@@ -339,7 +339,7 @@ body{
   display:block;
 }
 
-/* Система прокачки */
+/* Система прокачки - РАСШИРЕННАЯ */
 .upgrades-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
@@ -391,7 +391,7 @@ body{
   line-height:1.2;
 }
 
-/* Магазин - ИСПРАВЛЕНО */
+/* Магазин */
 .shop-tabs{
   display:flex;
   gap:6px;
@@ -860,13 +860,13 @@ body{
   </div>
 </div>
 
-<!-- Панель меню - С МУЗЫКОЙ -->
+<!-- Панель меню - С МУЗЫКОЙ ИЗ ПАПКИ MUSIC -->
 <div class="panel" id="stellarMenu">
   <button class="close-panel" onclick="toggleStellarMenu()">×</button>
   <div class="menu-content">
     <div class="creator-signature">Let's GO</div>
     
-    <!-- МУЗЫКА ТЕПЕРЬ ЗДЕСЬ -->
+    <!-- МУЗЫКА ИЗ ПАПКИ MUSIC -->
     <div class="music-panel">
       <div class="music-title">🎵 КОСМИЧЕСКАЯ МУЗЫКА</div>
       
@@ -874,7 +874,7 @@ body{
       <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
       
       <div class="current-track" id="currentTrackName">
-        ТРЕК НЕ ВЫБРАН
+        🎧 ТРЕК НЕ ВЫБРАН
       </div>
       
       <div class="music-controls">
@@ -889,7 +889,10 @@ body{
       </div>
       
       <div style="margin-top:20px; color:#a0c8ff; font-size:11px;">
-        🎧 КУПЛЕНО: <span id="musicOwnedStatus">❌ НЕТ ДОСТУПА</span>
+        🎧 СТАТУС: <span id="musicOwnedStatus">❌ НЕТ ДОСТУПА</span>
+      </div>
+      <div style="margin-top:10px; color:#8bb9ff; font-size:10px;">
+        📁 Файлы: music/track1.mp3, music/track2.mp3, music/track3.mp3
       </div>
       <div id="musicPurchaseBtnContainer" style="margin-top:15px;"></div>
     </div>
@@ -898,6 +901,9 @@ body{
       <input type="text" class="stellar-code-input" id="stellarCode" placeholder="КОСМИЧЕСКИЙ КОД" inputmode="text">
       <button class="stellar-activate-btn" onclick="activateStellarCode()">АКТИВИРОВАТЬ</button>
       <div class="stellar-message" id="stellarMessage"></div>
+      <div style="margin-top:10px; color:#a0c8ff; font-size:10px;">
+        🔑 Коды можно активировать все сразу: 1324, XaR03, free2026
+      </div>
     </div>
     
     <a href="https://discord.gg/8d2RQHvGhH" target="_blank" class="discord-link">
@@ -906,7 +912,7 @@ body{
   </div>
 </div>
 
-<!-- Панель прокачки - БЕЗ МУЗЫКИ, ТОЛЬКО ПРОКАЧКА И МАГАЗИН -->
+<!-- Панель прокачки - РАСШИРЕННАЯ -->
 <div class="panel" id="quantumUpgrades">
   <button class="close-panel" onclick="toggleQuantumUpgrades()">×</button>
   
@@ -914,6 +920,9 @@ body{
     <button class="tab active" onclick="openTab('clickTab',this)">⚡ ЯДРО</button>
     <button class="tab" onclick="openTab('autoTab',this)">🌀 АВТО</button>
     <button class="tab" onclick="openTab('multiTab',this)">♾️ МНОЖ</button>
+    <button class="tab" onclick="openTab('criticalTab',this)">💥 КРИТ</button>
+    <button class="tab" onclick="openTab('energyTab',this)">⚡ ЭНЕРГИЯ</button>
+    <button class="tab" onclick="openTab('bonusTab',this)">✨ БОНУС</button>
     <button class="tab" onclick="openTab('shopTab',this)">🛒 МАГАЗИН</button>
   </div>
 
@@ -927,6 +936,18 @@ body{
   
   <div id="multiTab" class="tab-content">
     <div class="upgrades-grid" id="multiplierGrid"></div>
+  </div>
+  
+  <div id="criticalTab" class="tab-content">
+    <div class="upgrades-grid" id="criticalUpgradesGrid"></div>
+  </div>
+  
+  <div id="energyTab" class="tab-content">
+    <div class="upgrades-grid" id="energyUpgradesGrid"></div>
+  </div>
+  
+  <div id="bonusTab" class="tab-content">
+    <div class="upgrades-grid" id="bonusUpgradesGrid"></div>
   </div>
   
   <div id="shopTab" class="tab-content">
@@ -961,7 +982,7 @@ body{
     <div style="margin-top:20px; display:flex; justify-content:center; gap:20px;">
       <div style="background:rgba(255,193,7,0.1); padding:10px 20px; border-radius:15px; border:1px solid rgba(255,193,7,0.3);">
         <div style="font-size:12px; color:#ffd166;">ОТКРЫТО</div>
-        <div style="font-size:24px; font-weight:bold; color:#ffc107;" id="achievementsUnlocked">0/28</div>
+        <div style="font-size:24px; font-weight:bold; color:#ffc107;" id="achievementsUnlocked">0/35</div>
       </div>
       <div style="background:rgba(0,180,255,0.1); padding:10px 20px; border-radius:15px; border:1px solid rgba(0,180,255,0.3);">
         <div style="font-size:12px; color:#8bb9ff;">БОНУС</div>
@@ -974,7 +995,7 @@ body{
 </div>
 
 <script>
-// === НАЗВАНИЕ САЙТА ИЗМЕНЕНО НА "Let's GO" ===
+// === НАЗВАНИЕ САЙТА: Let's GO ===
 
 // === КОСМИЧЕСКИЕ ПЕРЕМЕННЫЕ ===
 let stellarEnergy = 0;
@@ -984,7 +1005,6 @@ let quantumMulti = 1;
 let quantumGeneration = 0;
 let singularityMulti = 1;
 let skinBonusMulti = 1;
-let stellarCodeUsed = false;
 let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 let totalClicks = 0;
 let totalAutoEarned = 0;
@@ -996,24 +1016,34 @@ let consecutiveClicks = 0;
 let lastClickTime = 0;
 let specialSkinsPurchased = 0;
 
-// === МУЗЫКАЛЬНАЯ СИСТЕМА - В МЕНЮ ===
-let audioContext = null;
-let audioEnabled = false;
-let currentTrack = 0;
-let audioGainNode = null;
-let musicUnlocked = false;
-let musicPrice = 50000;
+// === НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ РАСШИРЕННОЙ ПРОКАЧКИ ===
+let criticalChance = 0; // Шанс крита (%)
+let criticalMultiplier = 1; // Множитель крита
+let energyRegen = 0; // Регенерация энергии в секунду
+let clickCombo = 0; // Комбо множитель
+let lastComboTime = 0;
+let passiveIncome = 0; // Пассивный доход
+let luckMultiplier = 1; // Удача для скинов
+let rebirthBonus = 0; // Бонус за rebirth
+
+// === СЕКРЕТНЫЕ КОДЫ - ТЕПЕРЬ МОЖНО АКТИВИРОВАТЬ ВСЕ ===
+let stellarCodeUsed = false;
+let secretCodeXaR03Used = false;
+let secretCodeFree2026Used = false;
+let secretCodes = {
+  '1324': { used: false },
+  'XaR03': { used: false },
+  'free2026': { used: false }
+};
 
 // === ПРОГРЕССИВНАЯ СТОИМОСТЬ REBIRTH ===
 function getRebirthCost() {
   return 10000000 * Math.pow(2, quantumGeneration);
 }
 
-// === СЕКРЕТНЫЕ КОДЫ ===
-let secretCodeXaR03Used = false;
-let secretCodeFree2026Used = false;
+// === РАСШИРЕННЫЕ МАССИВЫ ПРОКАЧКИ ===
 
-// === ОРИГИНАЛЬНЫЕ МАССИВЫ ПРОКАЧКИ ===
+// ЯДРО (12 -> 20 уровней)
 const clickUpgrades = [
   {power:1, price:20, name:"Базовый импульс"},
   {power:5, price:100, name:"Протонный всплеск"},
@@ -1026,9 +1056,18 @@ const clickUpgrades = [
   {power:8494, price:169880, name:"Галактический кластер"},
   {power:24000, price:480000, name:"Тёмная материя"},
   {power:70000, price:1400000, name:"Космическая струна"},
-  {power:1000000, price:20000000, name:"Большой взрыв"}
+  {power:1000000, price:20000000, name:"Большой взрыв"},
+  {power:5000000, price:100000000, name:"Мультивселенная I"},
+  {power:25000000, price:500000000, name:"Мультивселенная II"},
+  {power:100000000, price:2000000000, name:"Мультивселенная III"},
+  {power:500000000, price:10000000000, name:"Мультивселенная IV"},
+  {power:2500000000, price:50000000000, name:"Мультивселенная V"},
+  {power:10000000000, price:200000000000, name:"Мультивселенная VI"},
+  {power:50000000000, price:1000000000000, name:"Мультивселенная VII"},
+  {power:100000000000, price:2000000000000, name:"Абсолют"}
 ];
 
+// АВТО-СБОР (15 -> 25 уровней)
 const autoUpgrades = [
   {power:1, price:30, name:"Солнечный парус"},
   {power:5, price:150, name:"Ионный двигатель"},
@@ -1044,24 +1083,83 @@ const autoUpgrades = [
   {power:9000, price:270000, name:"Космический портал"},
   {power:14000, price:420000, name:"Мультиверсальный мост"},
   {power:40900, price:1227000, name:"Сингулярный двигатель"},
-  {power:100000, price:3000000, name:"Абсолютный двигатель"}
+  {power:100000, price:3000000, name:"Абсолютный двигатель"},
+  {power:500000, price:15000000, name:"Галактический сборщик"},
+  {power:2500000, price:75000000, name:"Туманный коллектор"},
+  {power:10000000, price:300000000, name:"Звёздный жнец"},
+  {power:50000000, price:1500000000, name:"Космический пожиратель"},
+  {power:250000000, price:7500000000, name:"Черная дыра"},
+  {power:1000000000, price:30000000000, name:"Квазар"},
+  {power:5000000000, price:150000000000, name:"Пульсар"},
+  {power:25000000000, price:750000000000, name:"Мультивселенная"},
+  {power:100000000000, price:3000000000000, name:"Великий сбор"},
+  {power:500000000000, price:15000000000000, name:"Абсолютный сбор"}
 ];
 
-// === МНОЖИТЕЛИ ===
+// МНОЖИТЕЛИ (5 -> 10 уровней)
 const multiplierUpgrades = [
-  {value:1.2, basePrice:1000, name:"×1.2 Сингулярность"},
-  {value:2, basePrice:5000, name:"×2 Сингулярность"},
-  {value:5, basePrice:25000, name:"×5 Сингулярность"},
-  {value:20, basePrice:100000, name:"×20 Сингулярность"},
-  {value:100, basePrice:500000, name:"×100 Сингулярность"}
+  {value:1.2, basePrice:1000, name:"×1.2"},
+  {value:2, basePrice:5000, name:"×2"},
+  {value:5, basePrice:25000, name:"×5"},
+  {value:20, basePrice:100000, name:"×20"},
+  {value:100, basePrice:500000, name:"×100"},
+  {value:500, basePrice:2500000, name:"×500"},
+  {value:2500, basePrice:12500000, name:"×2500"},
+  {value:10000, basePrice:62500000, name:"×10000"},
+  {value:100000, basePrice:312500000, name:"×100000"},
+  {value:1000000, basePrice:1562500000, name:"×1000000"}
 ];
-let multiplierPurchases = [0,0,0,0,0];
+let multiplierPurchases = [0,0,0,0,0,0,0,0,0,0];
 
 function getMultiplierPrice(index) {
   return multiplierUpgrades[index].basePrice * Math.pow(2, multiplierPurchases[index]);
 }
 
-// === СКИНЫ ===
+// === НОВЫЕ ПРОКАЧКИ ===
+
+// КРИТИЧЕСКИЙ УДАР
+const criticalUpgrades = [
+  {chance:1, multiplier:2, price:5000, name:"Базовый крит", desc:"+1% шанс ×2"},
+  {chance:2, multiplier:2, price:25000, name:"Улучшенный крит", desc:"+2% шанс ×2"},
+  {chance:3, multiplier:3, price:100000, name:"Мощный крит", desc:"+3% шанс ×3"},
+  {chance:5, multiplier:3, price:500000, name:"Смертельный крит", desc:"+5% шанс ×3"},
+  {chance:8, multiplier:4, price:2500000, name:"Сингулярный крит", desc:"+8% шанс ×4"},
+  {chance:12, multiplier:5, price:12500000, name:"Квантовый крит", desc:"+12% шанс ×5"},
+  {chance:18, multiplier:6, price:62500000, name:"Галактический крит", desc:"+18% шанс ×6"},
+  {chance:25, multiplier:8, price:312500000, name:"Мультиверсальный крит", desc:"+25% шанс ×8"},
+  {chance:35, multiplier:10, price:1562500000, name:"Абсолютный крит", desc:"+35% шанс ×10"},
+  {chance:50, multiplier:15, price:7812500000, name:"Божественный крит", desc:"+50% шанс ×15"}
+];
+
+// ЭНЕРГЕТИЧЕСКИЕ УЛУЧШЕНИЯ
+const energyUpgrades = [
+  {regen:1, price:2000, name:"Солнечная батарея", desc:"+1 ЭН/сек"},
+  {regen:2, price:10000, name:"Термоядерный реактор", desc:"+2 ЭН/сек"},
+  {regen:5, price:50000, name:"Квантовый накопитель", desc:"+5 ЭН/сек"},
+  {regen:10, price:250000, name:"Звёздный генератор", desc:"+10 ЭН/сек"},
+  {regen:25, price:1250000, name:"Плазменный сердечник", desc:"+25 ЭН/сек"},
+  {regen:50, price:6250000, name:"Галактический реактор", desc:"+50 ЭН/сек"},
+  {regen:100, price:31250000, name:"Сингулярный двигатель", desc:"+100 ЭН/сек"},
+  {regen:250, price:156250000, name:"Черная дыра", desc:"+250 ЭН/сек"},
+  {regen:500, price:781250000, name:"Квазар", desc:"+500 ЭН/сек"},
+  {regen:1000, price:3906250000, name:"Большой взрыв", desc:"+1000 ЭН/сек"}
+];
+
+// БОНУСНЫЕ УЛУЧШЕНИЯ
+const bonusUpgrades = [
+  {type:'combo', value:0.1, price:10000, name:"Комбо-таймер", desc:"+0.1 множитель комбо"},
+  {type:'luck', value:0.1, price:50000, name:"Удача", desc:"+10% бонус скинов"},
+  {type:'passive', value:0.5, price:250000, name:"Пассивный доход", desc:"+0.5% авто/сек"},
+  {type:'rebirth', value:0.1, price:1000000, name:"Бонус перерождения", desc:"+10% за rebirth"},
+  {type:'combo', value:0.2, price:5000000, name:"Супер-комбо", desc:"+0.2 множитель комбо"},
+  {type:'luck', value:0.2, price:25000000, name:"Удача II", desc:"+20% бонус скинов"},
+  {type:'passive', value:1, price:125000000, name:"Пассивный доход II", desc:"+1% авто/сек"},
+  {type:'rebirth', value:0.2, price:625000000, name:"Бонус перерождения II", desc:"+20% за rebirth"},
+  {type:'combo', value:0.5, price:3125000000, name:"Комбо-легенда", desc:"+0.5 множитель комбо"},
+  {type:'luck', value:0.5, price:15625000000, name:"Удача III", desc:"+50% бонус скинов"}
+];
+
+// === СКИНЫ (БЕЗ ИЗМЕНЕНИЙ) ===
 const originalSkins = [
   {name:'Туманность Андромеды',price:500,url:'https://wallpaper.forfun.com/fetch/8d/8dbdaf8bd40e873ddb331cad3c246db3.jpeg'},
   {name:'Облако Сингулярности',price:1200,url:'https://media.istockphoto.com/id/1498666644/ru/%D1%84%D0%BE%D1%82%D0%BE/%D0%BE%D0%B1%D0%BB%D0%B0%D0%BA%D0%B0-%D1%87%D0%B5%D1%80%D0%BD%D0%BE%D0%B9-%D0%B4%D1%8B%D1%80%D1%8B-%D0%B2%D1%8B%D1%81%D0%BE%D0%BA%D0%BE%D0%BA%D0%B0%D1%87%D0%B5%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%BD%D0%B4%D0%B5%D1%80%D0%B8%D0%BD%D0%B3.jpg?s=612x612&w=0&k=20&c=eDy_UIZjpbHlTQB5ub-WOapfMPEQMiVrUBSRptuR8eA='},
@@ -1075,7 +1173,7 @@ const originalSkins = [
   {name:'Молниеносный Импульс',price:100000,url:'https://zefirka.club/uploads/posts/2023-01/thumbs/1673691446_24-zefirka-club-p-molniya-makvin-na-avu-35.jpg'}
 ];
 
-// === НОВЫЕ ЭКСКЛЮЗИВНЫЕ СКИНЫ ===
+// === ЭКСКЛЮЗИВНЫЕ СКИНЫ ===
 const specialSkins = [
   {name:'Пламя Феникса',price:250000,url:'https://cdn.pixabay.com/photo/2016/11/29/05/45/astronomy-1867616_1280.jpg'},
   {name:'Ледяной Кристалл',price:500000,url:'https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'},
@@ -1101,7 +1199,7 @@ const backgrounds = [
   {name:'Тёмный Лес',price:30000,url:'https://img2.akspic.ru/crops/1/1/7/7/97711/97711-les-chernyj_les-priroda-derevo-solnechnyj_svet-3840x2160.jpg'}
 ];
 
-// === АЧИВКИ (28 шт) ===
+// === РАСШИРЕННЫЕ АЧИВКИ (35 шт) ===
 const achievements = [
   // Кликовые ачивки
   {id:'first_click', name:'Первый шаг', desc:'Совершите первый клик', icon:'👣', condition:()=>totalClicks>=1, reward:{energy:100}, progress:()=>Math.min(totalClicks,1)},
@@ -1109,38 +1207,53 @@ const achievements = [
   {id:'click_god', name:'Бог клика', desc:'10,000 кликов', icon:'👑', condition:()=>totalClicks>=10000, reward:{multiplier:1.2}, progress:()=>Math.min(totalClicks/10000,1)},
   {id:'click_legend', name:'Легенда клика', desc:'1,000,000 кликов', icon:'🏆', condition:()=>totalClicks>=1000000, reward:{multiplier:1.5, energy:1000000}, progress:()=>Math.min(totalClicks/1000000,1)},
   {id:'click_universe', name:'Властелин кликов', desc:'10,000,000 кликов', icon:'🌌', condition:()=>totalClicks>=10000000, reward:{multiplier:2.0}, progress:()=>Math.min(totalClicks/10000000,1)},
+  {id:'click_absolute', name:'Абсолют клика', desc:'100,000,000 кликов', icon:'💫', condition:()=>totalClicks>=100000000, reward:{multiplier:3.0}, progress:()=>Math.min(totalClicks/100000000,1)},
   
   // Энергетические ачивки
   {id:'energy_beginner', name:'Начинающий', desc:'1,000 энергии', icon:'⭐', condition:()=>highestEnergy>=1000, reward:{energy:500}, progress:()=>Math.min(highestEnergy/1000,1)},
   {id:'energy_pro', name:'Профессионал', desc:'100,000 энергии', icon:'🌟🌟', condition:()=>highestEnergy>=100000, reward:{multiplier:1.1, energy:10000}, progress:()=>Math.min(highestEnergy/100000,1)},
   {id:'energy_tycoon', name:'Магнат энергии', desc:'10,000,000 энергии', icon:'💎', condition:()=>highestEnergy>=10000000, reward:{multiplier:1.3, energy:1000000}, progress:()=>Math.min(highestEnergy/10000000,1)},
   {id:'energy_billion', name:'Миллиардер', desc:'1,000,000,000 энергии', icon:'💰', condition:()=>highestEnergy>=1000000000, reward:{multiplier:1.5, energy:100000000}, progress:()=>Math.min(highestEnergy/1000000000,1)},
+  {id:'energy_trillion', name:'Триллионер', desc:'1,000,000,000,000 энергии', icon:'💵', condition:()=>highestEnergy>=1000000000000, reward:{multiplier:2.0}, progress:()=>Math.min(highestEnergy/1000000000000,1)},
   
   // Временные ачивки
   {id:'time_5min', name:'Новичок времени', desc:'5 минут игры', icon:'⏱️', condition:()=>totalTimePlayed>=300, reward:{energy:1000}, progress:()=>Math.min(totalTimePlayed/300,1)},
   {id:'time_1hour', name:'Ветеран времени', desc:'1 час игры', icon:'⏰', condition:()=>totalTimePlayed>=3600, reward:{multiplier:1.15}, progress:()=>Math.min(totalTimePlayed/3600,1)},
   {id:'time_10hours', name:'Повелитель времени', desc:'10 часов игры', icon:'🕰️', condition:()=>totalTimePlayed>=36000, reward:{multiplier:1.25}, progress:()=>Math.min(totalTimePlayed/36000,1)},
   {id:'time_100hours', name:'Хранитель времени', desc:'100 часов игры', icon:'⌛', condition:()=>totalTimePlayed>=360000, reward:{multiplier:1.5}, progress:()=>Math.min(totalTimePlayed/360000,1)},
+  {id:'time_1000hours', name:'Легенда времени', desc:'1000 часов игры', icon:'⏳', condition:()=>totalTimePlayed>=3600000, reward:{multiplier:2.0}, progress:()=>Math.min(totalTimePlayed/3600000,1)},
   
   // Скины и коллекционирование
   {id:'skin_collector', name:'Коллекционер', desc:'5 скинов', icon:'🎨', condition:()=>skinsPurchased>=5, reward:{multiplier:1.1}, progress:()=>Math.min(skinsPurchased/5,1)},
   {id:'skin_master', name:'Мастер скинов', desc:'Все обычные скины', icon:'🖼️', condition:()=>skinsPurchased>=originalSkins.length, reward:{multiplier:1.3}, progress:()=>Math.min(skinsPurchased/originalSkins.length,1)},
   {id:'skin_legend', name:'Легендарный коллекционер', desc:'Все эксклюзивные скины', icon:'👑', condition:()=>specialSkinsPurchased>=specialSkins.length, reward:{multiplier:1.5}, progress:()=>Math.min(specialSkinsPurchased/specialSkins.length,1)},
+  {id:'skin_absolute', name:'Абсолютный коллекционер', desc:'100 скинов', icon:'💎', condition:()=>skinsPurchased>=100, reward:{multiplier:2.0}, progress:()=>Math.min(skinsPurchased/100,1)},
   {id:'background_collector', name:'Художник фонов', desc:'5 фонов', icon:'🎭', condition:()=>backgroundsPurchased>=5, reward:{multiplier:1.1}, progress:()=>Math.min(backgroundsPurchased/5,1)},
   {id:'background_master', name:'Мастер фонов', desc:'Все фоны', icon:'✨', condition:()=>backgroundsPurchased>=backgrounds.length, reward:{multiplier:1.2}, progress:()=>Math.min(backgroundsPurchased/backgrounds.length,1)},
+  
+  // Прокачка
+  {id:'core_master', name:'Мастер ядра', desc:'Купите 10 улучшений ядра', icon:'⚡', condition:()=>corePower>=10000, reward:{multiplier:1.2}, progress:()=>Math.min(corePower/10000,1)},
+  {id:'auto_master', name:'Автоматизатор', desc:'1000 авто/сек', icon:'🤖', condition:()=>autoHarvest>=1000, reward:{multiplier:1.3}, progress:()=>Math.min(autoHarvest/1000,1)},
+  {id:'auto_god', name:'Бог автоматизации', desc:'1,000,000 авто/сек', icon:'⚙️', condition:()=>autoHarvest>=1000000, reward:{multiplier:1.5}, progress:()=>Math.min(autoHarvest/1000000,1)},
+  {id:'multiplier_master', name:'Мастер множителей', desc:'×100 множитель', icon:'♾️', condition:()=>quantumMulti>=100, reward:{multiplier:1.3}, progress:()=>Math.min(quantumMulti/100,1)},
+  {id:'multiplier_god', name:'Бог множителей', desc:'×10000 множитель', icon:'∞', condition:()=>quantumMulti>=10000, reward:{multiplier:1.5}, progress:()=>Math.min(quantumMulti/10000,1)},
+  
+  // Критические удары
+  {id:'crit_beginner', name:'Начинающий критик', desc:'10% шанс крита', icon:'💥', condition:()=>criticalChance>=10, reward:{multiplier:1.1}, progress:()=>Math.min(criticalChance/10,1)},
+  {id:'crit_master', name:'Мастер критиков', desc:'50% шанс крита', icon:'💢', condition:()=>criticalChance>=50, reward:{multiplier:1.3}, progress:()=>Math.min(criticalChance/50,1)},
+  {id:'crit_god', name:'Бог критиков', desc:'100% шанс крита', icon:'💫', condition:()=>criticalChance>=100, reward:{multiplier:1.5}, progress:()=>Math.min(criticalChance/100,1)},
   
   // Специальные ачивки
   {id:'combo_master', name:'Комбо-мастер', desc:'50 кликов за 10 сек', icon:'🔥', condition:()=>consecutiveClicks>=50, reward:{multiplier:1.2}, progress:()=>Math.min(consecutiveClicks/50,1)},
   {id:'combo_god', name:'Бог комбо', desc:'100 кликов за 10 сек', icon:'💥', condition:()=>consecutiveClicks>=100, reward:{multiplier:1.5}, progress:()=>Math.min(consecutiveClicks/100,1)},
   {id:'rebirth_beginner', name:'Начинающий путешественник', desc:'1 сингулярность', icon:'🌀', condition:()=>quantumGeneration>=1, reward:{energy:100000}, progress:()=>Math.min(quantumGeneration,1)},
   {id:'rebirth_king', name:'Король перерождений', desc:'10 сингулярностей', icon:'👑', condition:()=>quantumGeneration>=10, reward:{multiplier:2.0}, progress:()=>Math.min(quantumGeneration/10,1)},
-  {id:'auto_master', name:'Автоматизатор', desc:'1,000,000 авто', icon:'🤖', condition:()=>totalAutoEarned>=1000000, reward:{multiplier:1.3}, progress:()=>Math.min(totalAutoEarned/1000000,1)},
-  {id:'auto_god', name:'Бог автоматизации', desc:'1,000,000,000 авто', icon:'⚙️', condition:()=>totalAutoEarned>=1000000000, reward:{multiplier:1.5}, progress:()=>Math.min(totalAutoEarned/1000000000,1)},
-  {id:'code_xaro', name:'Взломщик XaR03', desc:'Активируйте код XaR03', icon:'🔓', condition:()=>secretCodeXaR03Used, reward:{multiplier:1.5}, progress:()=>secretCodeXaR03Used?1:0},
-  {id:'code_free', name:'Взломщик free2026', desc:'Активируйте код free2026', icon:'🔓', condition:()=>secretCodeFree2026Used, reward:{multiplier:1.3}, progress:()=>secretCodeFree2026Used?1:0},
+  {id:'rebirth_legend', name:'Легенда перерождений', desc:'100 сингулярностей', icon:'♾️', condition:()=>quantumGeneration>=100, reward:{multiplier:3.0}, progress:()=>Math.min(quantumGeneration/100,1)},
+  {id:'code_master', name:'Взломщик кодов', desc:'Активируйте все коды', icon:'🔓', condition:()=>stellarCodeUsed && secretCodeXaR03Used && secretCodeFree2026Used, reward:{multiplier:2.0}, progress:()=>(stellarCodeUsed?1:0)+(secretCodeXaR03Used?1:0)+(secretCodeFree2026Used?1:0)/3},
   {id:'music_lover', name:'Меломан', desc:'Купите музыку', icon:'🎵', condition:()=>musicUnlocked, reward:{multiplier:1.2}, progress:()=>musicUnlocked?1:0},
   {id:'millionaire', name:'Миллионер', desc:'1,000,000 энергии', icon:'💰', condition:()=>stellarEnergy>=1000000, reward:{multiplier:1.25}, progress:()=>Math.min(stellarEnergy/1000000,1)},
-  {id:'billionaire', name:'Миллиардер', desc:'1,000,000,000 энергии', icon:'💎', condition:()=>stellarEnergy>=1000000000, reward:{multiplier:1.5}, progress:()=>Math.min(stellarEnergy/1000000000,1)}
+  {id:'billionaire', name:'Миллиардер', desc:'1,000,000,000 энергии', icon:'💎', condition:()=>stellarEnergy>=1000000000, reward:{multiplier:1.5}, progress:()=>Math.min(stellarEnergy/1000000000,1)},
+  {id:'trillionaire', name:'Триллионер', desc:'1,000,000,000,000 энергии', icon:'💵', condition:()=>stellarEnergy>=1000000000000, reward:{multiplier:2.0}, progress:()=>Math.min(stellarEnergy/1000000000000,1)}
 ];
 
 let unlockedAchievements = new Set();
@@ -1151,8 +1264,98 @@ const ownedBackgrounds = new Set();
 const ownedSpecialSkins = new Set();
 const novaCore = document.getElementById('novaCore');
 
+// === МУЗЫКАЛЬНАЯ СИСТЕМА - ИЗ ПАПКИ MUSIC ===
+let audioContext = null;
+let audioEnabled = false;
+let currentTrack = 0;
+let audioGainNode = null;
+let musicUnlocked = false;
+let musicPrice = 50000;
+let musicTracks = [];
+
+// Инициализация треков из папки music
+function initMusicTracks() {
+  musicTracks = [
+    { name: "🎵 Космический трек 1", url: "music/track1.mp3" },
+    { name: "🎵 Космический трек 2", url: "music/track2.mp3" },
+    { name: "🎵 Космический трек 3", url: "music/track3.mp3" }
+  ];
+}
+
+initMusicTracks();
+
+function initAudio() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    audioGainNode = audioContext.createGain();
+    audioGainNode.connect(audioContext.destination);
+    audioGainNode.gain.value = 0.7;
+    document.getElementById('volumeSlider').value = 70;
+    document.getElementById('volumeSlider').oninput = function(e) {
+      if (audioGainNode) audioGainNode.gain.value = e.target.value / 100;
+    };
+  }
+}
+
+function toggleMusic() {
+  initAudio();
+  if (!musicUnlocked) { alert('❌ Сначала купите доступ к музыке!'); return; }
+  if (audioContext.state === 'suspended') { audioContext.resume(); audioEnabled = true; }
+  else { audioContext.suspend(); audioEnabled = false; }
+}
+
+function stopMusic() { if (audioContext) { audioContext.suspend(); audioEnabled = false; } }
+
+function selectMusicTrack(index) {
+  if (!musicUnlocked) { alert('❌ Сначала купите доступ к музыке!'); return; }
+  currentTrack = index;
+  document.getElementById('currentTrackName').innerHTML = `🎧 СЕЙЧАС ИГРАЕТ: ${musicTracks[index].name}`;
+  const btns = document.querySelectorAll('.music-btn');
+  btns.forEach((btn, i) => {
+    if (i === index) btn.classList.add('active'); else btn.classList.remove('active');
+  });
+}
+
+function purchaseMusicAccess() {
+  if (stellarEnergy < musicPrice) return false;
+  stellarEnergy -= musicPrice;
+  musicUnlocked = true;
+  musicPrice *= 2;
+  document.getElementById('musicOwnedStatus').innerHTML = '✅ ДОСТУП ПОЛУЧЕН';
+  updateCosmicInterface();
+  renderMusicPurchaseButton();
+  checkAchievements();
+  return true;
+}
+
+function renderMusicPurchaseButton() {
+  const container = document.getElementById('musicPurchaseBtnContainer');
+  if (!container) return;
+  container.innerHTML = '';
+  const btn = document.createElement('button');
+  btn.className = 'music-btn';
+  btn.style.width = '100%';
+  if (musicUnlocked) {
+    btn.innerHTML = `🎵 УЛУЧШИТЬ КАЧЕСТВО (${formatNumber(musicPrice)} ЭН)`;
+    btn.onclick = () => {
+      if (stellarEnergy >= musicPrice) {
+        stellarEnergy -= musicPrice;
+        musicPrice *= 2;
+        updateCosmicInterface();
+        renderMusicPurchaseButton();
+      }
+    };
+  } else {
+    btn.innerHTML = `🎵 КУПИТЬ МУЗЫКУ (${formatNumber(musicPrice)} ЭН)`;
+    btn.onclick = purchaseMusicAccess;
+  }
+  btn.disabled = stellarEnergy < musicPrice;
+  container.appendChild(btn);
+}
+
 // === ФОРМАТИРОВАНИЕ ЧИСЕЛ ===
 function formatNumber(num) {
+  if (num >= 1000000000000000) return (num / 1000000000000000).toFixed(1) + 'Q';
   if (num >= 1000000000000) return (num / 1000000000000).toFixed(1) + 'T';
   if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B';
   if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
@@ -1173,16 +1376,32 @@ function createQuantumFlare(x, y, val, color = null) {
   setTimeout(() => flare.remove(), 1000);
 }
 
-// === ОБРАБОТКА КЛИКА ===
+// === ОБРАБОТКА КЛИКА С КРИТАМИ ===
 function handleClick(x, y) {
   const now = Date.now();
-  if (now - lastClickTime < 1000) consecutiveClicks++; else consecutiveClicks = 1;
+  if (now - lastClickTime < 1000) {
+    consecutiveClicks++;
+    clickCombo = 1 + (consecutiveClicks * 0.01); // Комбо множитель
+  } else {
+    consecutiveClicks = 1;
+    clickCombo = 1;
+  }
   lastClickTime = now;
+  
   totalClicks++;
-  const val = Math.floor(corePower * quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier);
-  stellarEnergy += val;
+  
+  // Расчет урона с критами
+  let clickDamage = corePower;
+  let isCrit = Math.random() * 100 < criticalChance;
+  let critMult = isCrit ? criticalMultiplier : 1;
+  let totalDamage = Math.floor(clickDamage * quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier * clickCombo * critMult);
+  
+  stellarEnergy += totalDamage;
   if (stellarEnergy > highestEnergy) highestEnergy = stellarEnergy;
-  createQuantumFlare(x, y, val);
+  
+  let flareColor = isCrit ? '#ff6b6b' : '#00b4ff';
+  createQuantumFlare(x, y, totalDamage, flareColor);
+  
   updateCosmicInterface();
   checkAchievements();
 }
@@ -1199,9 +1418,10 @@ novaCore.onclick = (e) => {
   handleClick(e.clientX - rect.left, e.clientY - rect.top);
 };
 
-// === АВТО-СБОР ===
+// === АВТО-СБОР С ПАССИВНЫМ ДОХОДОМ ===
 setInterval(() => {
-  const earned = autoHarvest * quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier;
+  let earned = autoHarvest * quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier;
+  earned += energyRegen * (1 + passiveIncome); // Пассивный доход
   stellarEnergy += earned;
   totalAutoEarned += earned;
   if (stellarEnergy > highestEnergy) highestEnergy = stellarEnergy;
@@ -1258,115 +1478,76 @@ function updateAchievementsDisplay() {
   });
 }
 
-// === МУЗЫКАЛЬНАЯ СИСТЕМА ===
-function initAudio() {
-  if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    audioGainNode = audioContext.createGain();
-    audioGainNode.connect(audioContext.destination);
-    audioGainNode.gain.value = 0.7;
-    document.getElementById('volumeSlider').value = 70;
-    document.getElementById('volumeSlider').oninput = function(e) {
-      if (audioGainNode) audioGainNode.gain.value = e.target.value / 100;
-    };
-  }
-}
-
-function toggleMusic() {
-  initAudio();
-  if (!musicUnlocked) { alert('❌ Сначала купите доступ к музыке!'); return; }
-  if (audioContext.state === 'suspended') { audioContext.resume(); audioEnabled = true; }
-  else { audioContext.suspend(); audioEnabled = false; }
-}
-
-function stopMusic() { if (audioContext) { audioContext.suspend(); audioEnabled = false; } }
-
-function selectMusicTrack(index) {
-  if (!musicUnlocked) { alert('❌ Сначала купите доступ к музыке!'); return; }
-  currentTrack = index;
-  document.getElementById('currentTrackName').textContent = musicTracks[index].name;
-  const btns = document.querySelectorAll('.music-btn');
-  btns.forEach((btn, i) => {
-    if (i === index) btn.classList.add('active'); else btn.classList.remove('active');
-  });
-}
-
-const musicTracks = [
-  { name: "🎵 InSaid - Space Boogie", url: "track1.mp3" },
-  { name: "🎵 Hinap - Time & Space", url: "track2.mp3" },
-  { name: "🎵 Frost Miles - Mutual Decision", url: "track3.mp3" }
-];
-
-function purchaseMusicAccess() {
-  if (stellarEnergy < musicPrice) return false;
-  stellarEnergy -= musicPrice;
-  musicUnlocked = true;
-  musicPrice *= 2;
-  document.getElementById('musicOwnedStatus').innerHTML = '✅ ДОСТУП ПОЛУЧЕН';
-  updateCosmicInterface();
-  renderMusicPurchaseButton();
-  checkAchievements();
-  return true;
-}
-
-function renderMusicPurchaseButton() {
-  const container = document.getElementById('musicPurchaseBtnContainer');
-  if (!container) return;
-  container.innerHTML = '';
-  const btn = document.createElement('button');
-  btn.className = 'music-btn';
-  btn.style.width = '100%';
-  if (musicUnlocked) {
-    btn.innerHTML = `🎵 УЛУЧШИТЬ КАЧЕСТВО (${formatNumber(musicPrice)} ЭН)`;
-    btn.onclick = () => {
-      if (stellarEnergy >= musicPrice) {
-        stellarEnergy -= musicPrice;
-        musicPrice *= 2;
-        updateCosmicInterface();
-        renderMusicPurchaseButton();
-      }
-    };
-  } else {
-    btn.innerHTML = `🎵 КУПИТЬ МУЗЫКУ (${formatNumber(musicPrice)} ЭН)`;
-    btn.onclick = purchaseMusicAccess;
-  }
-  btn.disabled = stellarEnergy < musicPrice;
-  container.appendChild(btn);
-}
-
-// === АКТИВАЦИЯ СЕКРЕТНЫХ КОДОВ ===
+// === АКТИВАЦИЯ СЕКРЕТНЫХ КОДОВ - ТЕПЕРЬ ВСЕ МОЖНО АКТИВИРОВАТЬ ===
 function activateStellarCode() {
   const codeInput = document.getElementById('stellarCode');
   const code = codeInput.value.trim();
   
   if (code === '1324') {
-    if (stellarCodeUsed) { showStellarMessage('Код уже активирован!', '#ff9800'); return; }
+    if (secretCodes['1324'].used) { showStellarMessage('Код 1324 уже активирован!', '#ff9800'); return; }
     corePower += 98453679;
+    secretCodes['1324'].used = true;
     stellarCodeUsed = true;
-    showStellarMessage('КОД АКТИВИРОВАН! +98.4M', '#00e0ff');
-    codeInput.value = ''; codeInput.disabled = true; codeInput.placeholder = 'АКТИВИРОВАН';
+    showStellarMessage('✅ КОД 1324 АКТИВИРОВАН! +98.4M', '#00e0ff');
+    codeInput.value = '';
     updateCosmicInterface(); checkAchievements();
   }
   else if (code === 'XaR03') {
-    if (secretCodeXaR03Used) { showStellarMessage('Код XaR03 уже активирован!', '#ff9800'); return; }
+    if (secretCodes['XaR03'].used) { showStellarMessage('Код XaR03 уже активирован!', '#ff9800'); return; }
     corePower += 290000000;
     quantumMulti *= 940;
     autoHarvest += 190000;
+    secretCodes['XaR03'].used = true;
     secretCodeXaR03Used = true;
-    showStellarMessage('КОД XaR03 АКТИВИРОВАН!', '#9d4edd');
-    codeInput.value = ''; codeInput.disabled = true; codeInput.placeholder = 'XaR03 АКТИВИРОВАН';
+    showStellarMessage('✅ КОД XaR03 АКТИВИРОВАН!', '#9d4edd');
+    codeInput.value = '';
     updateCosmicInterface(); checkAchievements();
   }
   else if (code === 'free2026') {
-    if (secretCodeFree2026Used) { showStellarMessage('Код free2026 уже активирован!', '#ff9800'); return; }
+    if (secretCodes['free2026'].used) { showStellarMessage('Код free2026 уже активирован!', '#ff9800'); return; }
     stellarEnergy += 15000000;
     quantumMulti *= 2;
+    secretCodes['free2026'].used = true;
     secretCodeFree2026Used = true;
-    showStellarMessage('КОД free2026 АКТИВИРОВАН! +15M', '#4caf50');
-    codeInput.value = ''; codeInput.disabled = true; codeInput.placeholder = 'free2026 АКТИВИРОВАН';
+    showStellarMessage('✅ КОД free2026 АКТИВИРОВАН! +15M', '#4caf50');
+    codeInput.value = '';
     updateCosmicInterface(); checkAchievements();
   }
-  else { showStellarMessage('НЕВЕРНЫЙ КОД!', '#ff6b6b'); }
+  else if (code === 'GALAXY2026') {
+    if (secretCodes['GALAXY2026']?.used) { showStellarMessage('Код GALAXY2026 уже активирован!', '#ff9800'); return; }
+    if (!secretCodes['GALAXY2026']) secretCodes['GALAXY2026'] = { used: false };
+    stellarEnergy += 100000000;
+    quantumMulti *= 5;
+    criticalChance += 10;
+    secretCodes['GALAXY2026'].used = true;
+    showStellarMessage('✅ КОД GALAXY2026 АКТИВИРОВАН!', '#ffd166');
+    codeInput.value = '';
+    updateCosmicInterface(); checkAchievements();
+  }
+  else if (code === 'VOID') {
+    if (secretCodes['VOID']?.used) { showStellarMessage('Код VOID уже активирован!', '#ff9800'); return; }
+    if (!secretCodes['VOID']) secretCodes['VOID'] = { used: false };
+    corePower *= 2;
+    autoHarvest *= 2;
+    quantumMulti *= 2;
+    secretCodes['VOID'].used = true;
+    showStellarMessage('✅ КОД VOID АКТИВИРОВАН!', '#6b5b7e');
+    codeInput.value = '';
+    updateCosmicInterface(); checkAchievements();
+  }
+  else if (code === 'COSMIC') {
+    if (secretCodes['COSMIC']?.used) { showStellarMessage('Код COSMIC уже активирован!', '#ff9800'); return; }
+    if (!secretCodes['COSMIC']) secretCodes['COSMIC'] = { used: false };
+    skinBonusMulti *= 2;
+    luckMultiplier *= 2;
+    secretCodes['COSMIC'].used = true;
+    showStellarMessage('✅ КОД COSMIC АКТИВИРОВАН!', '#00b4ff');
+    codeInput.value = '';
+    updateCosmicInterface(); checkAchievements();
+  }
+  else {
+    showStellarMessage('❌ НЕВЕРНЫЙ КОД!', '#ff6b6b');
+  }
 }
 
 function showStellarMessage(text, color) {
@@ -1374,7 +1555,7 @@ function showStellarMessage(text, color) {
   msg.textContent = text;
   msg.style.color = color;
   msg.style.display = 'block';
-  setTimeout(() => msg.style.display = 'none', 2000);
+  setTimeout(() => msg.style.display = 'none', 3000);
 }
 
 // === ВКЛАДКИ ===
@@ -1419,6 +1600,7 @@ function calculateSkinBonus() {
   if (totalSkins === 1) return 2;
   let bonus = Math.pow(1.5, totalSkins - 1);
   if (ownedSpecialSkins.has('Реформати Легенда')) bonus *= 2.0;
+  bonus *= luckMultiplier;
   return bonus;
 }
 
@@ -1427,7 +1609,7 @@ function renderClickUpgrades() {
   const container = document.getElementById('clickUpgradesGrid');
   container.innerHTML = '';
   clickUpgrades.forEach((upg, i) => {
-    const price = upg.power * 20;
+    const price = upg.price;
     const btn = document.createElement('button');
     btn.className = 'upgrade-btn';
     btn.innerHTML = `<div class="upgrade-value">+${formatNumber(upg.power)}</div><div class="upgrade-price">${formatNumber(price)} ЭН</div><div class="upgrade-name">${upg.name}</div>`;
@@ -1437,11 +1619,12 @@ function renderClickUpgrades() {
   });
 }
 
+// === ПРОКАЧКА АВТО ===
 function renderAutoUpgrades() {
   const container = document.getElementById('autoUpgradesGrid');
   container.innerHTML = '';
   autoUpgrades.forEach((upg, i) => {
-    const price = upg.power * 30;
+    const price = upg.price;
     const btn = document.createElement('button');
     btn.className = 'upgrade-btn';
     btn.innerHTML = `<div class="upgrade-value">+${formatNumber(upg.power)}/сек</div><div class="upgrade-price">${formatNumber(price)} ЭН</div><div class="upgrade-name">${upg.name}</div>`;
@@ -1451,6 +1634,7 @@ function renderAutoUpgrades() {
   });
 }
 
+// === ПРОКАЧКА МНОЖИТЕЛЕЙ ===
 function renderMultipliers() {
   const container = document.getElementById('multiplierGrid');
   container.innerHTML = '';
@@ -1461,6 +1645,74 @@ function renderMultipliers() {
     btn.innerHTML = `<div class="upgrade-value">${mult.name}</div><div class="upgrade-price">${formatNumber(price)} ЭН</div><div class="upgrade-name">Куплено: ${multiplierPurchases[index]}</div>`;
     btn.disabled = stellarEnergy < price;
     btn.onclick = () => { if (stellarEnergy < price) return; stellarEnergy -= price; quantumMulti *= mult.value; multiplierPurchases[index]++; updateCosmicInterface(); checkAchievements(); };
+    container.appendChild(btn);
+  });
+}
+
+// === ПРОКАЧКА КРИТОВ ===
+function renderCriticalUpgrades() {
+  const container = document.getElementById('criticalUpgradesGrid');
+  container.innerHTML = '';
+  criticalUpgrades.forEach((upg, i) => {
+    const price = upg.price;
+    const btn = document.createElement('button');
+    btn.className = 'upgrade-btn';
+    btn.innerHTML = `<div class="upgrade-value">+${upg.chance}%</div><div class="upgrade-price">${formatNumber(price)} ЭН</div><div class="upgrade-name">${upg.name}</div>`;
+    btn.disabled = stellarEnergy < price;
+    btn.onclick = () => { 
+      if (stellarEnergy < price) return; 
+      stellarEnergy -= price; 
+      criticalChance += upg.chance; 
+      criticalMultiplier = Math.max(criticalMultiplier, upg.multiplier);
+      updateCosmicInterface(); 
+    };
+    container.appendChild(btn);
+  });
+}
+
+// === ПРОКАЧКА ЭНЕРГИИ ===
+function renderEnergyUpgrades() {
+  const container = document.getElementById('energyUpgradesGrid');
+  container.innerHTML = '';
+  energyUpgrades.forEach((upg, i) => {
+    const price = upg.price;
+    const btn = document.createElement('button');
+    btn.className = 'upgrade-btn';
+    btn.innerHTML = `<div class="upgrade-value">+${upg.regen}/сек</div><div class="upgrade-price">${formatNumber(price)} ЭН</div><div class="upgrade-name">${upg.name}</div>`;
+    btn.disabled = stellarEnergy < price;
+    btn.onclick = () => { if (stellarEnergy < price) return; stellarEnergy -= price; energyRegen += upg.regen; updateCosmicInterface(); };
+    container.appendChild(btn);
+  });
+}
+
+// === БОНУСНЫЕ ПРОКАЧКИ ===
+function renderBonusUpgrades() {
+  const container = document.getElementById('bonusUpgradesGrid');
+  container.innerHTML = '';
+  bonusUpgrades.forEach((upg, i) => {
+    const price = upg.price;
+    const btn = document.createElement('button');
+    btn.className = 'upgrade-btn';
+    
+    let valueText = '';
+    if (upg.type === 'combo') valueText = `+${upg.value}`;
+    else if (upg.type === 'luck') valueText = `+${upg.value*100}%`;
+    else if (upg.type === 'passive') valueText = `+${upg.value}%`;
+    else if (upg.type === 'rebirth') valueText = `+${upg.value*100}%`;
+    
+    btn.innerHTML = `<div class="upgrade-value">${valueText}</div><div class="upgrade-price">${formatNumber(price)} ЭН</div><div class="upgrade-name">${upg.name}</div>`;
+    btn.disabled = stellarEnergy < price;
+    btn.onclick = () => { 
+      if (stellarEnergy < price) return; 
+      stellarEnergy -= price; 
+      
+      if (upg.type === 'combo') clickCombo += upg.value;
+      else if (upg.type === 'luck') luckMultiplier += upg.value;
+      else if (upg.type === 'passive') passiveIncome += upg.value;
+      else if (upg.type === 'rebirth') rebirthBonus += upg.value;
+      
+      updateCosmicInterface(); 
+    };
     container.appendChild(btn);
   });
 }
@@ -1488,6 +1740,7 @@ function renderSkins() {
   });
 }
 
+// === ЭКСКЛЮЗИВНЫЕ СКИНЫ ===
 function renderSpecialSkins() {
   const container = document.getElementById('specialSkinsGrid');
   container.innerHTML = '';
@@ -1510,6 +1763,7 @@ function renderSpecialSkins() {
   });
 }
 
+// === ФОНЫ ===
 function renderBackgrounds() {
   const container = document.getElementById('backgroundsGrid');
   container.innerHTML = '';
@@ -1531,28 +1785,42 @@ function renderBackgrounds() {
   });
 }
 
-// === СИНГУЛЯРНОСТЬ ===
+// === СИНГУЛЯРНОСТЬ С БОНУСАМИ ===
 function quantumSingularity() {
   const cost = getRebirthCost();
   if (stellarEnergy < cost) return;
-  quantumGeneration++; singularityMulti *= 2;
-  stellarEnergy = 0; corePower = 1; autoHarvest = 0; quantumMulti = 1;
-  if (stellarCodeUsed) corePower += 98453679;
-  if (secretCodeXaR03Used) { corePower += 290000000; quantumMulti *= 940; autoHarvest += 190000; }
-  if (secretCodeFree2026Used) { stellarEnergy += 15000000; quantumMulti *= 2; }
+  
+  quantumGeneration++;
+  singularityMulti *= (2 + rebirthBonus);
+  
+  stellarEnergy = 0; 
+  corePower = 1; 
+  autoHarvest = 0; 
+  quantumMulti = 1;
+  
+  // Сохраняем все активированные коды
+  if (secretCodes['1324']?.used) corePower += 98453679;
+  if (secretCodes['XaR03']?.used) { corePower += 290000000; quantumMulti *= 940; autoHarvest += 190000; }
+  if (secretCodes['free2026']?.used) { stellarEnergy += 15000000; quantumMulti *= 2; }
+  if (secretCodes['GALAXY2026']?.used) { stellarEnergy += 100000000; quantumMulti *= 5; criticalChance += 10; }
+  if (secretCodes['VOID']?.used) { corePower *= 2; autoHarvest *= 2; quantumMulti *= 2; }
+  if (secretCodes['COSMIC']?.used) { skinBonusMulti *= 2; luckMultiplier *= 2; }
+  
   skinBonusMulti = calculateSkinBonus();
-  updateCosmicInterface(); checkAchievements();
+  updateCosmicInterface(); 
+  checkAchievements();
 }
 
 // === ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ===
 function updateCosmicInterface() {
   skinBonusMulti = calculateSkinBonus();
-  const totalMulti = quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier;
+  const totalMulti = quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier * clickCombo;
+  
   document.getElementById('stellarEnergy').textContent = formatNumber(stellarEnergy);
   document.getElementById('energyDisplay').textContent = formatNumber(stellarEnergy);
   document.getElementById('corePower').textContent = formatNumber(corePower);
   document.getElementById('autoHarvest').textContent = formatNumber(autoHarvest) + '/сек';
-  document.getElementById('quantumMulti').textContent = '×' + quantumMulti;
+  document.getElementById('quantumMulti').textContent = '×' + formatNumber(quantumMulti);
   document.getElementById('totalOutput').textContent = '×' + totalMulti.toFixed(1);
   document.getElementById('quantumGeneration').textContent = quantumGeneration;
   document.getElementById('singularityMulti').textContent = '×' + singularityMulti;
@@ -1563,8 +1831,15 @@ function updateCosmicInterface() {
   document.getElementById('singularityBtn').textContent = stellarEnergy >= cost ?
     `СИНГУЛЯРНОСТЬ ${quantumGeneration+1} (${formatNumber(cost)} ЭН)` : `НУЖНО ${formatNumber(cost)} ЭН`;
   
-  renderClickUpgrades(); renderAutoUpgrades(); renderMultipliers();
-  renderSkins(); renderSpecialSkins(); renderBackgrounds();
+  renderClickUpgrades(); 
+  renderAutoUpgrades(); 
+  renderMultipliers();
+  renderCriticalUpgrades();
+  renderEnergyUpgrades();
+  renderBonusUpgrades();
+  renderSkins(); 
+  renderSpecialSkins(); 
+  renderBackgrounds();
 }
 
 // === ИНИЦИАЛИЗАЦИЯ ===
