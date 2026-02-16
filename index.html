@@ -56,7 +56,7 @@ body::before {
 
 @keyframes button-pop {
   0% { transform:scale(1); }
-  50% { transform:scale(0.95); }
+  50% { transform:scale(0.98); }
   100% { transform:scale(1); }
 }
 
@@ -96,7 +96,27 @@ body::before {
   80% { transform:translateX(3px); }
 }
 
-/* ===== НОВЫЙ ДИЗАЙН ГЛАВНОГО ЭКРАНА ===== */
+@keyframes rainbow {
+  0% { border-color:#ff0000; box-shadow:0 0 30px #ff0000; }
+  17% { border-color:#ff8800; box-shadow:0 0 30px #ff8800; }
+  33% { border-color:#ffff00; box-shadow:0 0 30px #ffff00; }
+  50% { border-color:#00ff00; box-shadow:0 0 30px #00ff00; }
+  67% { border-color:#0000ff; box-shadow:0 0 30px #0000ff; }
+  83% { border-color:#8800ff; box-shadow:0 0 30px #8800ff; }
+  100% { border-color:#ff0000; box-shadow:0 0 30px #ff0000; }
+}
+
+@keyframes floating {
+  0% { transform:translateY(0px); }
+  50% { transform:translateY(-10px); }
+  100% { transform:translateY(0px); }
+}
+
+@keyframes rotate {
+  from { transform:rotate(0deg); }
+  to { transform:rotate(360deg); }
+}
+
 .game-container{
   width:100%;
   max-width:1200px;
@@ -108,7 +128,6 @@ body::before {
   z-index:10;
 }
 
-/* НОВЫЙ ДИЗАЙН ВЕРХНЕЙ ПАНЕЛИ */
 .top-bar{
   width:100%;
   display:flex;
@@ -175,15 +194,12 @@ body::before {
   background:linear-gradient(145deg, rgba(40,60,120,0.9), rgba(30,50,100,0.9));
   box-shadow:0 10px 25px rgba(88,179,255,0.5), inset 0 0 20px rgba(255,255,255,0.2);
   border-color:rgba(88,179,255,0.8);
-  animation:glow-pulse 1.5s infinite;
 }
 
 .astro-btn:active {
-  transform:scale(0.95);
-  animation:button-pop 0.3s;
+  animation:button-pop 0.2s;
 }
 
-/* НОВЫЙ ДИЗАЙН СТАТИСТИКИ */
 .stats-container{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -257,7 +273,6 @@ body::before {
   animation:glow-pulse 2s infinite;
 }
 
-/* НОВЫЙ ДИЗАЙН ОСНОВНОГО БЛОКА */
 .main-game-area{
   display:flex;
   flex-direction:column;
@@ -325,6 +340,7 @@ body::before {
   box-shadow:0 0 60px rgba(0,180,255,0.6), inset 0 0 50px rgba(255,255,255,0.3);
   position:relative;
   animation:pulse-glow 4s infinite alternate;
+  transform-origin:center center;
 }
 
 .nova-core::before {
@@ -339,7 +355,12 @@ body::before {
   animation:spin-slow 10s linear infinite;
 }
 
-.nova-core::after {
+.nova-core:active {
+  transform:scale(0.98);
+  transition:transform 0.1s ease;
+}
+
+.nova-core:active::after {
   content:'';
   position:absolute;
   top:50%;
@@ -347,22 +368,11 @@ body::before {
   transform:translate(-50%, -50%);
   width:120%;
   height:120%;
-  background:radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-  opacity:0;
-  transition:0.3s;
-}
-
-.nova-core:active {
-  transform:scale(0.95);
-  animation:button-pop 0.3s;
-}
-
-.nova-core:active::after {
-  opacity:1;
+  background:radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
   animation:quantum-burst 0.5s;
+  pointer-events:none;
 }
 
-/* НОВЫЙ ДИЗАЙН ИГРОВОЙ ИНФОРМАЦИИ */
 .game-info{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -429,7 +439,6 @@ body::before {
   text-shadow:0 0 10px rgba(0,224,255,0.5);
 }
 
-/* НОВЫЙ ДИЗАЙН КНОПКИ СИНГУЛЯРНОСТИ */
 .singularity-btn{
   background:linear-gradient(145deg, #9d4edd, #ff6b6b, #f9c74f);
   color:white;
@@ -441,7 +450,7 @@ body::before {
   cursor:pointer;
   margin:20px auto;
   display:block;
-  transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family:'Orbitron', sans-serif;
   letter-spacing:1px;
   text-transform:uppercase;
@@ -477,7 +486,7 @@ body::before {
 
 .singularity-btn:active:not(:disabled) {
   transform:scale(0.98);
-  animation:button-pop 0.3s;
+  transition:transform 0.1s;
 }
 
 .singularity-btn:disabled {
@@ -486,7 +495,6 @@ body::before {
   filter:grayscale(0.5);
 }
 
-/* НОВЫЙ ДИЗАЙН ПАНЕЛЕЙ */
 .panel{
   position:fixed;
   top:-100%;
@@ -538,11 +546,9 @@ body::before {
 }
 
 .close-panel:active {
-  transform:scale(0.95);
-  animation:button-pop 0.3s;
+  animation:button-pop 0.2s;
 }
 
-/* НОВЫЙ ДИЗАЙН ВКЛАДОК */
 .panel-tabs{
   display:flex;
   flex-wrap:wrap;
@@ -598,8 +604,7 @@ body::before {
 }
 
 .tab:active {
-  transform:scale(0.95);
-  animation:button-pop 0.3s;
+  animation:button-pop 0.2s;
 }
 
 .tab.active{
@@ -624,7 +629,6 @@ body::before {
   to { opacity:1; transform:translateY(0); }
 }
 
-/* НОВЫЙ ДИЗАЙН КНОПОК ПРОКАЧКИ */
 .upgrades-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
@@ -678,20 +682,8 @@ body::before {
 }
 
 .upgrade-btn:active:not(:disabled) {
-  transform:scale(0.95);
-  animation:button-pop 0.3s;
-}
-
-.upgrade-btn:active:not(:disabled)::after {
-  content:'⚡';
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  font-size:30px;
-  color:white;
-  text-shadow:0 0 20px #00e0ff;
-  animation:quantum-burst 0.5s;
+  transform:scale(0.98);
+  transition:transform 0.1s;
 }
 
 .upgrade-btn:disabled{
@@ -724,7 +716,6 @@ body::before {
   border:1px solid rgba(255,209,102,0.4);
 }
 
-/* НОВЫЙ ДИЗАЙН МАГАЗИНА */
 .shop-tabs{
   display:flex;
   gap:8px;
@@ -773,8 +764,7 @@ body::before {
 }
 
 .shop-tab:active {
-  transform:scale(0.95);
-  animation:button-pop 0.3s;
+  animation:button-pop 0.2s;
 }
 
 .shop-tab.active{
@@ -812,20 +802,7 @@ body::before {
 
 .skin-card:active {
   transform:scale(0.98);
-  animation:button-pop 0.3s;
-}
-
-.skin-card:active::after {
-  content:'✦';
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  font-size:40px;
-  color:#ffd166;
-  text-shadow:0 0 30px gold;
-  animation:quantum-burst 0.5s;
-  z-index:10;
+  transition:transform 0.1s;
 }
 
 .skin-card.owned{
@@ -837,6 +814,12 @@ body::before {
 .skin-card.available{
   border-color:#00e0ff;
   box-shadow:0 0 20px rgba(0,224,255,0.3);
+}
+
+.skin-card.equipped{
+  border:4px solid #ffd700;
+  box-shadow:0 0 40px rgba(255,215,0,0.6);
+  animation:rainbow 3s linear infinite;
 }
 
 .skin-image{
@@ -894,7 +877,21 @@ body::before {
   animation:glow-pulse 1.5s infinite;
 }
 
-/* НОВЫЙ ДИЗАЙН МУЗЫКАЛЬНОЙ ПАНЕЛИ */
+.skin-equip-badge{
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:#ffd700;
+  color:#000;
+  padding:4px 8px;
+  border-radius:15px;
+  font-size:10px;
+  font-weight:bold;
+  z-index:5;
+  box-shadow:0 0 15px rgba(255,215,0,0.5);
+  animation:floating 2s ease-in-out infinite;
+}
+
 .music-panel{
   background:linear-gradient(145deg, rgba(30,20,60,0.95), rgba(20,15,40,0.95));
   border-radius:25px;
@@ -937,7 +934,7 @@ body::before {
   margin:20px 0;
   -webkit-appearance:none;
   background:linear-gradient(90deg, #00b4ff, #9d4edd);
-  height:8px;
+  height:10px;
   border-radius:5px;
   outline:none;
 }
@@ -961,7 +958,7 @@ body::before {
 
 .volume-slider::-webkit-slider-thumb:active {
   transform:scale(0.9);
-  animation:button-pop 0.3s;
+  transition:transform 0.1s;
 }
 
 .music-controls{
@@ -1010,8 +1007,7 @@ body::before {
 }
 
 .music-btn:active {
-  transform:scale(0.95);
-  animation:button-pop 0.3s;
+  animation:button-pop 0.2s;
 }
 
 .music-btn.active{
@@ -1019,6 +1015,17 @@ body::before {
   border-color:#81c784;
   box-shadow:0 0 25px rgba(76,175,80,0.6);
   animation:glow-pulse 1.5s infinite;
+}
+
+.music-btn.locked{
+  opacity:0.4;
+  cursor:not-allowed;
+  filter:grayscale(0.7);
+}
+
+.music-btn.locked:hover{
+  transform:none;
+  box-shadow:none;
 }
 
 .current-track{
@@ -1032,7 +1039,6 @@ body::before {
   text-align:center;
 }
 
-/* НОВЫЙ ДИЗАЙН АЧИВОК */
 .achievements-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
@@ -1060,7 +1066,7 @@ body::before {
 
 .achievement-card:active {
   transform:scale(0.98);
-  animation:button-pop 0.3s;
+  transition:transform 0.1s;
 }
 
 .achievement-card.unlocked{
@@ -1117,7 +1123,6 @@ body::before {
   animation:shimmer 2s infinite;
 }
 
-/* НОВЫЙ ДИЗАЙН МЕНЮ */
 .menu-content{
   max-width:600px;
   margin:0 auto;
@@ -1173,10 +1178,6 @@ body::before {
   animation:shake 0.5s;
 }
 
-.stellar-code-input:invalid {
-  animation:shake 0.5s;
-}
-
 .stellar-activate-btn{
   width:100%;
   padding:16px;
@@ -1187,7 +1188,7 @@ body::before {
   font-weight:800;
   font-size:16px;
   cursor:pointer;
-  transition:all 0.4s;
+  transition:all 0.3s;
   font-family:'Orbitron', sans-serif;
   letter-spacing:1.5px;
   text-transform:uppercase;
@@ -1217,8 +1218,8 @@ body::before {
 }
 
 .stellar-activate-btn:active {
-  transform:scale(0.95);
-  animation:button-pop 0.3s;
+  transform:scale(0.98);
+  transition:transform 0.1s;
 }
 
 .discord-link{
@@ -1234,7 +1235,7 @@ body::before {
   font-weight:800;
   font-size:16px;
   margin-top:25px;
-  transition:all 0.4s;
+  transition:all 0.3s;
   width:100%;
   max-width:350px;
   position:relative;
@@ -1263,7 +1264,7 @@ body::before {
 
 .discord-link:active {
   transform:scale(0.98);
-  animation:button-pop 0.3s;
+  transition:transform 0.1s;
 }
 
 .stellar-message{
@@ -1276,7 +1277,6 @@ body::before {
   animation:glow-pulse 1.5s infinite;
 }
 
-/* Эффекты частиц при покупке */
 .purchase-particle {
   position:absolute;
   width:5px;
@@ -1299,7 +1299,63 @@ body::before {
   }
 }
 
-/* Адаптивность */
+.secret-panel{
+  background:linear-gradient(145deg, rgba(255,215,0,0.2), rgba(255,140,0,0.2));
+  border:3px solid #ffd700;
+  border-radius:25px;
+  padding:20px;
+  margin:20px 0;
+  animation:rainbow 5s linear infinite;
+}
+
+.secret-title{
+  font-size:24px;
+  font-weight:800;
+  color:#ffd700;
+  text-shadow:0 0 20px rgba(255,215,0,0.5);
+  margin-bottom:15px;
+  animation:floating 3s ease-in-out infinite;
+}
+
+.joke-container{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+  gap:15px;
+  padding:15px;
+}
+
+.joke-card{
+  background:rgba(0,0,0,0.5);
+  border-radius:15px;
+  padding:15px;
+  border:2px solid #ffd700;
+  text-align:center;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.joke-card:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 30px rgba(255,215,0,0.5);
+}
+
+.joke-card:active{
+  transform:scale(0.98);
+}
+
+.joke-text{
+  font-size:14px;
+  color:#fff;
+  margin-bottom:10px;
+  line-height:1.4;
+}
+
+.joke-laugh{
+  font-size:12px;
+  color:#ffd700;
+  opacity:0.8;
+}
+
 @media (max-width: 480px){
   .stats-container{grid-template-columns:1fr;}
   .game-info{grid-template-columns:1fr;}
@@ -1316,14 +1372,13 @@ body::before {
 <body>
 
 <div class="game-container">
-  <!-- Верхняя панель с анимированными кнопками -->
   <div class="top-bar">
     <button class="astro-btn" onclick="toggleStellarMenu()" style="--i:1">☰ СТАНЦИЯ</button>
     <button class="astro-btn" onclick="toggleQuantumUpgrades()" style="--i:2">▲ ПРОКАЧКА</button>
     <button class="astro-btn" onclick="toggleAchievements()" style="--i:3">🏆 АЧИВКИ</button>
+    <button class="astro-btn" onclick="toggleJokesPanel()" style="--i:4" id="jokesTabBtn" disabled>😂 АНЕКДОТЫ</button>
   </div>
 
-  <!-- Анимированная статистика -->
   <div class="stats-container">
     <div class="stat-card" style="--i:1">
       <div class="stat-label">ЭНЕРГИЯ</div>
@@ -1343,7 +1398,6 @@ body::before {
     </div>
   </div>
 
-  <!-- Основной игровой блок с новым дизайном -->
   <div class="main-game-area">
     <div class="stellar-energy">ЭНЕРГИЯ: <span id="energyDisplay">0</span></div>
     
@@ -1376,27 +1430,30 @@ body::before {
   </div>
 </div>
 
-<!-- Панель меню -->
 <div class="panel" id="stellarMenu">
   <button class="close-panel" onclick="toggleStellarMenu()">×</button>
   <div class="menu-content">
     <div class="creator-signature">Let's GO</div>
     
-    <!-- МУЗЫКА ИСПРАВЛЕНА -->
     <div class="music-panel">
       <div class="music-title">🎵 КОСМИЧЕСКАЯ МУЗЫКА</div>
       
       <div style="color:#8bb9ff; margin-bottom:15px; font-size:14px;">ГРОМКОСТЬ</div>
-      <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
+      <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70" onchange="updateVolume(this.value)" oninput="updateVolume(this.value)">
       
       <div class="current-track" id="currentTrackName">
         🎧 ВЫБЕРИТЕ ТРЕК
       </div>
       
       <div class="music-controls">
-        <button class="music-btn" onclick="selectMusicTrack(0)">🎵 ТРЕК 1</button>
-        <button class="music-btn" onclick="selectMusicTrack(1)">🎵 ТРЕК 2</button>
-        <button class="music-btn" onclick="selectMusicTrack(2)">🎵 ТРЕК 3</button>
+        <button class="music-btn" onclick="selectMusicTrack(0)" id="musicTrack0">🎵 ТРЕК 1</button>
+        <button class="music-btn" onclick="selectMusicTrack(1)" id="musicTrack1">🎵 ТРЕК 2</button>
+        <button class="music-btn" onclick="selectMusicTrack(2)" id="musicTrack2">🎵 ТРЕК 3</button>
+      </div>
+      
+      <div class="music-controls">
+        <button class="music-btn" onclick="selectMusicTrack(3)" id="musicTrack3" disabled>🔒 ТРЕК 4</button>
+        <button class="music-btn" onclick="selectMusicTrack(4)" id="musicTrack4" disabled>🔒 ТРЕК 5</button>
       </div>
       
       <div class="music-controls">
@@ -1408,7 +1465,7 @@ body::before {
         🎧 СТАТУС: <span id="musicOwnedStatus">❌ НЕТ ДОСТУПА</span>
       </div>
       <div style="margin-top:10px; color:#8bb9ff; font-size:10px;">
-        📁 Файлы: music/track1.mp3, music/track2.mp3, music/track3.mp3
+        📁 Файлы: music/track1.mp3 - track5.mp3
       </div>
       <div id="musicPurchaseBtnContainer" style="margin-top:15px;"></div>
     </div>
@@ -1425,7 +1482,6 @@ body::before {
   </div>
 </div>
 
-<!-- Панель прокачки -->
 <div class="panel" id="quantumUpgrades">
   <button class="close-panel" onclick="toggleQuantumUpgrades()">×</button>
   
@@ -1484,7 +1540,6 @@ body::before {
   </div>
 </div>
 
-<!-- Панель ачивок -->
 <div class="panel" id="achievementsPanel">
   <button class="close-panel" onclick="toggleAchievements()">×</button>
   
@@ -1507,10 +1562,23 @@ body::before {
   <div class="achievements-grid" id="achievementsGrid"></div>
 </div>
 
-<script>
-// === НАЗВАНИЕ САЙТА: Let's GO ===
+<!-- НОВАЯ ПАНЕЛЬ С АНЕКДОТАМИ -->
+<div class="panel" id="jokesPanel">
+  <button class="close-panel" onclick="toggleJokesPanel()">×</button>
+  
+  <div class="secret-panel">
+    <div class="secret-title">😂 СЕКРЕТНЫЕ АНЕКДОТЫ</div>
+    <div style="color:#ffd700; text-align:center; margin-bottom:20px;">
+      ✦ Вы достигли 20 сингулярностей! ✦
+    </div>
+    
+    <div class="joke-container" id="jokesGrid">
+      <!-- Анекдоты будут добавлены JavaScript -->
+    </div>
+  </div>
+</div>
 
-// === КОСМИЧЕСКИЕ ПЕРЕМЕННЫЕ ===
+<script>
 let stellarEnergy = 0;
 let corePower = 1;
 let autoHarvest = 0;
@@ -1537,7 +1605,10 @@ let passiveIncome = 0;
 let luckMultiplier = 1;
 let rebirthBonus = 0;
 
-// === СЕКРЕТНЫЕ КОДЫ ===
+let equippedSkin = null;
+let equippedBg = null;
+let equippedSpecialSkin = null;
+
 let secretCodes = {
   '1324': { used: false },
   'XaR03': { used: false },
@@ -1549,7 +1620,6 @@ let secretCodes = {
   'QUASAR': { used: false }
 };
 
-// === МУЗЫКАЛЬНАЯ СИСТЕМА - ИСПРАВЛЕНА ===
 let audioContext = null;
 let audioEnabled = false;
 let currentTrack = 0;
@@ -1557,34 +1627,50 @@ let audioGainNode = null;
 let musicUnlocked = false;
 let musicPrice = 50000;
 let audioElements = [];
+let currentVolume = 70;
+let tracksUnlocked = 3;
+
+const jokes = [
+  { text: "Летит байт по проводу, а навстречу ему гигабайт. Байт спрашивает: 'Ты кто?'. Гигабайт отвечает: 'Я - 1024 тебя!'", laugh: "🤣😂🤣" },
+  { text: "Программист просыпается и говорит жене: 'Дорогая, я тебя люблю!'. Жена: 'Ты что, баги ловил всю ночь?'", laugh: "😆😆😆" },
+  { text: "Встречаются два хакера. Один говорит: 'Я взломал Пентагон!'. Второй: 'А я взломал холодильник - теперь колбаса сама выходит!'", laugh: "🤪🤪🤪" },
+  { text: "Приходит байт в бар и заказывает 8 бит пива.", laugh: "😁😁😁" },
+  { text: "Стоят два процессора на конвейере. Один другому: 'Ты чего такой грустный?'. Второй: 'Да понимаешь, меня сегодня уже третий раз перезагружают...'", laugh: "🤣🤣🤣" },
+  { text: "Космонавт прилетает на Марс, а там табличка: 'Добро пожаловать! Если ты с Земли - у нас тут тоже есть интернет, только ping 40 минут'", laugh: "😆😆😆" },
+  { text: "Илон Маск купил Twitter, а теперь хочет купить телеграм, чтобы сделать из него космический корабль", laugh: "🚀🚀🚀" },
+  { text: "Сингулярность - это когда твой компьютер думает быстрее, чем ты успеваешь кликать", laugh: "😵😵😵" },
+  { text: "Почему программисты не любят космос? Там слишком много багов!", laugh: "🐛🐛🐛" },
+  { text: "Встречаются 0 и 1. 0 говорит: 'Ты такой единичный!'. 1 отвечает: 'А ты такой нулевой...'", laugh: "😄😄😄" }
+];
 
 function initMusicTracks() {
-  // Создаем аудиоэлементы для каждого трека
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     let audio = new Audio();
     audio.loop = true;
-    audio.volume = 0.7;
+    audio.volume = currentVolume / 100;
     audioElements.push(audio);
   }
   
-  // Устанавливаем источники из папки music
   audioElements[0].src = 'music/track1.mp3';
   audioElements[1].src = 'music/track2.mp3';
   audioElements[2].src = 'music/track3.mp3';
+  audioElements[3].src = 'music/track4.mp3';
+  audioElements[4].src = 'music/track5.mp3';
   
-  // Обработчики ошибок
   audioElements.forEach((audio, index) => {
     audio.onerror = () => {
       console.log(`Ошибка загрузки трека ${index + 1}`);
-      document.getElementById('currentTrackName').innerHTML = '❌ ОШИБКА ЗАГРУЗКИ ТРЕКА';
     };
   });
 }
 
 initMusicTracks();
 
-function initAudio() {
-  // Уже инициализировано через Audio элементы
+function updateVolume(value) {
+  currentVolume = value;
+  audioElements.forEach(audio => {
+    audio.volume = currentVolume / 100;
+  });
 }
 
 function toggleMusic() {
@@ -1594,18 +1680,18 @@ function toggleMusic() {
   }
   
   if (audioEnabled) {
-    // Останавливаем все треки
     audioElements.forEach(audio => {
       audio.pause();
     });
     audioEnabled = false;
   } else {
-    // Запускаем выбранный трек
-    audioElements[currentTrack].play().catch(e => {
-      console.log('Ошибка воспроизведения:', e);
-      showStellarMessage('❌ Ошибка воспроизведения музыки', '#ff6b6b');
-    });
-    audioEnabled = true;
+    if (currentTrack < tracksUnlocked) {
+      audioElements[currentTrack].play().catch(e => {
+        console.log('Ошибка воспроизведения:', e);
+        showStellarMessage('❌ Ошибка воспроизведения музыки', '#ff6b6b');
+      });
+      audioEnabled = true;
+    }
   }
 }
 
@@ -1623,7 +1709,11 @@ function selectMusicTrack(index) {
     return; 
   }
   
-  // Останавливаем текущий трек если играет
+  if (index >= tracksUnlocked) {
+    showStellarMessage('❌ Этот трек ещё не разблокирован!', '#ff9800');
+    return;
+  }
+  
   if (audioEnabled) {
     audioElements.forEach(audio => audio.pause());
   }
@@ -1636,7 +1726,6 @@ function selectMusicTrack(index) {
     if (i === index) btn.classList.add('active'); else btn.classList.remove('active');
   });
   
-  // Если музыка была включена, запускаем новый трек
   if (audioEnabled) {
     audioElements[currentTrack].play().catch(e => {
       console.log('Ошибка воспроизведения:', e);
@@ -1650,11 +1739,20 @@ function purchaseMusicAccess() {
   musicUnlocked = true;
   musicPrice *= 2;
   document.getElementById('musicOwnedStatus').innerHTML = '✅ ДОСТУП ПОЛУЧЕН';
+  
+  // Разблокировка дополнительных треков
+  if (tracksUnlocked < 5) {
+    tracksUnlocked++;
+    document.getElementById(`musicTrack${tracksUnlocked-1}`).disabled = false;
+    document.getElementById(`musicTrack${tracksUnlocked-1}`).classList.remove('locked');
+    document.getElementById(`musicTrack${tracksUnlocked-1}`).innerHTML = `🎵 ТРЕК ${tracksUnlocked}`;
+    showStellarMessage(`✅ Разблокирован трек ${tracksUnlocked}!`, '#4caf50');
+  }
+  
   updateCosmicInterface();
   renderMusicPurchaseButton();
   checkAchievements();
   
-  // Создаем частицы при покупке
   createPurchaseParticles();
   
   return true;
@@ -1673,6 +1771,13 @@ function renderMusicPurchaseButton() {
       if (stellarEnergy >= musicPrice) {
         stellarEnergy -= musicPrice;
         musicPrice *= 2;
+        if (tracksUnlocked < 5) {
+          tracksUnlocked++;
+          document.getElementById(`musicTrack${tracksUnlocked-1}`).disabled = false;
+          document.getElementById(`musicTrack${tracksUnlocked-1}`).classList.remove('locked');
+          document.getElementById(`musicTrack${tracksUnlocked-1}`).innerHTML = `🎵 ТРЕК ${tracksUnlocked}`;
+          showStellarMessage(`✅ Разблокирован трек ${tracksUnlocked}!`, '#4caf50');
+        }
         updateCosmicInterface();
         renderMusicPurchaseButton();
         createPurchaseParticles();
@@ -1686,7 +1791,6 @@ function renderMusicPurchaseButton() {
   container.appendChild(btn);
 }
 
-// === ФУНКЦИЯ ДЛЯ ЧАСТИЦ ПРИ ПОКУПКЕ ===
 function createPurchaseParticles() {
   for (let i = 0; i < 20; i++) {
     setTimeout(() => {
@@ -1702,28 +1806,10 @@ function createPurchaseParticles() {
   }
 }
 
-// === ФУНКЦИЯ ДЛЯ ЭФФЕКТА ПРИ ПОКУПКЕ ===
-function createPurchaseEffect(x, y) {
-  for (let i = 0; i < 15; i++) {
-    setTimeout(() => {
-      const particle = document.createElement('div');
-      particle.className = 'purchase-particle';
-      particle.style.left = x + 'px';
-      particle.style.top = y + 'px';
-      particle.style.setProperty('--tx', (Math.random() - 0.5) * 150 + 'px');
-      particle.style.setProperty('--ty', (Math.random() - 0.5) * 150 + 'px');
-      document.body.appendChild(particle);
-      setTimeout(() => particle.remove(), 1000);
-    }, i * 30);
-  }
-}
-
-// === ПРОГРЕССИВНАЯ СТОИМОСТЬ REBIRTH ===
 function getRebirthCost() {
   return 10000000 * Math.pow(2, quantumGeneration);
 }
 
-// === МАССИВЫ ПРОКАЧКИ ===
 const clickUpgrades = [
   {power:1, price:20, name:"Базовый импульс"},
   {power:5, price:100, name:"Протонный всплеск"},
@@ -1832,7 +1918,6 @@ const bonusUpgrades = [
   {type:'luck', value:0.5, price:15625000000, name:"Удача III"}
 ];
 
-// === СКИНЫ ===
 const originalSkins = [
   {name:'Туманность Андромеды',price:500,url:'https://wallpaper.forfun.com/fetch/8d/8dbdaf8bd40e873ddb331cad3c246db3.jpeg'},
   {name:'Облако Сингулярности',price:1200,url:'https://media.istockphoto.com/id/1498666644/ru/%D1%84%D0%BE%D1%82%D0%BE/%D0%BE%D0%B1%D0%BB%D0%B0%D0%BA%D0%B0-%D1%87%D0%B5%D1%80%D0%BD%D0%BE%D0%B9-%D0%B4%D1%8B%D1%80%D1%8B-%D0%B2%D1%8B%D1%81%D0%BE%D0%BA%D0%BE%D0%BA%D0%B0%D1%87%D0%B5%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%BD%D0%B4%D0%B5%D1%80%D0%B8%D0%BD%D0%B3.jpg'},
@@ -1889,7 +1974,6 @@ const backgrounds = [
   {name:'Рождение Звезды',price:1000000,url:'https://cdn.pixabay.com/photo/2016/11/29/05/45/astronomy-1867616_1280.jpg'}
 ];
 
-// === АЧИВКИ ===
 const achievements = [
   {id:'first_click', name:'Первый шаг', desc:'Совершите первый клик', icon:'👣', condition:()=>totalClicks>=1, reward:{energy:100}, progress:()=>Math.min(totalClicks,1)},
   {id:'click_master', name:'Мастер клика', desc:'100 кликов', icon:'⚡', condition:()=>totalClicks>=100, reward:{multiplier:1.1}, progress:()=>Math.min(totalClicks/100,1)},
@@ -1934,7 +2018,6 @@ const ownedBackgrounds = new Set();
 const ownedSpecialSkins = new Set();
 const novaCore = document.getElementById('novaCore');
 
-// === ФОРМАТИРОВАНИЕ ЧИСЕЛ ===
 function formatNumber(num) {
   if (num >= 1000000000000000) return (num / 1000000000000000).toFixed(1) + 'Q';
   if (num >= 1000000000000) return (num / 1000000000000).toFixed(1) + 'T';
@@ -1944,7 +2027,6 @@ function formatNumber(num) {
   return num.toString();
 }
 
-// === КВАНТОВЫЙ ВСПЛЕСК ===
 function createQuantumFlare(x, y, val, color = null) {
   const flare = document.createElement('div');
   flare.className = 'quantum-flare';
@@ -1957,7 +2039,6 @@ function createQuantumFlare(x, y, val, color = null) {
   setTimeout(() => flare.remove(), 1000);
 }
 
-// === ОБРАБОТКА КЛИКА ===
 function handleClick(x, y) {
   const now = Date.now();
   if (now - lastClickTime < 1000) {
@@ -1984,9 +2065,6 @@ function handleClick(x, y) {
   
   updateCosmicInterface();
   checkAchievements();
-  
-  // Создаем эффект частиц при клике
-  createPurchaseEffect(x + novaCore.offsetLeft, y + novaCore.offsetTop);
 }
 
 novaCore.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
@@ -2001,7 +2079,6 @@ novaCore.onclick = (e) => {
   handleClick(e.clientX - rect.left, e.clientY - rect.top);
 };
 
-// === АВТО-СБОР ===
 setInterval(() => {
   let earned = autoHarvest * quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier;
   earned += energyRegen * (1 + passiveIncome);
@@ -2016,7 +2093,6 @@ setInterval(() => {
   checkAchievements();
 }, 1000);
 
-// === ПРОВЕРКА АЧИВОК ===
 function checkAchievements() {
   let newAchievements = false;
   achievements.forEach(achievement => {
@@ -2031,9 +2107,13 @@ function checkAchievements() {
     updateAchievementsDisplay();
     createPurchaseParticles();
   }
+  
+  // Проверка для разблокировки анекдотов
+  if (quantumGeneration >= 20) {
+    document.getElementById('jokesTabBtn').disabled = false;
+  }
 }
 
-// === ОБНОВЛЕНИЕ ДИСПЛЕЯ АЧИВОК ===
 function updateAchievementsDisplay() {
   const unlockedCount = unlockedAchievements.size;
   document.getElementById('achievementsUnlocked').textContent = `${unlockedCount}/${achievements.length}`;
@@ -2064,7 +2144,26 @@ function updateAchievementsDisplay() {
   });
 }
 
-// === АКТИВАЦИЯ СЕКРЕТНЫХ КОДОВ ===
+function renderJokes() {
+  const container = document.getElementById('jokesGrid');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  jokes.forEach((joke, index) => {
+    const card = document.createElement('div');
+    card.className = 'joke-card';
+    card.innerHTML = `
+      <div class="joke-text">${joke.text}</div>
+      <div class="joke-laugh">${joke.laugh}</div>
+    `;
+    card.onclick = () => {
+      createPurchaseParticles();
+      showStellarMessage(joke.laugh, '#ffd700');
+    };
+    container.appendChild(card);
+  });
+}
+
 function activateStellarCode() {
   const codeInput = document.getElementById('stellarCode');
   const code = codeInput.value.trim();
@@ -2152,6 +2251,15 @@ function activateStellarCode() {
     createPurchaseParticles();
     updateCosmicInterface(); checkAchievements();
   }
+  else if (code === 'REFORMOTI') {
+    stellarEnergy += 1000000000;
+    quantumMulti *= 10;
+    criticalChance += 25;
+    showStellarMessage('✨ СЕКРЕТНЫЙ КОД РАЗРАБОТЧИКА!', '#ffd700');
+    codeInput.value = '';
+    createPurchaseParticles();
+    updateCosmicInterface(); checkAchievements();
+  }
   else {
     showStellarMessage('❌ НЕВЕРНЫЙ КОД!', '#ff6b6b');
   }
@@ -2165,7 +2273,6 @@ function showStellarMessage(text, color) {
   setTimeout(() => msg.style.display = 'none', 3000);
 }
 
-// === ВКЛАДКИ ===
 function openTab(id, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -2184,6 +2291,7 @@ function toggleStellarMenu() {
   document.getElementById('stellarMenu').classList.toggle('active');
   document.getElementById('quantumUpgrades').classList.remove('active');
   document.getElementById('achievementsPanel').classList.remove('active');
+  document.getElementById('jokesPanel').classList.remove('active');
   renderMusicPurchaseButton();
 }
 
@@ -2191,16 +2299,27 @@ function toggleQuantumUpgrades() {
   document.getElementById('quantumUpgrades').classList.toggle('active');
   document.getElementById('stellarMenu').classList.remove('active');
   document.getElementById('achievementsPanel').classList.remove('active');
+  document.getElementById('jokesPanel').classList.remove('active');
 }
 
 function toggleAchievements() {
   document.getElementById('achievementsPanel').classList.toggle('active');
   document.getElementById('stellarMenu').classList.remove('active');
   document.getElementById('quantumUpgrades').classList.remove('active');
+  document.getElementById('jokesPanel').classList.remove('active');
   updateAchievementsDisplay();
 }
 
-// === БОНУС СКИНОВ ===
+function toggleJokesPanel() {
+  if (quantumGeneration >= 20) {
+    document.getElementById('jokesPanel').classList.toggle('active');
+    document.getElementById('stellarMenu').classList.remove('active');
+    document.getElementById('quantumUpgrades').classList.remove('active');
+    document.getElementById('achievementsPanel').classList.remove('active');
+    renderJokes();
+  }
+}
+
 function calculateSkinBonus() {
   const totalSkins = ownedSkins.size + ownedSpecialSkins.size;
   if (totalSkins === 0) return 1;
@@ -2210,7 +2329,6 @@ function calculateSkinBonus() {
   return bonus;
 }
 
-// === ПРОКАЧКА ===
 function renderClickUpgrades() {
   const container = document.getElementById('clickUpgradesGrid');
   container.innerHTML = '';
@@ -2338,15 +2456,21 @@ function renderBonusUpgrades() {
   });
 }
 
-// === МАГАЗИН СКИНОВ ===
 function renderSkins() {
   const container = document.getElementById('skinsGrid');
   container.innerHTML = '';
   originalSkins.forEach(skin => {
     const owned = ownedSkins.has(skin.name);
+    const equipped = equippedSkin === skin.name;
     const card = document.createElement('div');
-    card.className = `skin-card ${owned ? 'owned' : ''}`;
-    card.innerHTML = `${owned ? '<div class="skin-owned-badge">✓</div>' : ''}<img src="${skin.url}" class="skin-image" loading="lazy" onerror="this.src='https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'"><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? 'КУПЛЕНО' : formatNumber(skin.price) + ' ЭН'}</div></div>`;
+    card.className = `skin-card ${owned ? 'owned' : ''} ${equipped ? 'equipped' : ''}`;
+    
+    let badges = '';
+    if (owned) badges += '<div class="skin-owned-badge">✓</div>';
+    if (equipped) badges += '<div class="skin-equip-badge">👑</div>';
+    
+    card.innerHTML = `${badges}<img src="${skin.url}" class="skin-image" loading="lazy" onerror="this.src='https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'"><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? (equipped ? 'НАДЕТО' : 'В ГАРДЕРОБЕ') : formatNumber(skin.price) + ' ЭН'}</div></div>`;
+    
     if (!owned) {
       if (stellarEnergy >= skin.price) card.classList.add('available');
       card.onclick = () => {
@@ -2354,12 +2478,21 @@ function renderSkins() {
         ownedSkins.add(skin.name);
         stellarEnergy -= skin.price;
         skinsPurchased++;
-        novaCore.style.backgroundImage = `url('${skin.url}')`;
         skinBonusMulti = calculateSkinBonus();
         createPurchaseParticles();
         updateCosmicInterface();
         checkAchievements();
         renderSkins();
+      };
+    } else {
+      card.onclick = () => {
+        equippedSkin = skin.name;
+        equippedSpecialSkin = null;
+        novaCore.style.backgroundImage = `url('${skin.url}')`;
+        createPurchaseParticles();
+        showStellarMessage(`✅ Надет скин: ${skin.name}`, '#4caf50');
+        renderSkins();
+        renderSpecialSkins();
       };
     }
     container.appendChild(card);
@@ -2371,9 +2504,16 @@ function renderSpecialSkins() {
   container.innerHTML = '';
   specialSkins.forEach(skin => {
     const owned = ownedSpecialSkins.has(skin.name);
+    const equipped = equippedSpecialSkin === skin.name;
     const card = document.createElement('div');
-    card.className = `skin-card ${owned ? 'owned' : ''}`;
-    card.innerHTML = `${owned ? '<div class="skin-owned-badge">✓</div>' : ''}<img src="${skin.url}" class="skin-image" loading="lazy" onerror="this.src='https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'"><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? 'КУПЛЕНО' : formatNumber(skin.price) + ' ЭН'}</div></div>`;
+    card.className = `skin-card ${owned ? 'owned' : ''} ${equipped ? 'equipped' : ''}`;
+    
+    let badges = '';
+    if (owned) badges += '<div class="skin-owned-badge">✓</div>';
+    if (equipped) badges += '<div class="skin-equip-badge">👑</div>';
+    
+    card.innerHTML = `${badges}<img src="${skin.url}" class="skin-image" loading="lazy" onerror="this.src='https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'"><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? (equipped ? 'НАДЕТО' : 'В ГАРДЕРОБЕ') : formatNumber(skin.price) + ' ЭН'}</div></div>`;
+    
     if (!owned) {
       if (stellarEnergy >= skin.price) card.classList.add('available');
       card.onclick = () => {
@@ -2382,11 +2522,20 @@ function renderSpecialSkins() {
         stellarEnergy -= skin.price;
         skinsPurchased++;
         specialSkinsPurchased++;
-        novaCore.style.backgroundImage = `url('${skin.url}')`;
         skinBonusMulti = calculateSkinBonus();
         createPurchaseParticles();
         updateCosmicInterface();
         checkAchievements();
+        renderSpecialSkins();
+      };
+    } else {
+      card.onclick = () => {
+        equippedSpecialSkin = skin.name;
+        equippedSkin = null;
+        novaCore.style.backgroundImage = `url('${skin.url}')`;
+        createPurchaseParticles();
+        showStellarMessage(`✅ Надет эксклюзив: ${skin.name}`, '#ffd700');
+        renderSkins();
         renderSpecialSkins();
       };
     }
@@ -2399,9 +2548,16 @@ function renderBackgrounds() {
   container.innerHTML = '';
   backgrounds.forEach(bg => {
     const owned = ownedBackgrounds.has(bg.name);
+    const equipped = equippedBg === bg.name;
     const card = document.createElement('div');
-    card.className = `skin-card ${owned ? 'owned' : ''}`;
-    card.innerHTML = `${owned ? '<div class="skin-owned-badge">✓</div>' : ''}<img src="${bg.url}" class="skin-image" loading="lazy" onerror="this.src='https://images.wallpaperscraft.ru/image/single/kosmos_zvezdy_tumannost_157030_3840x2400.jpg'"><div class="skin-info"><div class="skin-name">${bg.name}</div><div class="skin-price">${owned ? 'КУПЛЕНО' : formatNumber(bg.price) + ' ЭН'}</div></div>`;
+    card.className = `skin-card ${owned ? 'owned' : ''} ${equipped ? 'equipped' : ''}`;
+    
+    let badges = '';
+    if (owned) badges += '<div class="skin-owned-badge">✓</div>';
+    if (equipped) badges += '<div class="skin-equip-badge">🌟</div>';
+    
+    card.innerHTML = `${badges}<img src="${bg.url}" class="skin-image" loading="lazy" onerror="this.src='https://images.wallpaperscraft.ru/image/single/kosmos_zvezdy_tumannost_157030_3840x2400.jpg'"><div class="skin-info"><div class="skin-name">${bg.name}</div><div class="skin-price">${owned ? (equipped ? 'АКТИВЕН' : 'В КОЛЛЕКЦИИ') : formatNumber(bg.price) + ' ЭН'}</div></div>`;
+    
     if (!owned) {
       if (stellarEnergy >= bg.price) card.classList.add('available');
       card.onclick = () => {
@@ -2409,10 +2565,17 @@ function renderBackgrounds() {
         ownedBackgrounds.add(bg.name);
         stellarEnergy -= bg.price;
         backgroundsPurchased++;
-        document.body.style.backgroundImage = `url('${bg.url}')`;
         createPurchaseParticles();
         updateCosmicInterface();
         checkAchievements();
+        renderBackgrounds();
+      };
+    } else {
+      card.onclick = () => {
+        equippedBg = bg.name;
+        document.body.style.backgroundImage = `url('${bg.url}')`;
+        createPurchaseParticles();
+        showStellarMessage(`✅ Установлен фон: ${bg.name}`, '#00b4ff');
         renderBackgrounds();
       };
     }
@@ -2420,7 +2583,6 @@ function renderBackgrounds() {
   });
 }
 
-// === СИНГУЛЯРНОСТЬ ===
 function quantumSingularity() {
   const cost = getRebirthCost();
   if (stellarEnergy < cost) return;
@@ -2444,9 +2606,14 @@ function quantumSingularity() {
   createPurchaseParticles();
   updateCosmicInterface();
   checkAchievements();
+  
+  // Проверка на разблокировку анекдотов
+  if (quantumGeneration >= 20) {
+    document.getElementById('jokesTabBtn').disabled = false;
+    showStellarMessage('🎉 Открыта секретная вкладка с анекдотами!', '#ffd700');
+  }
 }
 
-// === ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ===
 function updateCosmicInterface() {
   skinBonusMulti = calculateSkinBonus();
   const totalMulti = quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier * clickCombo;
@@ -2477,17 +2644,32 @@ function updateCosmicInterface() {
   renderBackgrounds();
 }
 
-// === ИНИЦИАЛИЗАЦИЯ ===
 updateCosmicInterface();
 updateAchievementsDisplay();
 
-// === ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ===
 const style = document.createElement('style');
 style.textContent = `
   .stellar-message { color: #00e0ff; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; text-shadow: 0 0 15px rgba(0,224,255,0.5); }
   .shop-tab-content { display: none; }
   .shop-tab-content.active { display: block; }
   .skin-card.available { border-color: #00e0ff; }
+  .quantum-flare {
+    position:absolute;
+    font-weight:800;
+    font-size:20px;
+    animation:flare-float 0.8s forwards;
+    pointer-events:none;
+    text-shadow:0 0 20px currentColor;
+    z-index:100;
+  }
+  @keyframes flare-float {
+    0% { opacity:1; transform:translateY(0) scale(1); }
+    100% { opacity:0; transform:translateY(-50px) scale(1.5); }
+  }
+  #jokesTabBtn:disabled {
+    opacity:0.3;
+    cursor:not-allowed;
+  }
 `;
 document.head.appendChild(style);
 </script>
