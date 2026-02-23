@@ -929,7 +929,6 @@ body::before {
   z-index:2;
 }
 
-/* НОВЫЙ КРУТИЛКА ГРОМКОСТИ - КОСМИЧЕСКОЕ КОЛЬЦО */
 .volume-container {
   display:flex;
   flex-direction:column;
@@ -1017,119 +1016,115 @@ body::before {
   display:none;
 }
 
-.music-controls{
+/* ОБНОВЛЕННЫЙ БЛОК УПРАВЛЕНИЯ МУЗЫКОЙ */
+.music-controls {
   display:flex;
-  gap:12px;
+  gap:10px;
   justify-content:center;
-  margin-top:20px;
+  margin:20px 0;
   flex-wrap:wrap;
 }
 
-.music-btn{
+.music-control-btn {
   background:linear-gradient(145deg, rgba(40,50,90,0.9), rgba(30,40,80,0.9));
-  border:none;
-  color:white;
-  padding:12px 20px;
-  border-radius:15px;
-  cursor:pointer;
-  font-size:13px;
-  font-weight:600;
   border:2px solid rgba(88,179,255,0.4);
+  color:white;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  font-size:20px;
+  cursor:pointer;
   transition:all 0.3s;
-  min-width:110px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   position:relative;
   overflow:hidden;
 }
 
-.music-btn::before {
+.music-control-btn:hover {
+  transform:scale(1.1);
+  border-color:#00b4ff;
+  box-shadow:0 0 20px rgba(0,180,255,0.5);
+}
+
+.music-control-btn:active {
+  transform:scale(0.95);
+}
+
+.music-control-btn.active {
+  background:linear-gradient(145deg, #4caf50, #45a049);
+  border-color:#81c784;
+  animation:glow-pulse 1.5s infinite;
+}
+
+.music-control-btn.play-pause {
+  width:60px;
+  height:60px;
+  font-size:24px;
+  background:linear-gradient(145deg, #00b4ff, #4a00e0);
+}
+
+.music-track-selector {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:20px 0;
+  flex-wrap:wrap;
+}
+
+.music-track-btn {
+  background:linear-gradient(145deg, rgba(30,20,60,0.8), rgba(20,15,40,0.8));
+  border:2px solid rgba(88,179,255,0.3);
+  border-radius:15px;
+  padding:12px 20px;
+  color:#a0c8ff;
+  cursor:pointer;
+  transition:all 0.3s;
+  min-width:80px;
+  text-align:center;
+  font-weight:600;
+  position:relative;
+  overflow:hidden;
+}
+
+.music-track-btn::before {
   content:'';
   position:absolute;
   top:0;
   left:-100%;
   width:100%;
   height:100%;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
   transition:0.5s;
 }
 
-.music-btn:hover {
+.music-track-btn:hover {
   transform:translateY(-3px);
-  background:linear-gradient(145deg, rgba(60,70,120,0.9), rgba(50,60,110,0.9));
-  box-shadow:0 8px 20px rgba(88,179,255,0.4);
+  border-color:#00b4ff;
+  color:#fff;
+  box-shadow:0 10px 20px rgba(0,180,255,0.3);
 }
 
-.music-btn:hover::before {
+.music-track-btn:hover::before {
   left:100%;
 }
 
-.music-btn:active {
-  animation:button-pop 0.2s;
+.music-track-btn.active {
+  background:linear-gradient(145deg, #00b4ff, #4a00e0);
+  color:#fff;
+  border-color:rgba(255,255,255,0.5);
+  animation:glow-pulse 2s infinite;
 }
 
-.music-btn.active{
-  background:linear-gradient(145deg, #4caf50, #45a049);
-  border-color:#81c784;
-  box-shadow:0 0 25px rgba(76,175,80,0.6);
-  animation:glow-pulse 1.5s infinite;
-}
-
-.music-btn.hidden {
-  display:none;
-}
-
-.music-track-container {
-  display:grid;
-  grid-template-columns:repeat(5, 1fr);
-  gap:10px;
-  margin:20px 0;
-}
-
-.music-track {
-  background:linear-gradient(145deg, rgba(30,20,60,0.8), rgba(20,15,40,0.8));
-  border-radius:12px;
-  padding:10px;
-  text-align:center;
-  border:2px solid rgba(88,179,255,0.3);
-  transition:0.3s;
-}
-
-.music-track.locked {
-  opacity:0.3;
-  filter:blur(2px);
+.music-track-btn.locked {
+  opacity:0.5;
+  filter:blur(1px);
   pointer-events:none;
+  background:rgba(50,50,70,0.5);
 }
 
-.music-track.unlocked {
-  cursor:pointer;
-}
-
-.music-track.unlocked:hover {
-  transform:translateY(-3px);
-  border-color:#00b4ff;
-}
-
-.music-track.active {
-  border-color:#4caf50;
-  box-shadow:0 0 20px rgba(76,175,80,0.5);
-}
-
-.music-track-number {
-  font-size:14px;
-  font-weight:bold;
-  color:#8bb9ff;
-}
-
-.music-track-icon {
-  font-size:24px;
-  margin:5px 0;
-}
-
-.music-track-name {
-  font-size:10px;
-  color:#a0c8ff;
-}
-
-.current-track{
+.current-track-display {
   color:#a0c8ff;
   font-size:14px;
   margin:15px 0;
@@ -1138,6 +1133,16 @@ body::before {
   border-radius:15px;
   border:1px solid rgba(88,179,255,0.3);
   text-align:center;
+}
+
+.track-number-badge {
+  display:inline-block;
+  background:#00b4ff;
+  color:white;
+  padding:2px 8px;
+  border-radius:12px;
+  font-size:12px;
+  margin-left:10px;
 }
 
 .achievements-grid{
@@ -1463,13 +1468,10 @@ body::before {
   .upgrades-grid{grid-template-columns:1fr;}
   .shop-container{grid-template-columns:1fr;}
   .achievements-grid{grid-template-columns:1fr;}
-  .music-controls{flex-direction:column;}
-  .music-btn{width:100%;}
+  .music-controls{flex-wrap:wrap;}
+  .music-track-selector{flex-wrap:wrap;}
   .panel-tabs{flex-direction:column;}
   .tab{width:100%;}
-  .music-track-container {
-    grid-template-columns:repeat(2, 1fr);
-  }
 }
 </style>
 </head>
@@ -1542,7 +1544,7 @@ body::before {
     <div class="music-panel">
       <div class="music-title">🎵 КОСМИЧЕСКАЯ МУЗЫКА</div>
       
-      <!-- НОВЫЙ КРУТИЛКА ГРОМКОСТИ -->
+      <!-- Крутилка громкости -->
       <div class="volume-container">
         <div class="volume-ring" onclick="rotateVolume(event)">
           <div class="volume-ring-bg"></div>
@@ -1554,38 +1556,27 @@ body::before {
         <div class="volume-value" id="volumeDisplay">70%</div>
       </div>
       
-      <!-- ТРЕКИ - НЕВИДИМЫЕ ДО ПОКУПКИ -->
-      <div class="music-track-container" id="musicTrackContainer">
-        <div class="music-track locked" id="musicTrack1">
-          <div class="music-track-number">#1</div>
-          <div class="music-track-icon">🔒</div>
-          <div class="music-track-name">Заблокировано</div>
-        </div>
-        <div class="music-track locked" id="musicTrack2">
-          <div class="music-track-number">#2</div>
-          <div class="music-track-icon">🔒</div>
-          <div class="music-track-name">Заблокировано</div>
-        </div>
-        <div class="music-track locked" id="musicTrack3">
-          <div class="music-track-number">#3</div>
-          <div class="music-track-icon">🔒</div>
-          <div class="music-track-name">Заблокировано</div>
-        </div>
-        <div class="music-track locked" id="musicTrack4">
-          <div class="music-track-number">#4</div>
-          <div class="music-track-icon">🔒</div>
-          <div class="music-track-name">Заблокировано</div>
-        </div>
-        <div class="music-track locked" id="musicTrack5">
-          <div class="music-track-number">#5</div>
-          <div class="music-track-icon">🔒</div>
-          <div class="music-track-name">Заблокировано</div>
-        </div>
+      <!-- КНОПКИ УПРАВЛЕНИЯ МУЗЫКОЙ (ОБНОВЛЕНО) -->
+      <div class="music-controls">
+        <button class="music-control-btn" onclick="prevTrack()" title="Предыдущий трек">⏮️</button>
+        <button class="music-control-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()">▶️</button>
+        <button class="music-control-btn" onclick="nextTrack()" title="Следующий трек">⏭️</button>
+        <button class="music-control-btn" onclick="stopMusic()" title="Стоп">⏹️</button>
       </div>
       
-      <div class="music-controls">
-        <button class="music-btn" onclick="toggleMusic()">⏯️ СТАРТ/ПАУЗА</button>
-        <button class="music-btn" onclick="stopMusic()">⏹️ СТОП</button>
+      <!-- ВЫБОР ТРЕКОВ -->
+      <div class="music-track-selector" id="musicTrackSelector">
+        <button class="music-track-btn locked" id="trackBtn1" onclick="selectTrack(0)">#1</button>
+        <button class="music-track-btn locked" id="trackBtn2" onclick="selectTrack(1)">#2</button>
+        <button class="music-track-btn locked" id="trackBtn3" onclick="selectTrack(2)">#3</button>
+        <button class="music-track-btn locked" id="trackBtn4" onclick="selectTrack(3)">#4</button>
+        <button class="music-track-btn locked" id="trackBtn5" onclick="selectTrack(4)">#5</button>
+      </div>
+      
+      <!-- ТЕКУЩИЙ ТРЕК -->
+      <div class="current-track-display" id="currentTrackDisplay">
+        ⏸️ Текущий трек: <span id="currentTrackName">Не выбран</span>
+        <span class="track-number-badge" id="trackNumberBadge">0/5</span>
       </div>
       
       <div style="margin-top:20px; color:#a0c8ff; font-size:11px;">
@@ -1744,64 +1735,277 @@ let secretCodes = {
   'QUASAR': { used: false }
 };
 
+// ========== МУЗЫКАЛЬНАЯ СИСТЕМА (ОБНОВЛЕНО) ==========
 let audioContext = null;
 let audioEnabled = false;
 let currentTrack = 0;
 let audioGainNode = null;
 let musicUnlocked = false;
 let musicPrice = 50000;
-let audioElements = [];
-let currentVolume = 70;
 let tracksUnlocked = 0;
+let currentVolume = 70;
 let isDraggingVolume = false;
 
-const jokes = [
-  { text: "Летит байт по проводу, а навстречу ему гигабайт. Байт спрашивает: 'Ты кто?'. Гигабайт отвечает: 'Я - 1024 тебя!'", laugh: "🤣😂🤣" },
-  { text: "Программист просыпается и говорит жене: 'Дорогая, я тебя люблю!'. Жена: 'Ты что, баги ловил всю ночь?'", laugh: "😆😆😆" },
-  { text: "Встречаются два хакера. Один говорит: 'Я взломал Пентагон!'. Второй: 'А я взломал холодильник - теперь колбаса сама выходит!'", laugh: "🤪🤪🤪" },
-  { text: "Приходит байт в бар и заказывает 8 бит пива.", laugh: "😁😁😁" },
-  { text: "Стоят два процессора на конвейере. Один другому: 'Ты чего такой грустный?'. Второй: 'Да понимаешь, меня сегодня уже третий раз перезагружают...'", laugh: "🤣🤣🤣" },
-  { text: "Космонавт прилетает на Марс, а там табличка: 'Добро пожаловать! Если ты с Земли - у нас тут тоже есть интернет, только ping 40 минут'", laugh: "😆😆😆" },
-  { text: "Илон Маск купил Twitter, а теперь хочет купить телеграм, чтобы сделать из него космический корабль", laugh: "🚀🚀🚀" },
-  { text: "Сингулярность - это когда твой компьютер думает быстрее, чем ты успеваешь кликать", laugh: "😵😵😵" },
-  { text: "Почему программисты не любят космос? Там слишком много багов!", laugh: "🐛🐛🐛" },
-  { text: "Встречаются 0 и 1. 0 говорит: 'Ты такой единичный!'. 1 отвечает: 'А ты такой нулевой...'", laugh: "😄😄😄" }
+// Массив с URL треков (замените на свои ссылки)
+const trackUrls = [
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3'
 ];
+
+// Массив с названиями треков
+const trackNames = [
+  'Космическая симфония',
+  'Галактический вальс',
+  'Туманность Ориона',
+  'Пульсар',
+  'Черная дыра'
+];
+
+let audioElements = [];
 
 function initMusicTracks() {
   for (let i = 0; i < 5; i++) {
     let audio = new Audio();
     audio.loop = true;
     audio.volume = currentVolume / 100;
+    audio.src = trackUrls[i];
     audioElements.push(audio);
+    
+    // Добавляем обработчик ошибок
+    audio.onerror = () => {
+      console.log(`Ошибка загрузки трека ${i + 1}`);
+      // Если трек не грузится, создаем генератор тонов как запасной вариант
+      createFallbackTrack(i);
+    };
+    
+    // Обработчик загрузки
+    audio.oncanplaythrough = () => {
+      console.log(`Трек ${i + 1} загружен`);
+    };
   }
   
-  audioElements[0].src = 'music/track1.mp3';
-  audioElements[1].src = 'music/track2.mp3';
-  audioElements[2].src = 'music/track3.mp3';
-  audioElements[3].src = 'music/track4.mp3';
-  audioElements[4].src = 'music/track5.mp3';
-  
-  audioElements.forEach((audio, index) => {
-    audio.onerror = () => {
-      console.log(`Ошибка загрузки трека ${index + 1}`);
-    };
-  });
+  updateMusicTrackButtons();
 }
 
-initMusicTracks();
+// Запасной вариант - генерация тонов через Web Audio API
+function createFallbackTrack(index) {
+  console.log(`Создание запасного трека ${index + 1}`);
+  // Это заглушка - реальная генерация будет при воспроизведении
+  audioElements[index] = null;
+}
 
-// НОВАЯ СИСТЕМА УПРАВЛЕНИЯ ГРОМКОСТЬЮ
+function playFallbackTrack(index) {
+  if (!audioContext) {
+    try {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    } catch(e) {
+      console.log('Web Audio API не поддерживается');
+      return null;
+    }
+  }
+  
+  // Создаем простую мелодию на основе индекса трека
+  const now = audioContext.currentTime;
+  const osc1 = audioContext.createOscillator();
+  const osc2 = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  osc1.type = 'sine';
+  osc2.type = 'triangle';
+  
+  // Разные частоты для разных треков
+  const baseFreq = 220 + index * 110;
+  osc1.frequency.setValueAtTime(baseFreq, now);
+  osc2.frequency.setValueAtTime(baseFreq * 1.5, now);
+  
+  gainNode.gain.setValueAtTime((currentVolume / 100) * 0.1, now);
+  
+  osc1.connect(gainNode);
+  osc2.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  osc1.start();
+  osc2.start();
+  
+  return { 
+    stop: () => { 
+      osc1.stop(); 
+      osc2.stop(); 
+    },
+    setVolume: (vol) => {
+      gainNode.gain.setValueAtTime((vol / 100) * 0.1, audioContext.currentTime);
+    }
+  };
+}
+
+function updateMusicTrackButtons() {
+  for (let i = 0; i < 5; i++) {
+    const btn = document.getElementById(`trackBtn${i+1}`);
+    if (i < tracksUnlocked) {
+      btn.classList.remove('locked');
+      btn.classList.add('unlocked');
+      btn.innerHTML = `#${i+1}<br><small>${trackNames[i].substring(0, 8)}</small>`;
+      
+      if (i === currentTrack && audioEnabled) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    } else {
+      btn.classList.add('locked');
+      btn.classList.remove('unlocked', 'active');
+      btn.innerHTML = `#${i+1}<br><small>🔒</small>`;
+    }
+  }
+  
+  // Обновляем отображение текущего трека
+  const trackNameSpan = document.getElementById('currentTrackName');
+  const trackBadge = document.getElementById('trackNumberBadge');
+  
+  if (tracksUnlocked > 0 && currentTrack < tracksUnlocked) {
+    trackNameSpan.textContent = trackNames[currentTrack];
+    trackBadge.textContent = `${currentTrack + 1}/${tracksUnlocked}`;
+  } else {
+    trackNameSpan.textContent = 'Не выбран';
+    trackBadge.textContent = `0/${tracksUnlocked}`;
+  }
+  
+  // Обновляем кнопку Play/Pause
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  if (audioEnabled) {
+    playPauseBtn.innerHTML = '⏸️';
+  } else {
+    playPauseBtn.innerHTML = '▶️';
+  }
+}
+
+function togglePlayPause() {
+  if (!musicUnlocked) { 
+    showStellarMessage('❌ Сначала купите доступ к музыке!', '#ff9800'); 
+    return; 
+  }
+  
+  if (tracksUnlocked === 0) {
+    showStellarMessage('❌ Нет доступных треков!', '#ff9800');
+    return;
+  }
+  
+  if (audioEnabled) {
+    // Пауза
+    stopAllAudio();
+    audioEnabled = false;
+  } else {
+    // Плей
+    playTrack(currentTrack);
+  }
+  
+  updateMusicTrackButtons();
+}
+
+function playTrack(index) {
+  if (!musicUnlocked || index >= tracksUnlocked) return false;
+  
+  stopAllAudio();
+  
+  const audio = audioElements[index];
+  if (audio) {
+    audio.volume = currentVolume / 100;
+    audio.play().catch(e => {
+      console.log('Ошибка воспроизведения, используем запасной вариант');
+      // Если не получилось, используем генератор
+      const fallback = playFallbackTrack(index);
+      if (fallback) {
+        audioElements[index] = fallback;
+        audioEnabled = true;
+        currentTrack = index;
+        updateMusicTrackButtons();
+      }
+    });
+    audioEnabled = true;
+    currentTrack = index;
+  } else {
+    // Если аудио элемента нет, используем генератор
+    const fallback = playFallbackTrack(index);
+    if (fallback) {
+      audioElements[index] = fallback;
+      audioEnabled = true;
+      currentTrack = index;
+    }
+  }
+  
+  updateMusicTrackButtons();
+  return true;
+}
+
+function stopAllAudio() {
+  audioElements.forEach((audio, index) => {
+    if (audio && audio.stop) {
+      audio.stop();
+    } else if (audio && audio.pause) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  });
+  audioEnabled = false;
+}
+
+function stopMusic() {
+  stopAllAudio();
+  audioEnabled = false;
+  updateMusicTrackButtons();
+}
+
+function selectTrack(index) {
+  if (!musicUnlocked) { 
+    showStellarMessage('❌ Сначала купите доступ к музыке!', '#ff9800'); 
+    return; 
+  }
+  
+  if (index >= tracksUnlocked) {
+    showStellarMessage('❌ Этот трек ещё не разблокирован!', '#ff9800');
+    return;
+  }
+  
+  if (currentTrack === index && audioEnabled) {
+    // Если это тот же трек и он играет - ничего не делаем
+    return;
+  }
+  
+  playTrack(index);
+}
+
+function nextTrack() {
+  if (!musicUnlocked || tracksUnlocked === 0) return;
+  
+  let nextIndex = (currentTrack + 1) % tracksUnlocked;
+  playTrack(nextIndex);
+}
+
+function prevTrack() {
+  if (!musicUnlocked || tracksUnlocked === 0) return;
+  
+  let prevIndex = (currentTrack - 1 + tracksUnlocked) % tracksUnlocked;
+  playTrack(prevIndex);
+}
+
+// Управление громкостью
 function updateVolume(value) {
   currentVolume = Math.min(100, Math.max(0, value));
+  
   audioElements.forEach(audio => {
-    audio.volume = currentVolume / 100;
+    if (audio && audio.volume !== undefined) {
+      audio.volume = currentVolume / 100;
+    } else if (audio && audio.setVolume) {
+      audio.setVolume(currentVolume);
+    }
   });
   
   document.getElementById('volumeDisplay').textContent = currentVolume + '%';
   document.getElementById('volumeKnobValue').textContent = currentVolume;
   
-  // Поворачиваем кольцо в зависимости от громкости
   const rotation = (currentVolume / 100) * 360;
   document.getElementById('volumeRingFill').style.transform = `rotate(${rotation}deg)`;
 }
@@ -1877,101 +2081,6 @@ function rotateVolume(e) {
   updateVolume(volume);
 }
 
-function updateMusicTracksDisplay() {
-  for (let i = 0; i < 5; i++) {
-    const track = document.getElementById(`musicTrack${i+1}`);
-    if (i < tracksUnlocked) {
-      track.classList.remove('locked');
-      track.classList.add('unlocked');
-      track.innerHTML = `
-        <div class="music-track-number">#${i+1}</div>
-        <div class="music-track-icon">🎵</div>
-        <div class="music-track-name">Трек ${i+1}</div>
-      `;
-      track.onclick = () => selectMusicTrack(i);
-      
-      if (i === currentTrack && audioEnabled) {
-        track.classList.add('active');
-      } else {
-        track.classList.remove('active');
-      }
-    } else {
-      track.classList.add('locked');
-      track.classList.remove('unlocked', 'active');
-      track.innerHTML = `
-        <div class="music-track-number">#${i+1}</div>
-        <div class="music-track-icon">🔒</div>
-        <div class="music-track-name">Заблокировано</div>
-      `;
-      track.onclick = null;
-    }
-  }
-}
-
-function toggleMusic() {
-  if (!musicUnlocked) { 
-    showStellarMessage('❌ Сначала купите доступ к музыке!', '#ff9800'); 
-    return; 
-  }
-  
-  if (tracksUnlocked === 0) {
-    showStellarMessage('❌ Нет доступных треков!', '#ff9800');
-    return;
-  }
-  
-  if (audioEnabled) {
-    audioElements.forEach(audio => {
-      audio.pause();
-    });
-    audioEnabled = false;
-    updateMusicTracksDisplay();
-  } else {
-    if (currentTrack < tracksUnlocked) {
-      audioElements[currentTrack].play().catch(e => {
-        console.log('Ошибка воспроизведения:', e);
-        showStellarMessage('❌ Ошибка воспроизведения музыки', '#ff6b6b');
-      });
-      audioEnabled = true;
-      updateMusicTracksDisplay();
-    }
-  }
-}
-
-function stopMusic() {
-  audioElements.forEach(audio => {
-    audio.pause();
-    audio.currentTime = 0;
-  });
-  audioEnabled = false;
-  updateMusicTracksDisplay();
-}
-
-function selectMusicTrack(index) {
-  if (!musicUnlocked) { 
-    showStellarMessage('❌ Сначала купите доступ к музыке!', '#ff9800'); 
-    return; 
-  }
-  
-  if (index >= tracksUnlocked) {
-    showStellarMessage('❌ Этот трек ещё не разблокирован!', '#ff9800');
-    return;
-  }
-  
-  if (audioEnabled) {
-    audioElements.forEach(audio => audio.pause());
-  }
-  
-  currentTrack = index;
-  
-  if (audioEnabled) {
-    audioElements[currentTrack].play().catch(e => {
-      console.log('Ошибка воспроизведения:', e);
-    });
-  }
-  
-  updateMusicTracksDisplay();
-}
-
 function purchaseMusicAccess() {
   if (stellarEnergy < musicPrice) return false;
   stellarEnergy -= musicPrice;
@@ -1980,7 +2089,7 @@ function purchaseMusicAccess() {
   if (tracksUnlocked < 5) {
     tracksUnlocked++;
     showStellarMessage(`✅ Разблокирован трек ${tracksUnlocked}!`, '#4caf50');
-    updateMusicTracksDisplay();
+    updateMusicTrackButtons();
   }
   
   musicPrice *= 2;
@@ -2002,8 +2111,16 @@ function renderMusicPurchaseButton() {
   
   if (tracksUnlocked < 5) {
     const btn = document.createElement('button');
-    btn.className = 'music-btn';
+    btn.className = 'music-track-btn';
     btn.style.width = '100%';
+    btn.style.padding = '15px';
+    btn.style.background = 'linear-gradient(145deg, #00b4ff, #4a00e0)';
+    btn.style.color = 'white';
+    btn.style.border = 'none';
+    btn.style.borderRadius = '15px';
+    btn.style.fontSize = '14px';
+    btn.style.fontWeight = 'bold';
+    btn.style.cursor = 'pointer';
     btn.innerHTML = `🎵 КУПИТЬ ТРЕК ${tracksUnlocked + 1} (${formatNumber(musicPrice)} ЭН)`;
     btn.onclick = purchaseMusicAccess;
     btn.disabled = stellarEnergy < musicPrice;
@@ -2012,10 +2129,29 @@ function renderMusicPurchaseButton() {
     const msg = document.createElement('div');
     msg.style.color = '#4caf50';
     msg.style.fontWeight = 'bold';
+    msg.style.fontSize = '14px';
+    msg.style.padding = '10px';
+    msg.style.background = 'rgba(76,175,80,0.2)';
+    msg.style.borderRadius = '10px';
     msg.innerHTML = '✅ ВСЕ ТРЕКИ РАЗБЛОКИРОВАНЫ';
     container.appendChild(msg);
   }
 }
+
+// ========== ОСТАЛЬНЫЕ ФУНКЦИИ ИГРЫ ==========
+
+const jokes = [
+  { text: "Летит байт по проводу, а навстречу ему гигабайт. Байт спрашивает: 'Ты кто?'. Гигабайт отвечает: 'Я - 1024 тебя!'", laugh: "🤣😂🤣" },
+  { text: "Программист просыпается и говорит жене: 'Дорогая, я тебя люблю!'. Жена: 'Ты что, баги ловил всю ночь?'", laugh: "😆😆😆" },
+  { text: "Встречаются два хакера. Один говорит: 'Я взломал Пентагон!'. Второй: 'А я взломал холодильник - теперь колбаса сама выходит!'", laugh: "🤪🤪🤪" },
+  { text: "Приходит байт в бар и заказывает 8 бит пива.", laugh: "😁😁😁" },
+  { text: "Стоят два процессора на конвейере. Один другому: 'Ты чего такой грустный?'. Второй: 'Да понимаешь, меня сегодня уже третий раз перезагружают...'", laugh: "🤣🤣🤣" },
+  { text: "Космонавт прилетает на Марс, а там табличка: 'Добро пожаловать! Если ты с Земли - у нас тут тоже есть интернет, только ping 40 минут'", laugh: "😆😆😆" },
+  { text: "Илон Маск купил Twitter, а теперь хочет купить телеграм, чтобы сделать из него космический корабль", laugh: "🚀🚀🚀" },
+  { text: "Сингулярность - это когда твой компьютер думает быстрее, чем ты успеваешь кликать", laugh: "😵😵😵" },
+  { text: "Почему программисты не любят космос? Там слишком много багов!", laugh: "🐛🐛🐛" },
+  { text: "Встречаются 0 и 1. 0 говорит: 'Ты такой единичный!'. 1 отвечает: 'А ты такой нулевой...'", laugh: "😄😄😄" }
+];
 
 function createPurchaseParticles() {
   for (let i = 0; i < 20; i++) {
@@ -2334,7 +2470,6 @@ function checkAchievements() {
     createPurchaseParticles();
   }
   
-  // Проверка для разблокировки анекдотов
   if (quantumGeneration >= 20) {
     document.getElementById('jokesTabBtn').disabled = false;
   } else {
@@ -2521,7 +2656,7 @@ function toggleStellarMenu() {
   document.getElementById('achievementsPanel').classList.remove('active');
   document.getElementById('jokesPanel').classList.remove('active');
   renderMusicPurchaseButton();
-  updateMusicTracksDisplay();
+  updateMusicTrackButtons();
 }
 
 function toggleQuantumUpgrades() {
@@ -2836,7 +2971,6 @@ function quantumSingularity() {
   updateCosmicInterface();
   checkAchievements();
   
-  // Проверка на разблокировку анекдотов
   if (quantumGeneration >= 20) {
     document.getElementById('jokesTabBtn').disabled = false;
     showStellarMessage('🎉 Открыта секретная вкладка с анекдотами!', '#ffd700');
@@ -2871,14 +3005,19 @@ function updateCosmicInterface() {
   renderSkins();
   renderSpecialSkins();
   renderBackgrounds();
+  
+  // Обновляем статус музыки при каждом обновлении
+  renderMusicPurchaseButton();
+  updateMusicTrackButtons();
 }
 
+// Инициализация
+initMusicTracks();
+updateVolume(70);
 updateCosmicInterface();
 updateAchievementsDisplay();
 
-// Инициализация громкости
-updateVolume(70);
-
+// Добавляем стиль для уведомлений
 const style = document.createElement('style');
 style.textContent = `
   .stellar-message { color: #00e0ff; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; text-shadow: 0 0 15px rgba(0,224,255,0.5); }
@@ -2901,6 +3040,15 @@ style.textContent = `
   #jokesTabBtn:disabled {
     opacity:0.3;
     cursor:not-allowed;
+  }
+  .music-track-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+    padding: 10px 12px;
+    min-width: 70px;
   }
 `;
 document.head.appendChild(style);
