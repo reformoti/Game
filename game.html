@@ -1764,29 +1764,33 @@ const trackNames = [
 
 let audioElements = [];
 
-// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ МУЗЫКИ ==========
 function initMusicTracks() {
+  // Очищаем массив
+  audioElements = [];
+  
   for (let i = 0; i < 5; i++) {
     let audio = new Audio();
     audio.loop = true;
     audio.volume = currentVolume / 100;
     
-    // Здесь ваши локальные файлы
+    // Ваши локальные файлы
     if (i === 0) audio.src = 'track1.mp3';
     else if (i === 1) audio.src = 'track2.mp3';
     else if (i === 2) audio.src = 'track3.mp3';
     else if (i === 3) audio.src = 'track4.mp3';
     else if (i === 4) audio.src = 'track5.mp3';
     
+    // Добавляем обработчики
+    audio.addEventListener('error', (e) => {
+      console.log(`Ошибка загрузки трека ${i + 1}:`, e);
+    });
+    
+    audio.addEventListener('canplaythrough', () => {
+      console.log(`Трек ${i + 1} готов к воспроизведению`);
+    });
+    
+    audio.load(); // Принудительно загружаем
     audioElements.push(audio);
-    
-    audio.onerror = () => {
-      console.log(`Ошибка загрузки трека ${i + 1}`);
-    };
-    
-    audio.oncanplaythrough = () => {
-      console.log(`Трек ${i + 1} загружен`);
-    };
   }
   
   updateMusicTrackButtons();
@@ -1853,21 +1857,45 @@ function togglePlayPause() {
 }
 
 function playTrack(index) {
-  if (!musicUnlocked || index >= tracksUnlocked) return false;
+  if (!musicUnlocked) { 
+    showStellarMessage('❌ Сначала купите доступ к музыке!', '#ff9800'); 
+    return false; 
+  }
   
+  if (index >= tracksUnlocked) {
+    showStellarMessage('❌ Этот трек ещё не разблокирован!', '#ff9800');
+    return false;
+  }
+  
+  // Останавливаем все текущие треки
   stopAllAudio();
   
   const audio = audioElements[index];
   if (audio) {
     audio.volume = currentVolume / 100;
-    audio.play().catch(e => {
-      console.log('Ошибка воспроизведения:', e);
-    });
-    audioEnabled = true;
-    currentTrack = index;
+    audio.currentTime = 0;
+    
+    // Пробуем воспроизвести
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        console.log(`Трек ${index + 1} играет`);
+        audioEnabled = true;
+        currentTrack = index;
+        updateMusicTrackButtons();
+      }).catch(error => {
+        console.log('Ошибка воспроизведения:', error);
+        showStellarMessage('❌ Нажмите на страницу, чтобы включить музыку', '#ff9800');
+        audioEnabled = false;
+        updateMusicTrackButtons();
+      });
+    }
+  } else {
+    console.log('Аудио элемент не найден');
+    return false;
   }
   
-  updateMusicTrackButtons();
   return true;
 }
 
@@ -1918,6 +1946,37 @@ function prevTrack() {
   let prevIndex = (currentTrack - 1 + tracksUnlocked) % tracksUnlocked;
   playTrack(prevIndex);
 }
+
+function checkAudioFiles() {
+  console.log('Проверка аудио файлов:');
+  for (let i = 0; i < audioElements.length; i++) {
+    const audio = audioElements[i];
+    console.log(`Трек ${i+1}:`, {
+      src: audio.src,
+      readyState: audio.readyState,
+      error: audio.error ? audio.error.message : 'нет ошибки'
+    });
+  }
+}
+// Разблокировка аудио контекста при первом клике
+document.addEventListener('click', function unlockAudio() {
+  // Создаем тихий звук для разблокировки
+  if (audioElements.length > 0) {
+    const silentTrack = audioElements[0];
+    if (silentTrack) {
+      silentTrack.volume = 0.01;
+      silentTrack.play().then(() => {
+        silentTrack.pause();
+        silentTrack.currentTime = 0;
+        silentTrack.volume = currentVolume / 100;
+        console.log('Аудио разблокировано');
+      }).catch(e => console.log('Не удалось разблокировать аудио:', e));
+    }
+  }
+  document.removeEventListener('click', unlockAudio);
+}, { once: true });
+// Вызовите после инициализации
+setTimeout(checkAudioFiles, 2000);
 
 function updateVolume(value) {
   currentVolume = Math.min(100, Math.max(0, value));
@@ -2959,50 +3018,7 @@ initMusicTracks();
 updateVolume(70);
 updateCosmicInterface();
 updateAchievementsDisplay();
-// ========== ИНИЦИАЛИЗАЦИЯ МУЗЫКИ ПОСЛЕ КЛИКА ==========
-document.addEventListener('click', function initAudioOnFirstClick() {
-    // Создаем тихий звук для разблокировки аудио контекста
-    if (audioElements.length > 0 && audioElements[0]) {
-        // Пробуем воспроизвести первый трек очень тихо и сразу ставим на паузу
-        audioElements[0].volume = 0.01;
-        audioElements[0].play().then(() => {
-            audioElements[0].pause();
-            audioElements[0].currentTime = 0;
-            audioElements[0].volume = currentVolume / 100;
-            console.log('Аудио контекст разблокирован');
-        }).catch(e => console.log('Ошибка инициализации аудио:', e));
-    }
-    
-    // Удаляем обработчик после первого клика
-    document.removeEventListener('click', initAudioOnFirstClick);
-}, { once: true });
 
-// Альтернативный метод с использованием Web Audio API
-function initWebAudio() {
-    try {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
-        }
-    } catch (e) {
-        console.log('Web Audio API не поддерживается');
-    }
-}
-
-// Добавляем обработчик на кнопку покупки музыки
-document.addEventListener('DOMContentLoaded', function() {
-    // Принудительно создаем аудио контекст при загрузке
-    initWebAudio();
-    
-    // Обновляем функцию покупки музыки
-    const originalPurchase = purchaseMusicAccess;
-    purchaseMusicAccess = function() {
-        initWebAudio();
-        return originalPurchase.apply(this, arguments);
-    };
-});
 // Добавляем стиль для уведомлений
 const style = document.createElement('style');
 style.textContent = `
@@ -3038,6 +3054,7 @@ style.textContent = `
   }
     
 `;
+
 document.head.appendChild(style);
 
 </script>
