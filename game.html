@@ -1016,7 +1016,6 @@ body::before {
   display:none;
 }
 
-/* ОБНОВЛЕННЫЙ БЛОК УПРАВЛЕНИЯ МУЗЫКОЙ */
 .music-controls {
   display:flex;
   gap:10px;
@@ -1086,6 +1085,13 @@ body::before {
   font-weight:600;
   position:relative;
   overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  line-height:1.2;
+  padding:10px 12px;
+  min-width:70px;
 }
 
 .music-track-btn::before {
@@ -1556,7 +1562,7 @@ body::before {
         <div class="volume-value" id="volumeDisplay">70%</div>
       </div>
       
-      <!-- КНОПКИ УПРАВЛЕНИЯ МУЗЫКОЙ (ОБНОВЛЕНО) -->
+      <!-- КНОПКИ УПРАВЛЕНИЯ МУЗЫКОЙ -->
       <div class="music-controls">
         <button class="music-control-btn" onclick="prevTrack()" title="Предыдущий трек">⏮️</button>
         <button class="music-control-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()">▶️</button>
@@ -1694,6 +1700,7 @@ body::before {
 </div>
 
 <script>
+// ========== ОСНОВНЫЕ ПЕРЕМЕННЫЕ ==========
 let stellarEnergy = 0;
 let corePower = 1;
 let autoHarvest = 0;
@@ -1735,7 +1742,7 @@ let secretCodes = {
   'QUASAR': { used: false }
 };
 
-// ========== МУЗЫКАЛЬНАЯ СИСТЕМА (ОБНОВЛЕНО) ==========
+// ========== МУЗЫКАЛЬНАЯ СИСТЕМА ==========
 let audioContext = null;
 let audioEnabled = false;
 let currentTrack = 0;
@@ -1745,15 +1752,6 @@ let musicPrice = 50000;
 let tracksUnlocked = 0;
 let currentVolume = 70;
 let isDraggingVolume = false;
-
-// Массив с URL треков (замените на свои ссылки)
-const trackUrls = [
-  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3'
-];
 
 // Массив с названиями треков
 const trackNames = [
@@ -1766,79 +1764,32 @@ const trackNames = [
 
 let audioElements = [];
 
+// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ МУЗЫКИ ==========
 function initMusicTracks() {
   for (let i = 0; i < 5; i++) {
     let audio = new Audio();
     audio.loop = true;
     audio.volume = currentVolume / 100;
-    audio.src = trackUrls[i];
+    
+    // Здесь ваши локальные файлы
+    if (i === 0) audio.src = 'track1.mp3';
+    else if (i === 1) audio.src = 'track2.mp3';
+    else if (i === 2) audio.src = 'track3.mp3';
+    else if (i === 3) audio.src = 'track4.mp3';
+    else if (i === 4) audio.src = 'track5.mp3';
+    
     audioElements.push(audio);
     
-    // Добавляем обработчик ошибок
     audio.onerror = () => {
       console.log(`Ошибка загрузки трека ${i + 1}`);
-      // Если трек не грузится, создаем генератор тонов как запасной вариант
-      createFallbackTrack(i);
     };
     
-    // Обработчик загрузки
     audio.oncanplaythrough = () => {
       console.log(`Трек ${i + 1} загружен`);
     };
   }
   
   updateMusicTrackButtons();
-}
-
-// Запасной вариант - генерация тонов через Web Audio API
-function createFallbackTrack(index) {
-  console.log(`Создание запасного трека ${index + 1}`);
-  // Это заглушка - реальная генерация будет при воспроизведении
-  audioElements[index] = null;
-}
-
-function playFallbackTrack(index) {
-  if (!audioContext) {
-    try {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    } catch(e) {
-      console.log('Web Audio API не поддерживается');
-      return null;
-    }
-  }
-  
-  // Создаем простую мелодию на основе индекса трека
-  const now = audioContext.currentTime;
-  const osc1 = audioContext.createOscillator();
-  const osc2 = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
-  
-  osc1.type = 'sine';
-  osc2.type = 'triangle';
-  
-  // Разные частоты для разных треков
-  const baseFreq = 220 + index * 110;
-  osc1.frequency.setValueAtTime(baseFreq, now);
-  osc2.frequency.setValueAtTime(baseFreq * 1.5, now);
-  
-  gainNode.gain.setValueAtTime((currentVolume / 100) * 0.1, now);
-  
-  osc1.connect(gainNode);
-  osc2.connect(gainNode);
-  gainNode.connect(audioContext.destination);
-  
-  osc1.start();
-  osc2.start();
-  
-  return { 
-    stop: () => { 
-      osc1.stop(); 
-      osc2.stop(); 
-    },
-    setVolume: (vol) => {
-      gainNode.gain.setValueAtTime((vol / 100) * 0.1, audioContext.currentTime);
-    }
-  };
 }
 
 function updateMusicTrackButtons() {
@@ -1861,7 +1812,6 @@ function updateMusicTrackButtons() {
     }
   }
   
-  // Обновляем отображение текущего трека
   const trackNameSpan = document.getElementById('currentTrackName');
   const trackBadge = document.getElementById('trackNumberBadge');
   
@@ -1873,7 +1823,6 @@ function updateMusicTrackButtons() {
     trackBadge.textContent = `0/${tracksUnlocked}`;
   }
   
-  // Обновляем кнопку Play/Pause
   const playPauseBtn = document.getElementById('playPauseBtn');
   if (audioEnabled) {
     playPauseBtn.innerHTML = '⏸️';
@@ -1894,11 +1843,9 @@ function togglePlayPause() {
   }
   
   if (audioEnabled) {
-    // Пауза
     stopAllAudio();
     audioEnabled = false;
   } else {
-    // Плей
     playTrack(currentTrack);
   }
   
@@ -1914,26 +1861,10 @@ function playTrack(index) {
   if (audio) {
     audio.volume = currentVolume / 100;
     audio.play().catch(e => {
-      console.log('Ошибка воспроизведения, используем запасной вариант');
-      // Если не получилось, используем генератор
-      const fallback = playFallbackTrack(index);
-      if (fallback) {
-        audioElements[index] = fallback;
-        audioEnabled = true;
-        currentTrack = index;
-        updateMusicTrackButtons();
-      }
+      console.log('Ошибка воспроизведения:', e);
     });
     audioEnabled = true;
     currentTrack = index;
-  } else {
-    // Если аудио элемента нет, используем генератор
-    const fallback = playFallbackTrack(index);
-    if (fallback) {
-      audioElements[index] = fallback;
-      audioEnabled = true;
-      currentTrack = index;
-    }
   }
   
   updateMusicTrackButtons();
@@ -1941,10 +1872,8 @@ function playTrack(index) {
 }
 
 function stopAllAudio() {
-  audioElements.forEach((audio, index) => {
-    if (audio && audio.stop) {
-      audio.stop();
-    } else if (audio && audio.pause) {
+  audioElements.forEach(audio => {
+    if (audio) {
       audio.pause();
       audio.currentTime = 0;
     }
@@ -1970,7 +1899,6 @@ function selectTrack(index) {
   }
   
   if (currentTrack === index && audioEnabled) {
-    // Если это тот же трек и он играет - ничего не делаем
     return;
   }
   
@@ -1991,15 +1919,12 @@ function prevTrack() {
   playTrack(prevIndex);
 }
 
-// Управление громкостью
 function updateVolume(value) {
   currentVolume = Math.min(100, Math.max(0, value));
   
   audioElements.forEach(audio => {
-    if (audio && audio.volume !== undefined) {
+    if (audio) {
       audio.volume = currentVolume / 100;
-    } else if (audio && audio.setVolume) {
-      audio.setVolume(currentVolume);
     }
   });
   
@@ -2138,8 +2063,7 @@ function renderMusicPurchaseButton() {
   }
 }
 
-// ========== ОСТАЛЬНЫЕ ФУНКЦИИ ИГРЫ ==========
-
+// ========== 30 АНЕКДОТОВ ==========
 const jokes = [
   { text: "Летит байт по проводу, а навстречу ему гигабайт. Байт спрашивает: 'Ты кто?'. Гигабайт отвечает: 'Я - 1024 тебя!'", laugh: "🤣😂🤣" },
   { text: "Программист просыпается и говорит жене: 'Дорогая, я тебя люблю!'. Жена: 'Ты что, баги ловил всю ночь?'", laugh: "😆😆😆" },
@@ -2150,7 +2074,27 @@ const jokes = [
   { text: "Илон Маск купил Twitter, а теперь хочет купить телеграм, чтобы сделать из него космический корабль", laugh: "🚀🚀🚀" },
   { text: "Сингулярность - это когда твой компьютер думает быстрее, чем ты успеваешь кликать", laugh: "😵😵😵" },
   { text: "Почему программисты не любят космос? Там слишком много багов!", laugh: "🐛🐛🐛" },
-  { text: "Встречаются 0 и 1. 0 говорит: 'Ты такой единичный!'. 1 отвечает: 'А ты такой нулевой...'", laugh: "😄😄😄" }
+  { text: "Встречаются 0 и 1. 0 говорит: 'Ты такой единичный!'. 1 отвечает: 'А ты такой нулевой...'", laugh: "😄😄😄" },
+  { text: "Что говорит программист, когда у него день рождения? 'Happy birthday to me! Синтаксическая ошибка!'", laugh: "🎂🎂🎂" },
+  { text: "Почему программисты путают Хэллоуин и Рождество? Потому что Oct 31 == Dec 25", laugh: "🎃🎄🎃" },
+  { text: "Сколько программистов нужно, чтобы вкрутить лампочку? Ни одного, это hardware проблема.", laugh: "💡💡💡" },
+  { text: "Айтишник приходит к врачу. Врач: 'На что жалуетесь?'. Айтишник: 'Болит вот здесь, здесь и здесь'. Врач: 'Попробуйте перезагрузиться'", laugh: "🔄🔄🔄" },
+  { text: "Жена программиста: 'Дорогой, сходи в магазин, купи хлеб, если будут яйца - купи десяток'. Программист принес 10 буханок хлеба и сказал: 'Яйца были'", laugh: "🥚🥚🥚" },
+  { text: "Администратор спрашивает у программиста: 'Ты почему вчера не пришел на работу?'. Программист: 'Я компилировал программу'", laugh: "💻💻💻" },
+  { text: "Что такое 'I C Q' в переводе с английского? 'Я ищу тебя'", laugh: "🔍🔍🔍" },
+  { text: "Стоит Windows на коленях перед Линуксом и плачет. Линукс: 'Ты чего?'. Windows: 'Я тебя не поддерживаю'", laugh: "😭😭😭" },
+  { text: "Приходит баг к разработчику и говорит: 'Ты меня вчера пофиксил?'. Разработчик: 'Да'. Баг: 'А я сегодня опять вылез!'", laugh: "🐞🐞🐞" },
+  { text: "Как программисты поздравляют друг друга с днем рождения? 'Желаю тебе бесконечного цикла удачи и никаких багов в жизни!'", laugh: "🎉🎉🎉" },
+  { text: "В чем разница между программистом и Богом? Бог знает всё, программист знает, где искать", laugh: "👨‍💻👨‍💻👨‍💻" },
+  { text: "Оптимист учит английский, пессимист - китайский, а программист - язык ассемблера", laugh: "🔤🔤🔤" },
+  { text: "Почему программисты любят темноту? Потому что свет привлекает багов", laugh: "🌚🌚🌚" },
+  { text: "Если у тебя есть яблоко и у меня есть яблоко, и мы обменяемся, у каждого будет по яблоку. Если у тебя есть идея и у меня есть идея, и мы обменяемся, у каждого будет по две идеи", laugh: "🍎💡🍎" },
+  { text: "Программист заходит в бар и заказывает 1, 0, 1, 0, 1, 0, 1, 0...", laugh: "🥃🥃🥃" },
+  { text: "Сколько нужно программистов, чтобы поменять лампочку? 10. Один меняет, остальные 9 говорят: 'Я бы сделал лучше'", laugh: "💡💡💡" },
+  { text: "Что говорит программист, когда у него всё работает? 'Оно компилируется! ОНО КОМПИЛИРУЕТСЯ!!!'", laugh: "🎊🎊🎊" },
+  { text: "Как называется маленький программист? Микро-софт", laugh: "👶👶👶" },
+  { text: "Программист звоит в службу поддержки: 'У меня не работает интернет'. Оператор: 'Перезагрузите роутер'. Программист: 'А где кнопка перезагрузки?'", laugh: "📞📞📞" },
+  { text: "Хакеры не ломают системы - они просто просят пароль вежливо", laugh: "😇😇😇" }
 ];
 
 function createPurchaseParticles() {
@@ -3006,7 +2950,6 @@ function updateCosmicInterface() {
   renderSpecialSkins();
   renderBackgrounds();
   
-  // Обновляем статус музыки при каждом обновлении
   renderMusicPurchaseButton();
   updateMusicTrackButtons();
 }
