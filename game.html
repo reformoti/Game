@@ -1743,17 +1743,35 @@ let secretCodes = {
 };
 
 // ========== МУЗЫКАЛЬНАЯ СИСТЕМА ==========
-let audioContext = null;
 let audioEnabled = false;
 let currentTrack = 0;
-let audioGainNode = null;
 let musicUnlocked = false;
 let musicPrice = 50000;
 let tracksUnlocked = 0;
 let currentVolume = 70;
-let isDraggingVolume = false;
 
-// Массив с названиями треков
+// Простое создание аудио элементов
+let track1 = new Audio('track1.mp3');
+let track2 = new Audio('track2.mp3');
+let track3 = new Audio('track3.mp3');
+let track4 = new Audio('track4.mp3');
+let track5 = new Audio('track5.mp3');
+
+// Настраиваем все треки
+track1.loop = true;
+track2.loop = true;
+track3.loop = true;
+track4.loop = true;
+track5.loop = true;
+
+track1.volume = currentVolume / 100;
+track2.volume = currentVolume / 100;
+track3.volume = currentVolume / 100;
+track4.volume = currentVolume / 100;
+track5.volume = currentVolume / 100;
+
+// Массив с треками для удобства
+const audioTracks = [track1, track2, track3, track4, track5];
 const trackNames = [
   'Космическая симфония',
   'Галактический вальс',
@@ -1762,43 +1780,22 @@ const trackNames = [
   'Черная дыра'
 ];
 
-let audioElements = [];
-
-function initMusicTracks() {
-  // Очищаем массив
-  audioElements = [];
-  
-  for (let i = 0; i < 5; i++) {
-    let audio = new Audio();
-    audio.loop = true;
-    audio.volume = currentVolume / 100;
-    
-    // Ваши локальные файлы
-    if (i === 0) audio.src = 'track1.mp3';
-    else if (i === 1) audio.src = 'track2.mp3';
-    else if (i === 2) audio.src = 'track3.mp3';
-    else if (i === 3) audio.src = 'track4.mp3';
-    else if (i === 4) audio.src = 'track5.mp3';
-    
-    // Добавляем обработчики
-    audio.addEventListener('error', (e) => {
-      console.log(`Ошибка загрузки трека ${i + 1}:`, e);
+// Проверка загрузки треков
+for (let i = 0; i < audioTracks.length; i++) {
+    audioTracks[i].addEventListener('canplaythrough', function() {
+        console.log(`Трек ${i+1} готов к воспроизведению`);
     });
     
-    audio.addEventListener('canplaythrough', () => {
-      console.log(`Трек ${i + 1} готов к воспроизведению`);
+    audioTracks[i].addEventListener('error', function(e) {
+        console.log(`Ошибка загрузки трека ${i+1}:`, e);
     });
-    
-    audio.load(); // Принудительно загружаем
-    audioElements.push(audio);
-  }
-  
-  updateMusicTrackButtons();
 }
 
 function updateMusicTrackButtons() {
   for (let i = 0; i < 5; i++) {
     const btn = document.getElementById(`trackBtn${i+1}`);
+    if (!btn) continue;
+    
     if (i < tracksUnlocked) {
       btn.classList.remove('locked');
       btn.classList.add('unlocked');
@@ -1819,20 +1816,62 @@ function updateMusicTrackButtons() {
   const trackNameSpan = document.getElementById('currentTrackName');
   const trackBadge = document.getElementById('trackNumberBadge');
   
-  if (tracksUnlocked > 0 && currentTrack < tracksUnlocked) {
-    trackNameSpan.textContent = trackNames[currentTrack];
-    trackBadge.textContent = `${currentTrack + 1}/${tracksUnlocked}`;
-  } else {
-    trackNameSpan.textContent = 'Не выбран';
-    trackBadge.textContent = `0/${tracksUnlocked}`;
+  if (trackNameSpan && trackBadge) {
+    if (tracksUnlocked > 0 && currentTrack < tracksUnlocked) {
+      trackNameSpan.textContent = trackNames[currentTrack];
+      trackBadge.textContent = `${currentTrack + 1}/${tracksUnlocked}`;
+    } else {
+      trackNameSpan.textContent = 'Не выбран';
+      trackBadge.textContent = `0/${tracksUnlocked}`;
+    }
   }
   
   const playPauseBtn = document.getElementById('playPauseBtn');
-  if (audioEnabled) {
-    playPauseBtn.innerHTML = '⏸️';
-  } else {
-    playPauseBtn.innerHTML = '▶️';
+  if (playPauseBtn) {
+    playPauseBtn.innerHTML = audioEnabled ? '⏸️' : '▶️';
   }
+}
+
+function stopAllAudio() {
+  for (let i = 0; i < audioTracks.length; i++) {
+    audioTracks[i].pause();
+    audioTracks[i].currentTime = 0;
+  }
+  audioEnabled = false;
+}
+
+function playTrack(index) {
+  if (!musicUnlocked) { 
+    showStellarMessage('❌ Сначала купите доступ к музыке!', '#ff9800'); 
+    return false; 
+  }
+  
+  if (index >= tracksUnlocked) {
+    showStellarMessage('❌ Этот трек ещё не разблокирован!', '#ff9800');
+    return false;
+  }
+  
+  // Останавливаем все треки
+  stopAllAudio();
+  
+  // Пробуем воспроизвести выбранный трек
+  const track = audioTracks[index];
+  track.volume = currentVolume / 100;
+  track.currentTime = 0;
+  
+  track.play().then(() => {
+    console.log(`Трек ${index + 1} играет`);
+    audioEnabled = true;
+    currentTrack = index;
+    updateMusicTrackButtons();
+  }).catch(error => {
+    console.log('Ошибка воспроизведения:', error);
+    showStellarMessage('❌ Нажмите на страницу, чтобы разрешить музыку', '#ff9800');
+    audioEnabled = false;
+    updateMusicTrackButtons();
+  });
+  
+  return true;
 }
 
 function togglePlayPause() {
@@ -1847,71 +1886,14 @@ function togglePlayPause() {
   }
   
   if (audioEnabled) {
-    stopAllAudio();
+    // Пауза
+    audioTracks[currentTrack].pause();
     audioEnabled = false;
   } else {
+    // Плей
     playTrack(currentTrack);
   }
   
-  updateMusicTrackButtons();
-}
-
-function playTrack(index) {
-  if (!musicUnlocked) { 
-    showStellarMessage('❌ Сначала купите доступ к музыке!', '#ff9800'); 
-    return false; 
-  }
-  
-  if (index >= tracksUnlocked) {
-    showStellarMessage('❌ Этот трек ещё не разблокирован!', '#ff9800');
-    return false;
-  }
-  
-  // Останавливаем все текущие треки
-  stopAllAudio();
-  
-  const audio = audioElements[index];
-  if (audio) {
-    audio.volume = currentVolume / 100;
-    audio.currentTime = 0;
-    
-    // Пробуем воспроизвести
-    const playPromise = audio.play();
-    
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
-        console.log(`Трек ${index + 1} играет`);
-        audioEnabled = true;
-        currentTrack = index;
-        updateMusicTrackButtons();
-      }).catch(error => {
-        console.log('Ошибка воспроизведения:', error);
-        showStellarMessage('❌ Нажмите на страницу, чтобы включить музыку', '#ff9800');
-        audioEnabled = false;
-        updateMusicTrackButtons();
-      });
-    }
-  } else {
-    console.log('Аудио элемент не найден');
-    return false;
-  }
-  
-  return true;
-}
-
-function stopAllAudio() {
-  audioElements.forEach(audio => {
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-  });
-  audioEnabled = false;
-}
-
-function stopMusic() {
-  stopAllAudio();
-  audioEnabled = false;
   updateMusicTrackButtons();
 }
 
@@ -1927,10 +1909,15 @@ function selectTrack(index) {
   }
   
   if (currentTrack === index && audioEnabled) {
-    return;
+    // Если это тот же трек и он играет - ставим на паузу
+    audioTracks[index].pause();
+    audioEnabled = false;
+  } else {
+    // Иначе играем новый трек
+    playTrack(index);
   }
   
-  playTrack(index);
+  updateMusicTrackButtons();
 }
 
 function nextTrack() {
@@ -1947,62 +1934,42 @@ function prevTrack() {
   playTrack(prevIndex);
 }
 
-function checkAudioFiles() {
-  console.log('Проверка аудио файлов:');
-  for (let i = 0; i < audioElements.length; i++) {
-    const audio = audioElements[i];
-    console.log(`Трек ${i+1}:`, {
-      src: audio.src,
-      readyState: audio.readyState,
-      error: audio.error ? audio.error.message : 'нет ошибки'
-    });
-  }
+function stopMusic() {
+  stopAllAudio();
+  updateMusicTrackButtons();
 }
-// Разблокировка аудио контекста при первом клике
-document.addEventListener('click', function unlockAudio() {
-  // Создаем тихий звук для разблокировки
-  if (audioElements.length > 0) {
-    const silentTrack = audioElements[0];
-    if (silentTrack) {
-      silentTrack.volume = 0.01;
-      silentTrack.play().then(() => {
-        silentTrack.pause();
-        silentTrack.currentTime = 0;
-        silentTrack.volume = currentVolume / 100;
-        console.log('Аудио разблокировано');
-      }).catch(e => console.log('Не удалось разблокировать аудио:', e));
-    }
-  }
-  document.removeEventListener('click', unlockAudio);
-}, { once: true });
-// Вызовите после инициализации
-setTimeout(checkAudioFiles, 2000);
 
 function updateVolume(value) {
   currentVolume = Math.min(100, Math.max(0, value));
   
-  audioElements.forEach(audio => {
-    if (audio) {
-      audio.volume = currentVolume / 100;
-    }
-  });
+  for (let i = 0; i < audioTracks.length; i++) {
+    audioTracks[i].volume = currentVolume / 100;
+  }
   
-  document.getElementById('volumeDisplay').textContent = currentVolume + '%';
-  document.getElementById('volumeKnobValue').textContent = currentVolume;
+  const volumeDisplay = document.getElementById('volumeDisplay');
+  const volumeKnobValue = document.getElementById('volumeKnobValue');
+  const volumeRingFill = document.getElementById('volumeRingFill');
   
-  const rotation = (currentVolume / 100) * 360;
-  document.getElementById('volumeRingFill').style.transform = `rotate(${rotation}deg)`;
+  if (volumeDisplay) volumeDisplay.textContent = currentVolume + '%';
+  if (volumeKnobValue) volumeKnobValue.textContent = currentVolume;
+  
+  if (volumeRingFill) {
+    const rotation = (currentVolume / 100) * 360;
+    volumeRingFill.style.transform = `rotate(${rotation}deg)`;
+  }
 }
 
 function startDragVolume(e) {
   e.preventDefault();
-  isDraggingVolume = true;
+  let isDragging = true;
   
   const onMove = (moveEvent) => {
-    if (!isDraggingVolume) return;
+    if (!isDragging) return;
     moveEvent.preventDefault();
     
     const ring = document.querySelector('.volume-ring');
+    if (!ring) return;
+    
     const rect = ring.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -2027,7 +1994,7 @@ function startDragVolume(e) {
   };
   
   const onEnd = () => {
-    isDraggingVolume = false;
+    isDragging = false;
     document.removeEventListener('mousemove', onMove);
     document.removeEventListener('mouseup', onEnd);
     document.removeEventListener('touchmove', onMove);
@@ -2042,6 +2009,8 @@ function startDragVolume(e) {
 
 function rotateVolume(e) {
   const ring = document.querySelector('.volume-ring');
+  if (!ring) return;
+  
   const rect = ring.getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
@@ -2073,11 +2042,19 @@ function purchaseMusicAccess() {
   if (tracksUnlocked < 5) {
     tracksUnlocked++;
     showStellarMessage(`✅ Разблокирован трек ${tracksUnlocked}!`, '#4caf50');
+    
+    // Если это первый трек, показываем как включить
+    if (tracksUnlocked === 1) {
+      showStellarMessage('💡 Нажмите на трек #1 чтобы включить музыку', '#00b4ff');
+    }
+    
     updateMusicTrackButtons();
   }
   
   musicPrice *= 2;
-  document.getElementById('musicOwnedStatus').innerHTML = '✅ ДОСТУП ПОЛУЧЕН';
+  
+  const statusEl = document.getElementById('musicOwnedStatus');
+  if (statusEl) statusEl.innerHTML = '✅ ДОСТУП ПОЛУЧЕН';
   
   updateCosmicInterface();
   renderMusicPurchaseButton();
@@ -2121,6 +2098,16 @@ function renderMusicPurchaseButton() {
     container.appendChild(msg);
   }
 }
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+  updateMusicTrackButtons();
+  renderMusicPurchaseButton();
+  updateVolume(70);
+  
+  // Добавляем подсказку
+  console.log('Музыкальная система готова. Купите треки чтобы слушать музыку!');
+});
 
 // ========== 30 АНЕКДОТОВ ==========
 const jokes = [
