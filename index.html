@@ -4,96 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Космический Кликер | Официальный портал</title>
-    
-    <!-- Шрифты и стили -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Orbitron', sans-serif;
-            background: #000;
-            color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* Звездный фон с анимацией */
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            background: radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
-                        radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
-                        radial-gradient(2px 2px at 80px 120px, #fff, rgba(0,0,0,0)),
-                        radial-gradient(2px 2px at 160px 50px, #fff, rgba(0,0,0,0)),
-                        radial-gradient(2px 2px at 300px 200px, #fff, rgba(0,0,0,0)),
-                        radial-gradient(2px 2px at 450px 350px, #ff6b6b, rgba(0,0,0,0)),
-                        radial-gradient(3px 3px at 550px 480px, #9d4edd, rgba(0,0,0,0)),
-                        radial-gradient(2px 2px at 700px 150px, #00b4ff, rgba(0,0,0,0)),
-                        radial-gradient(2px 2px at 850px 600px, #fff, rgba(0,0,0,0)),
-                        radial-gradient(3px 3px at 1000px 400px, #9d4edd, rgba(0,0,0,0));
-            background-size: 200px 200px;
-            background-repeat: repeat;
-            animation: starsMove 100s linear infinite;
-            opacity: 0.8;
-        }
-        
-        .stars::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(0,180,255,0.1) 0%, transparent 50%);
-        }
-        
-        @keyframes starsMove {
-            from { transform: translateY(0); }
-            to { transform: translateY(-200px); }
-        }
-        
-        /* Туманность (декоративный элемент) */
-        .nebula {
-            position: fixed;
-            top: -20%;
-            right: -10%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(circle at 70% 30%, rgba(157,78,221,0.2) 0%, transparent 60%),
-                        radial-gradient(circle at 30% 70%, rgba(0,180,255,0.15) 0%, transparent 60%);
-            filter: blur(40px);
-            z-index: 0;
-            animation: nebulaPulse 15s ease-in-out infinite alternate;
-        }
-        
-        @keyframes nebulaPulse {
-            0% { opacity: 0.5; transform: scale(1); }
-            100% { opacity: 0.8; transform: scale(1.1); }
-        }
-        
-        /* Контейнер с контентом */
-        .container {
-            position: relative;
-            z-index: 2;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* Навигация */
+        /* Специфичные стили только для главной страницы */
         nav {
             display: flex;
             justify-content: space-between;
@@ -115,12 +28,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             text-shadow: 0 0 20px rgba(0,180,255,0.5);
-            animation: logoGlow 3s infinite alternate;
-        }
-        
-        @keyframes logoGlow {
-            from { text-shadow: 0 0 20px rgba(0,180,255,0.5); }
-            to { text-shadow: 0 0 40px rgba(157,78,221,0.8); }
+            animation: glow 3s infinite alternate;
         }
         
         .nav-links {
@@ -158,30 +66,6 @@
             width: 100%;
         }
         
-        .discord-btn {
-            background: linear-gradient(145deg, #5865F2, #4752c4);
-            border: none;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid rgba(255,255,255,0.2);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'Orbitron', sans-serif;
-        }
-        
-        .discord-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(88,101,242,0.5);
-        }
-        
-        /* Главный экран */
         .hero {
             display: flex;
             align-items: center;
@@ -201,13 +85,6 @@
             font-weight: 900;
             line-height: 1.2;
             margin-bottom: 20px;
-        }
-        
-        .hero-title span {
-            background: linear-gradient(135deg, #00b4ff, #9d4edd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
         
         .hero-subtitle {
@@ -260,12 +137,7 @@
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 2px;
             box-shadow: 0 10px 30px rgba(0,180,255,0.3);
-            animation: btnPulse 2s infinite;
-        }
-        
-        @keyframes btnPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            animation: pulse 2s infinite;
         }
         
         .play-btn:hover {
@@ -286,9 +158,8 @@
             margin: 0 auto;
             border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #00b4ff, #4a00e0);
-            box-shadow: 0 0 80px rgba(0,180,255,0.6),
-                        inset 0 0 60px rgba(255,255,255,0.3);
-            animation: coreRotate 20s linear infinite;
+            box-shadow: 0 0 80px rgba(0,180,255,0.6), inset 0 0 60px rgba(255,255,255,0.3);
+            animation: rotate 20s linear infinite;
             position: relative;
         }
         
@@ -301,23 +172,7 @@
             bottom: -20px;
             border-radius: 50%;
             border: 2px solid rgba(255,255,255,0.1);
-            animation: ringPulse 3s infinite;
-        }
-        
-        @keyframes coreRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        @keyframes ringPulse {
-            0% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.2; }
-            100% { transform: scale(1); opacity: 0.5; }
-        }
-        
-        /* Особенности игры */
-        .features {
-            margin-bottom: 100px;
+            animation: pulse 3s infinite;
         }
         
         .section-title {
@@ -335,6 +190,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
+            margin-bottom: 100px;
         }
         
         .feature-card {
@@ -371,133 +227,6 @@
             line-height: 1.6;
         }
         
-        /* Прогресс-бар особенностей */
-        .feature-progress {
-            margin-top: 20px;
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .feature-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #00b4ff, #9d4edd);
-            border-radius: 4px;
-            animation: progressLoad 2s ease-out;
-        }
-        
-        @keyframes progressLoad {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-        
-        /* Скриншоты/Превью */
-        .showcase {
-            margin-bottom: 100px;
-        }
-        
-        .showcase-slider {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding: 20px 0;
-            scrollbar-width: thin;
-            scrollbar-color: #00b4ff rgba(88,179,255,0.1);
-        }
-        
-        .showcase-slider::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .showcase-slider::-webkit-scrollbar-track {
-            background: rgba(88,179,255,0.1);
-            border-radius: 10px;
-        }
-        
-        .showcase-slider::-webkit-scrollbar-thumb {
-            background: linear-gradient(90deg, #00b4ff, #9d4edd);
-            border-radius: 10px;
-        }
-        
-        .showcase-item {
-            min-width: 300px;
-            height: 200px;
-            background: rgba(15,20,40,0.8);
-            border-radius: 15px;
-            overflow: hidden;
-            border: 2px solid rgba(88,179,255,0.3);
-            transition: all 0.3s;
-        }
-        
-        .showcase-item:hover {
-            transform: scale(1.05);
-            border-color: rgba(88,179,255,0.8);
-        }
-        
-        .showcase-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .showcase-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(145deg, #1a1f3a, #0f1425);
-            color: #8bb9ff;
-            font-weight: 600;
-        }
-        
-        /* Отзывы */
-        .testimonials {
-            margin-bottom: 100px;
-        }
-        
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .testimonial-card {
-            background: rgba(15,20,40,0.6);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(157,78,221,0.2);
-            border-radius: 20px;
-            padding: 30px;
-            position: relative;
-        }
-        
-        .testimonial-card::before {
-            content: '"';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 60px;
-            color: rgba(157,78,221,0.3);
-            font-family: serif;
-        }
-        
-        .testimonial-text {
-            color: #e0c3ff;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-style: italic;
-        }
-        
-        .testimonial-author {
-            color: #00b4ff;
-            font-weight: 700;
-            font-size: 14px;
-            text-align: right;
-        }
-        
-        /* Коды и секреты */
         .codes-section {
             background: rgba(15,20,40,0.8);
             backdrop-filter: blur(10px);
@@ -544,13 +273,47 @@
             font-size: 14px;
         }
         
-        .code-hint {
-            margin-top: 30px;
-            color: #8bb9ff;
-            font-size: 16px;
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 100px;
         }
         
-        /* Футер */
+        .testimonial-card {
+            background: rgba(15,20,40,0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(157,78,221,0.2);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 60px;
+            color: rgba(157,78,221,0.3);
+            font-family: serif;
+        }
+        
+        .testimonial-text {
+            color: #e0c3ff;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            color: #00b4ff;
+            font-weight: 700;
+            font-size: 14px;
+            text-align: right;
+        }
+        
         footer {
             margin-top: auto;
             padding: 40px 0 20px;
@@ -582,7 +345,6 @@
             font-size: 12px;
         }
         
-        /* Адаптивность */
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
@@ -602,16 +364,6 @@
                 justify-content: center;
             }
             
-            .codes-grid {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .code-item {
-                width: 100%;
-                max-width: 300px;
-            }
-            
             .section-title {
                 font-size: 36px;
             }
@@ -621,57 +373,14 @@
                 height: 300px;
             }
         }
-        
-        /* Анимации появления */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.8s ease forwards;
-        }
-        
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Частицы */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: particleFloat 20s linear infinite;
-        }
-        
-        @keyframes particleFloat {
-            from { transform: translateY(100vh); }
-            to { transform: translateY(-100vh); }
-        }
     </style>
 </head>
 <body>
-    <!-- Звездный фон -->
     <div class="stars"></div>
     <div class="nebula"></div>
     
-    <!-- Контейнер -->
     <div class="container">
-        <!-- Навигация -->
-        <nav class="fade-in" style="animation-delay: 0.2s;">
+        <nav class="fade-in">
             <div class="logo">REFORMOTI</div>
             <div class="nav-links">
                 <a href="#about">О игре</a>
@@ -679,17 +388,16 @@
                 <a href="#codes">Коды</a>
                 <a href="#community">Сообщество</a>
             </div>
-            <a href="game.html" class="discord-btn">
+            <a href="game.html" class="btn btn-discord">
                 <span>🎮</span> ИГРАТЬ СЕЙЧАС
             </a>
         </nav>
         
-        <!-- Главный экран -->
         <section class="hero">
-            <div class="hero-content fade-in" style="animation-delay: 0.4s;">
+            <div class="hero-content fade-in">
                 <h1 class="hero-title">
                     КОСМИЧЕСКИЙ<br>
-                    <span>КЛИКЕР</span>
+                    <span class="gradient-text">КЛИКЕР</span>
                 </h1>
                 <p class="hero-subtitle">
                     Погрузитесь в бескрайние просторы вселенной. Создавайте сингулярности, 
@@ -702,83 +410,63 @@
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">25</div>
-                        <div class="stat-label">УНИКАЛЬНЫХ СКИНОВ</div>
+                        <div class="stat-label">СКИНОВ</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">25</div>
-                        <div class="stat-label">ДОСТИЖЕНИЙ</div>
+                        <div class="stat-label">АЧИВОК</div>
                     </div>
                 </div>
                 <a href="game.html" class="play-btn">
                     🚀 ИГРАТЬ
                 </a>
             </div>
-            <div class="hero-image fade-in" style="animation-delay: 0.6s;">
+            <div class="hero-image fade-in">
                 <div class="core-preview"></div>
             </div>
         </section>
         
-        <!-- Особенности игры -->
-        <section id="features" class="features">
+        <section id="features">
             <h2 class="section-title fade-in">ОСОБЕННОСТИ ИГРЫ</h2>
             <div class="features-grid">
-                <div class="feature-card fade-in" style="animation-delay: 0.2s;">
+                <div class="feature-card fade-in">
                     <div class="feature-icon">⚡</div>
                     <div class="feature-title">30 УРОВНЕЙ ЯДРА</div>
                     <div class="feature-desc">От базового импульса до божественной мощи. Каждый уровень увеличивает силу клика.</div>
-                    <div class="feature-progress">
-                        <div class="feature-progress-bar" style="width: 100%"></div>
-                    </div>
                 </div>
                 
-                <div class="feature-card fade-in" style="animation-delay: 0.3s;">
+                <div class="feature-card fade-in">
                     <div class="feature-icon">🌀</div>
                     <div class="feature-title">30 АВТО-УЛУЧШЕНИЙ</div>
                     <div class="feature-desc">Автоматический сбор энергии с помощью космических двигателей.</div>
-                    <div class="feature-progress">
-                        <div class="feature-progress-bar" style="width: 100%"></div>
-                    </div>
                 </div>
                 
-                <div class="feature-card fade-in" style="animation-delay: 0.4s;">
+                <div class="feature-card fade-in">
                     <div class="feature-icon">🎨</div>
                     <div class="feature-title">25 СКИНОВ</div>
                     <div class="feature-desc">Уникальные скины ядра: от туманностей до легендарных артефактов.</div>
-                    <div class="feature-progress">
-                        <div class="feature-progress-bar" style="width: 100%"></div>
-                    </div>
                 </div>
                 
-                <div class="feature-card fade-in" style="animation-delay: 0.5s;">
+                <div class="feature-card fade-in">
                     <div class="feature-icon">🏆</div>
                     <div class="feature-title">25 АЧИВОК</div>
                     <div class="feature-desc">Достижения с наградами и анимациями. Станьте легендой!</div>
-                    <div class="feature-progress">
-                        <div class="feature-progress-bar" style="width: 100%"></div>
-                    </div>
                 </div>
                 
-                <div class="feature-card fade-in" style="animation-delay: 0.6s;">
+                <div class="feature-card fade-in">
                     <div class="feature-icon">🔐</div>
                     <div class="feature-title">СЕКРЕТНЫЕ КОДЫ</div>
                     <div class="feature-desc">XaR03, free2026, 1324 - активируйте и получите мощные бонусы!</div>
-                    <div class="feature-progress">
-                        <div class="feature-progress-bar" style="width: 100%"></div>
-                    </div>
                 </div>
                 
-                <div class="feature-card fade-in" style="animation-delay: 0.7s;">
+                <div class="feature-card fade-in">
                     <div class="feature-icon">🎵</div>
                     <div class="feature-title">КОСМИЧЕСКАЯ МУЗЫКА</div>
                     <div class="feature-desc">Атмосферный саундтрек и звуковые эффекты для полного погружения.</div>
-                    <div class="feature-progress">
-                        <div class="feature-progress-bar" style="width: 100%"></div>
-                    </div>
                 </div>
             </div>
         </section>
         
-        <!-- Секретные коды -->
         <section id="codes" class="codes-section fade-in">
             <h2 class="codes-title">⚡ СЕКРЕТНЫЕ КОДЫ ⚡</h2>
             <div class="codes-grid">
@@ -795,30 +483,29 @@
                     <div class="code-desc">+98.4M к клику</div>
                 </div>
             </div>
-            <div class="code-hint">
+            <div class="code-hint mt-4">
                 💡 Введи коды в меню "СТАНЦИЯ" в игре
             </div>
         </section>
         
-        <!-- Отзывы -->
-        <section id="community" class="testimonials">
+        <section id="community">
             <h2 class="section-title fade-in">ЧТО ГОВОРЯТ ИГРОКИ</h2>
             <div class="testimonials-grid">
-                <div class="testimonial-card fade-in" style="animation-delay: 0.2s;">
+                <div class="testimonial-card fade-in">
                     <div class="testimonial-text">
                         "Лучший кликер, в который я играл! 30 уровней ядра - это нечто. Уже 5 сингулярностей!"
                     </div>
                     <div class="testimonial-author">— CosmicMaster</div>
                 </div>
                 
-                <div class="testimonial-card fade-in" style="animation-delay: 0.3s;">
+                <div class="testimonial-card fade-in">
                     <div class="testimonial-text">
                         "Скины просто космос! Особенно Легенда Реформати. А ачивки с анимациями - огонь!"
                     </div>
                     <div class="testimonial-author">— StarCollector</div>
                 </div>
                 
-                <div class="testimonial-card fade-in" style="animation-delay: 0.4s;">
+                <div class="testimonial-card fade-in">
                     <div class="testimonial-text">
                         "Нашел код XaR03 - теперь мой клик дает 290M! Игра стал еще интереснее."
                     </div>
@@ -827,7 +514,6 @@
             </div>
         </section>
         
-        <!-- Футер -->
         <footer>
             <div class="footer-links">
                 <a href="game.html">Играть</a>
@@ -840,53 +526,5 @@
             </div>
         </footer>
     </div>
-    
-    <script>
-        // Создание частиц
-        function createParticles() {
-            const particlesContainer = document.createElement('div');
-            particlesContainer.className = 'particles';
-            
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDuration = 15 + Math.random() * 20 + 's';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                particle.style.width = (1 + Math.random() * 3) + 'px';
-                particle.style.height = particle.style.width;
-                particlesContainer.appendChild(particle);
-            }
-            
-            document.body.appendChild(particlesContainer);
-        }
-        
-        createParticles();
-        
-        // Анимация цифр в статистике
-        function animateNumbers() {
-            const numbers = document.querySelectorAll('.stat-number');
-            numbers.forEach(number => {
-                const finalValue = number.innerText.replace('+', '');
-                let currentValue = 0;
-                const increment = finalValue / 50;
-                
-                const interval = setInterval(() => {
-                    currentValue += increment;
-                    if (currentValue >= finalValue) {
-                        number.innerText = finalValue + (number.innerText.includes('+') ? '+' : '');
-                        clearInterval(interval);
-                    } else {
-                        number.innerText = Math.floor(currentValue) + (number.innerText.includes('+') ? '+' : '');
-                    }
-                }, 30);
-            });
-        }
-        
-        // Запуск анимации при загрузке
-        window.addEventListener('load', () => {
-            setTimeout(animateNumbers, 1000);
-        });
-    </script>
 </body>
 </html>
