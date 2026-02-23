@@ -2959,7 +2959,50 @@ initMusicTracks();
 updateVolume(70);
 updateCosmicInterface();
 updateAchievementsDisplay();
+// ========== ИНИЦИАЛИЗАЦИЯ МУЗЫКИ ПОСЛЕ КЛИКА ==========
+document.addEventListener('click', function initAudioOnFirstClick() {
+    // Создаем тихий звук для разблокировки аудио контекста
+    if (audioElements.length > 0 && audioElements[0]) {
+        // Пробуем воспроизвести первый трек очень тихо и сразу ставим на паузу
+        audioElements[0].volume = 0.01;
+        audioElements[0].play().then(() => {
+            audioElements[0].pause();
+            audioElements[0].currentTime = 0;
+            audioElements[0].volume = currentVolume / 100;
+            console.log('Аудио контекст разблокирован');
+        }).catch(e => console.log('Ошибка инициализации аудио:', e));
+    }
+    
+    // Удаляем обработчик после первого клика
+    document.removeEventListener('click', initAudioOnFirstClick);
+}, { once: true });
 
+// Альтернативный метод с использованием Web Audio API
+function initWebAudio() {
+    try {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+    } catch (e) {
+        console.log('Web Audio API не поддерживается');
+    }
+}
+
+// Добавляем обработчик на кнопку покупки музыки
+document.addEventListener('DOMContentLoaded', function() {
+    // Принудительно создаем аудио контекст при загрузке
+    initWebAudio();
+    
+    // Обновляем функцию покупки музыки
+    const originalPurchase = purchaseMusicAccess;
+    purchaseMusicAccess = function() {
+        initWebAudio();
+        return originalPurchase.apply(this, arguments);
+    };
+});
 // Добавляем стиль для уведомлений
 const style = document.createElement('style');
 style.textContent = `
@@ -2993,8 +3036,10 @@ style.textContent = `
     padding: 10px 12px;
     min-width: 70px;
   }
+    
 `;
 document.head.appendChild(style);
+
 </script>
 </body>
 </html>
