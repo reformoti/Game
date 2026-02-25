@@ -828,6 +828,7 @@ body::before {
   object-fit:cover;
   border-bottom:2px solid rgba(157,78,221,0.4);
   transition:0.3s;
+  border-radius:12px 12px 0 0;
 }
 
 .skin-card:hover .skin-image {
@@ -2044,79 +2045,59 @@ function renderMusicPurchaseButton() {
   }
 }
 
-// ========== НОВЫЕ ФОНЫ ==========
+// ========== ВСЕ ФОНЫ (старые + новые) ==========
 const backgrounds = [
-  {name:'Глубокий Космос', price:800*20, url:'https://wallpapercave.com/wp/wp9267865.jpg'},
-  {name:'Красная Туманность', price:40000*20, url:'https://images4.alphacoders.com/102/1029255.jpg'},
-  {name:'Синяя Галактика', price:50000*20, url:'https://wallpapercave.com/wp/wp15705495.jpg'},
-  {name:'Фиолетовый Космос', price:60000*20, url:'https://images8.alphacoders.com/135/thumb-1920-1354199.jpeg'},
-  {name:'Золотая Туманность', price:80000*20, url:'https://wallpaper.forfun.com/fetch/00/008ff52a2516af485380ffd409e6c834.jpeg'},
-  {name:'Розовая Галактика', price:100000*20, url:'https://applescoop.org/image/wallpapers/mac/night-mode-anime-style-cottage-on-a-hill-at-dark-night-best-most-popular-free-download-wallpapers-for-macbook-pro-and-macbook-air-and-microsoft-windows-desktop-pcs-4k-07-12-2024-1733638190-hd-wallpaper.webp'},
-  {name:'Изумрудный Космос', price:150000*20, url:'https://images8.alphacoders.com/131/1315742.jpg'},
-  {name:'Сапфировая Туманность', price:200000*20, url:'https://images3.alphacoders.com/137/1377082.png'}
+  {name:'Глубокий Космос', price:800, url:'https://images.wallpaperscraft.ru/image/single/kosmos_zvezdy_tumannost_157030_3840x2400.jpg'},
+  {name:'Сингулярность', price:2000, url:'https://server.wallpaperalchemy.com/storage/wallpapers/91/4k-black-hole-minimalistic-wallpaper.png'},
+  {name:'Планета Земля', price:3500, url:'https://img3.akspic.ru/crops/1/9/9/5/25991/25991-zemlya-atmosfera-kosmos-prostranstvo-vselennaya-3840x2160.jpg'},
+  {name:'Галактический Вихрь', price:5000, url:'https://wallpaper.forfun.com/fetch/60/604f6358cd0a4b83989516f724ed8bea.jpeg'},
+  {name:'Туманность Ориона', price:7500, url:'https://images.alphacoders.com/135/1354208.jpeg'},
+  {name:'Ледяная Планета', price:10000, url:'https://abrakadabra.fun/uploads/posts/2021-12/1640668539_5-abrakadabra-fun-p-oboi-na-rabochii-stol-planeta-6.png'},
+  {name:'Космический Океан', price:15000, url:'https://images.wallpapershq.com/wallpapers/1284/wallpaper_1284_3840x2160.jpg'},
+  {name:'Аниме Пейзаж', price:20000, url:'https://sotni.ru/wp-content/uploads/2023/08/anime-peizazh-375.webp'},
+  {name:'Аниме Закат', price:25000, url:'https://abrakadabra.fun/uploads/posts/2022-02/1643978194_2-abrakadabra-fun-p-fon-dlya-prevyu-anime-2.jpg'},
+  {name:'Тёмный Лес', price:30000, url:'https://img2.akspic.ru/crops/1/1/7/7/97711/97711-les-chernyj_les-priroda-derevo-solnechnyj_svet-3840x2160.jpg'},
+  {name:'Красная Туманность', price:40000, url:'https://images4.alphacoders.com/102/1029255.jpg'},
+  {name:'Синяя Галактика', price:50000, url:'https://wallpapercave.com/wp/wp15705495.jpg'},
+  {name:'Фиолетовый Космос', price:60000, url:'https://images8.alphacoders.com/135/thumb-1920-1354199.jpeg'},
+  {name:'Золотая Туманность', price:80000, url:'https://wallpaper.forfun.com/fetch/00/008ff52a2516af485380ffd409e6c834.jpeg'},
+  {name:'Розовая Галактика', price:100000, url:'https://applescoop.org/image/wallpapers/mac/night-mode-anime-style-cottage-on-a-hill-at-dark-night-best-most-popular-free-download-wallpapers-for-macbook-pro-and-macbook-air-and-microsoft-windows-desktop-pcs-4k-07-12-2024-1733638190-hd-wallpaper.webp'},
+  {name:'Изумрудный Космос', price:150000, url:'https://images8.alphacoders.com/131/1315742.jpg'},
+  {name:'Сапфировая Туманность', price:200000, url:'https://images3.alphacoders.com/137/1377082.png'}
 ];
 
-// ========== НОВЫЕ СКИНЫ ==========
+// ========== ВСЕ СКИНЫ (старые + новые) ==========
 const originalSkins = [
-  {name:'Туманность Андромеды', price:500*20, url:'https://wallpaper.forfun.com/fetch/8d/8dbdaf8bd40e873ddb331cad3c246db3.jpeg'},
-  {name:'Ретро Череп', price:1200*20, url:'https://e1.pxfuel.com/desktop-wallpaper/962/415/desktop-wallpaper-pink-skull-by-daemonika-2800x2100-for-your-mobile-tablet-retro-skull.jpg'},
-  {name:'Пицца', price:2500*20, url:'https://c4.wallpaperflare.com/wallpaper/741/599/723/pizza-food-vegetables-fruit-wallpaper-preview.jpg'},
-  {name:'Киберпанк', price:4000*20, url:'https://i.pinimg.com/736x/20/4d/58/204d5811926c27cb8925d5cc0a9342aa.jpg'},
-  {name:'Космический Пульсар', price:8000*20, url:'https://pbs.twimg.com/media/GVeSbUeWUAA2PSc.jpg'},
-  {name:'Магнетар', price:12000*20, url:'https://universemagazine.com/wp-content/uploads/2023/12/javier-miranda-kbu5apay4t0-unsplash.jpg'},
-  {name:'Квазар', price:20000*20, url:'https://www6.slac.stanford.edu/sites/default/files/images/0803019_21.jpg'},
-  {name:'Абстракция', price:35000*20, url:'https://i.pinimg.com/736x/96/b8/7e/96b87ed46354a6bcedaef2799b6553c3.jpg'},
-  {name:'Галактика', price:80000*20, url:'https://i.pinimg.com/600x315/c9/ff/7d/c9ff7da321a1896eedae3b262dbe3d8b.jpg'},
-  {name:'Неон', price:100000*20, url:'https://scontent-waw2-1.xx.fbcdn.net/v/t1.6435-9/60960653_2254372368146460_449542527381405696_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=fm6huFCQQy4Q7kNvwHl7RTQ&_nc_oc=Admp1V6s_jGaslIHHvOIEQ3V2zjTEnEKwtSAaInTALc5E0TjQvDua369GWuI1J9Wblc&_nc_zt=23&_nc_ht=scontent-waw2-1.xx&_nc_gid=yUQGFDDZ8d1MHXUq7PRxLw&oh=00_AfvOxDFSawHZKZjb9Wd1ahNQS9Tpe2QQytxXiVM5pI7IdA&oe=69C677A3'}
+  {name:'Туманность Андромеды', price:500, url:'https://wallpaper.forfun.com/fetch/8d/8dbdaf8bd40e873ddb331cad3c246db3.jpeg'},
+  {name:'Облако Сингулярности', price:1200, url:'https://e1.pxfuel.com/desktop-wallpaper/962/415/desktop-wallpaper-pink-skull-by-daemonika-2800x2100-for-your-mobile-tablet-retro-skull.jpg'},
+  {name:'Квантовый Разлом', price:2500, url:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0TgYQy6Kacnqz2eG4Kzpb5s3Ih73QeAYi8Q&s'},
+  {name:'Эхо Вселенной', price:4000, url:'https://images.steamusercontent.com/ugc/1675869057985981771/EC21624F70B718E5406F4748BD3DFC1EE4309CB7/'},
+  {name:'Череп Пустоты', price:8000, url:'https://img.freepik.com/premium-vector/illustration-white-skull-black-background-skull-tattoos-illustration-scarf_15870-787.jpg'},
+  {name:'Крик Бездны', price:12000, url:'https://img.freepik.com/premium-vector/screaming-skull-vector-black-background_248052-86.jpg'},
+  {name:'Тетрадь Смерти', price:20000, url:'https://img.goodfon.ru/wallpaper/big/c/e3/death-note-tetrad-smerti-2436.webp'},
+  {name:'Астральный Символ', price:35000, url:'https://i.pinimg.com/736x/b9/30/ba/b930ba00009244ce23891e5c42e699e9.jpg'},
+  {name:'Галактический Разряд', price:80000, url:'https://klike.net/uploads/posts/2022-07/1657778940_37.jpg'},
+  {name:'Молниеносный Импульс', price:100000, url:'https://zefirka.club/uploads/posts/2023-01/thumbs/1673691446_24-zefirka-club-p-molniya-makvin-na-avu-35.jpg'},
+  {name:'Красный Гигант', price:150000, url:'https://c4.wallpaperflare.com/wallpaper/741/599/723/pizza-food-vegetables-fruit-wallpaper-preview.jpg'},
+  {name:'Голубой Сверхгигант', price:300000, url:'https://i.pinimg.com/736x/20/4d/58/204d5811926c27cb8925d5cc0a9342aa.jpg'},
+  {name:'Пульсар', price:500000, url:'https://pbs.twimg.com/media/GVeSbUeWUAA2PSc.jpg'},
+  {name:'Магнетар', price:750000, url:'https://universemagazine.com/wp-content/uploads/2023/12/javier-miranda-kbu5apay4t0-unsplash.jpg'},
+  {name:'Квазар', price:1000000, url:'https://www6.slac.stanford.edu/sites/default/files/images/0803019_21.jpg'},
+  {name:'Абстракция', price:1500000, url:'https://i.pinimg.com/736x/96/b8/7e/96b87ed46354a6bcedaef2799b6553c3.jpg'},
+  {name:'Галактика', price:2000000, url:'https://i.pinimg.com/600x315/c9/ff/7d/c9ff7da321a1896eedae3b262dbe3d8b.jpg'},
+  {name:'Неон', price:3000000, url:'https://scontent-waw2-1.xx.fbcdn.net/v/t1.6435-9/60960653_2254372368146460_449542527381405696_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=fm6huFCQQy4Q7kNvwHl7RTQ&_nc_oc=Admp1V6s_jGaslIHHvOIEQ3V2zjTEnEKwtSAaInTALc5E0TjQvDua369GWuI1J9Wblc&_nc_zt=23&_nc_ht=scontent-waw2-1.xx&_nc_gid=yUQGFDDZ8d1MHXUq7PRxLw&oh=00_AfvOxDFSawHZKZjb9Wd1ahNQS9Tpe2QQytxXiVM5pI7IdA&oe=69C677A3'}
 ];
 
-// ========== ЭКСКЛЮЗИВНЫЕ СКИНЫ (ГРАДИЕНТЫ) ==========
+// ========== ЭКСКЛЮЗИВНЫЕ СКИНЫ ==========
 const specialSkins = [
-  {name:'Пламя Феникса', price:250000*20, gradient:'linear-gradient(135deg, #ff6b6b, #ff8e53, #ffd700)'},
-  {name:'Ледяной Кристалл', price:500000*20, gradient:'linear-gradient(135deg, #a8e6cf, #d4edfa, #89cff0)'},
-  {name:'Золотая Галактика', price:1000000*20, gradient:'linear-gradient(135deg, #ffd700, #ffa500, #ff8c00)'},
-  {name:'Кровавая Луна', price:2500000*20, gradient:'linear-gradient(135deg, #8b0000, #ff0000, #ff4444)'},
-  {name:'Божественный Щит', price:10000000*20, gradient:'linear-gradient(135deg, #fff, #f0f0f0, #e0e0e0)'},
-  {name:'Сверхновая', price:25000000*20, gradient:'linear-gradient(135deg, #9400d3, #4b0082, #0000ff)'},
-  {name:'Космический Феникс', price:50000000*20, gradient:'linear-gradient(135deg, #ff1493, #ff69b4, #ffb6c1)'},
-  {name:'Реформати Легенда', price:100000000*20, gradient:'linear-gradient(135deg, #00b4ff, #9d4edd, #ff6b6b)'}
-];
-
-// ========== НОВЫЕ ПРОКАЧКИ ==========
-const newClickUpgrades = [
-  {power:2, price:40, name:"Квантовый импульс"},
-  {power:8, price:200, name:"Протонный удар"},
-  {power:15, price:400, name:"Нейтронный взрыв"},
-  {power:35, price:1000, name:"Плазменный шторм"},
-  {power:75, price:2000, name:"Гравитационный коллапс"},
-  {power:150, price:4000, name:"Сингулярность"},
-  {power:300, price:8000, name:"Черная дыра"},
-  {power:600, price:16000, name:"Квазар"},
-  {power:1200, price:32000, name:"Галактика"},
-  {power:2400, price:64000, name:"Мультивселенная"},
-  {power:5000, price:128000, name:"Абсолют"},
-  {power:10000, price:256000, name:"Бесконечность"},
-  {power:20000, price:512000, name:"Вечность"},
-  {power:40000, price:1024000, name:"Божественность"},
-  {power:80000, price:2048000, name:"Создатель"}
-];
-
-const newAutoUpgrades = [
-  {power:2, price:60, name:"Солнечный ветер"},
-  {power:6, price:300, name:"Ионный поток"},
-  {power:12, price:600, name:"Варп-поле"},
-  {power:25, price:1200, name:"Квантовая турбина"},
-  {power:40, price:2400, name:"Гравитационный привод"},
-  {power:60, price:4800, name:"Термоядро"},
-  {power:90, price:9600, name:"Звездный коллектор"},
-  {power:140, price:19200, name:"Червоточина"},
-  {power:250, price:38400, name:"Гиперпространство"},
-  {power:400, price:76800, name:"Временной разлом"},
-  {power:650, price:153600, name:"Портал"},
-  {power:1000, price:307200, name:"Измерение"},
-  {power:1600, price:614400, name:"Реальность"},
-  {power:2500, price:1228800, name:"Сознание"},
-  {power:4000, price:2457600, name:"Истина"}
+  {name:'Пламя Феникса', price:250000, url:'https://cdn.pixabay.com/photo/2016/11/29/05/45/astronomy-1867616_1280.jpg'},
+  {name:'Ледяной Кристалл', price:500000, url:'https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'},
+  {name:'Золотая Галактика', price:1000000, url:'https://cdn.pixabay.com/photo/2016/10/20/18/35/earth-1756274_1280.jpg'},
+  {name:'Кровавая Луна', price:2500000, url:'https://cdn.pixabay.com/photo/2011/12/14/12/21/orion-nebula-11107_1280.jpg'},
+  {name:'Божественный Щит', price:10000000, url:'https://cdn.pixabay.com/photo/2017/09/12/11/56/universe-2742113_1280.jpg'},
+  {name:'Сверхновая', price:25000000, url:'https://cdn.pixabay.com/photo/2016/11/22/23/44/buildings-1851246_1280.jpg'},
+  {name:'Космический Феникс', price:50000000, url:'https://cdn.pixabay.com/photo/2017/02/09/17/15/abstract-2049565_1280.jpg'},
+  {name:'Реформати Легенда', price:100000000, url:'https://cdn.pixabay.com/photo/2018/04/25/09/26/eclipse-3348889_1280.jpg'}
 ];
 
 // ========== СТАРЫЕ ПРОКАЧКИ ==========
@@ -2170,10 +2151,6 @@ const autoUpgrades = [
   {power:100000000000, price:3000000000000, name:"Великий сбор"},
   {power:500000000000, price:15000000000000, name:"Абсолютный сбор"}
 ];
-
-// Объединяем старые и новые прокачки
-const allClickUpgrades = [...clickUpgrades, ...newClickUpgrades];
-const allAutoUpgrades = [...autoUpgrades, ...newAutoUpgrades];
 
 const multiplierUpgrades = [
   {value:1.2, basePrice:1000, name:"×1.2"},
@@ -2333,8 +2310,7 @@ const jokes = [
   { text: "Как программисты называют свою память? 'Кэш' - потому что быстро забывают", laugh: "💾💾💾" },
   { text: "Программист приходит к гадалке. Гадалка: 'Вижу в твоем будущем много багов'. Программист: 'Это баг или фича?'", laugh: "🔮🔮🔮" },
   { text: "Почему программисты не ходят в цирк? Потому что там слишком много 'клоунов', которые пишут код", laugh: "🤡🤡🤡" },
-  { text: "Программист спрашивает у коллеги: 'Ты веришь в Бога?'. Коллега: 'Да, это единственный разработчик, у которого нет багов'", laugh: "🙏🙏🙏" },
-  { text: "Почему программисты не ходят на пляж? Потому что там слишком много 'песочниц'", laugh: "🏖️🏖️🏖️" }
+  { text: "Программист спрашивает у коллеги: 'Ты веришь в Бога?'. Коллега: 'Да, это единственный разработчик, у которого нет багов'", laugh: "🙏🙏🙏" }
 ];
 
 // Достижения
@@ -2350,10 +2326,10 @@ const achievements = [
   {id:'energy_tycoon', name:'Магнат энергии', desc:'10,000,000 энергии', icon:'💎', condition:()=>highestEnergy>=10000000, reward:{multiplier:1.3, energy:1000000}, progress:()=>Math.min(highestEnergy/10000000,1)},
   {id:'energy_billion', name:'Миллиардер', desc:'1,000,000,000 энергии', icon:'💰', condition:()=>highestEnergy>=1000000000, reward:{multiplier:1.5, energy:100000000}, progress:()=>Math.min(highestEnergy/1000000000,1)},
   {id:'skin_collector', name:'Коллекционер', desc:'5 скинов', icon:'🎨', condition:()=>skinsPurchased>=5, reward:{multiplier:1.1}, progress:()=>Math.min(skinsPurchased/5,1)},
-  {id:'skin_master', name:'Мастер скинов', desc:'Все обычные скины', icon:'🖼️', condition:()=>skinsPurchased>=15, reward:{multiplier:1.3}, progress:()=>Math.min(skinsPurchased/15,1)},
+  {id:'skin_master', name:'Мастер скинов', desc:'Все обычные скины', icon:'🖼️', condition:()=>skinsPurchased>=18, reward:{multiplier:1.3}, progress:()=>Math.min(skinsPurchased/18,1)},
   {id:'skin_legend', name:'Легендарный коллекционер', desc:'Все эксклюзивные скины', icon:'👑', condition:()=>specialSkinsPurchased>=8, reward:{multiplier:1.5}, progress:()=>Math.min(specialSkinsPurchased/8,1)},
   {id:'background_collector', name:'Художник фонов', desc:'5 фонов', icon:'🎭', condition:()=>backgroundsPurchased>=5, reward:{multiplier:1.1}, progress:()=>Math.min(backgroundsPurchased/5,1)},
-  {id:'background_master', name:'Мастер фонов', desc:'Все фоны', icon:'✨', condition:()=>backgroundsPurchased>=8, reward:{multiplier:1.2}, progress:()=>Math.min(backgroundsPurchased/8,1)},
+  {id:'background_master', name:'Мастер фонов', desc:'Все фоны', icon:'✨', condition:()=>backgroundsPurchased>=17, reward:{multiplier:1.2}, progress:()=>Math.min(backgroundsPurchased/17,1)},
   {id:'core_master', name:'Мастер ядра', desc:'Купите 30 улучшений ядра', icon:'⚡', condition:()=>corePower>=1000000, reward:{multiplier:1.2}, progress:()=>Math.min(corePower/1000000,1)},
   {id:'auto_master', name:'Автоматизатор', desc:'1000 авто/сек', icon:'🤖', condition:()=>autoHarvest>=1000, reward:{multiplier:1.3}, progress:()=>Math.min(autoHarvest/1000,1)},
   {id:'auto_god', name:'Бог автоматизации', desc:'1,000,000 авто/сек', icon:'⚙️', condition:()=>autoHarvest>=1000000, reward:{multiplier:1.5}, progress:()=>Math.min(autoHarvest/1000000,1)},
@@ -2717,7 +2693,7 @@ function calculateSkinBonus() {
 function renderClickUpgrades() {
   const container = document.getElementById('clickUpgradesGrid');
   container.innerHTML = '';
-  allClickUpgrades.forEach((upg, i) => {
+  clickUpgrades.forEach((upg, i) => {
     const btn = document.createElement('button');
     btn.className = 'upgrade-btn';
     btn.innerHTML = `<div class="upgrade-value">+${formatNumber(upg.power)}</div><div class="upgrade-price">${formatNumber(upg.price)} ЭН</div><div class="upgrade-name">${upg.name}</div>`;
@@ -2736,7 +2712,7 @@ function renderClickUpgrades() {
 function renderAutoUpgrades() {
   const container = document.getElementById('autoUpgradesGrid');
   container.innerHTML = '';
-  allAutoUpgrades.forEach((upg, i) => {
+  autoUpgrades.forEach((upg, i) => {
     const btn = document.createElement('button');
     btn.className = 'upgrade-btn';
     btn.innerHTML = `<div class="upgrade-value">+${formatNumber(upg.power)}/сек</div><div class="upgrade-price">${formatNumber(upg.price)} ЭН</div><div class="upgrade-name">${upg.name}</div>`;
@@ -2858,7 +2834,7 @@ function renderSkins() {
     if (owned) badges += '<div class="skin-owned-badge">✓</div>';
     if (equipped) badges += '<div class="skin-equip-badge">👑</div>';
     
-    card.innerHTML = `${badges}<img src="${skin.url}" class="skin-image" loading="lazy" onerror="this.src='https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'"><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? (equipped ? 'НАДЕТО' : 'В ГАРДЕРОБЕ') : formatNumber(skin.price) + ' ЭН'}</div></div>`;
+    card.innerHTML = `${badges}<img src="${skin.url}" class="skin-image" loading="lazy" style="object-fit:cover; width:100%; height:100px; border-radius:12px 12px 0 0;" onerror="this.src='https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'"><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? (equipped ? 'НАДЕТО' : 'В ГАРДЕРОБЕ') : formatNumber(skin.price) + ' ЭН'}</div></div>`;
     
     if (!owned) {
       if (stellarEnergy >= skin.price) card.classList.add('available');
@@ -2878,6 +2854,7 @@ function renderSkins() {
         equippedSkin = skin.name;
         equippedSpecialSkin = null;
         novaCore.style.backgroundImage = `url('${skin.url}')`;
+        novaCore.style.backgroundSize = 'cover';
         createPurchaseParticles();
         showStellarMessage(`✅ Надет скин: ${skin.name}`, '#4caf50');
         renderSkins();
@@ -2901,7 +2878,7 @@ function renderSpecialSkins() {
     if (owned) badges += '<div class="skin-owned-badge">✓</div>';
     if (equipped) badges += '<div class="skin-equip-badge">👑</div>';
     
-    card.innerHTML = `${badges}<div class="skin-image" style="background:${skin.gradient}; width:100%; height:100px;"></div><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? (equipped ? 'НАДЕТО' : 'В ГАРДЕРОБЕ') : formatNumber(skin.price) + ' ЭН'}</div></div>`;
+    card.innerHTML = `${badges}<img src="${skin.url}" class="skin-image" loading="lazy" style="object-fit:cover; width:100%; height:100px; border-radius:12px 12px 0 0;" onerror="this.src='https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'"><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? (equipped ? 'НАДЕТО' : 'В ГАРДЕРОБЕ') : formatNumber(skin.price) + ' ЭН'}</div></div>`;
     
     if (!owned) {
       if (stellarEnergy >= skin.price) card.classList.add('available');
@@ -2921,7 +2898,8 @@ function renderSpecialSkins() {
       card.onclick = () => {
         equippedSpecialSkin = skin.name;
         equippedSkin = null;
-        novaCore.style.background = skin.gradient;
+        novaCore.style.backgroundImage = `url('${skin.url}')`;
+        novaCore.style.backgroundSize = 'cover';
         createPurchaseParticles();
         showStellarMessage(`✅ Надет эксклюзив: ${skin.name}`, '#ffd700');
         renderSkins();
@@ -2945,7 +2923,7 @@ function renderBackgrounds() {
     if (owned) badges += '<div class="skin-owned-badge">✓</div>';
     if (equipped) badges += '<div class="skin-equip-badge">🌟</div>';
     
-    card.innerHTML = `${badges}<img src="${bg.url}" class="skin-image" loading="lazy" onerror="this.src='https://images.wallpaperscraft.ru/image/single/kosmos_zvezdy_tumannost_157030_3840x2400.jpg'"><div class="skin-info"><div class="skin-name">${bg.name}</div><div class="skin-price">${owned ? (equipped ? 'АКТИВЕН' : 'В КОЛЛЕКЦИИ') : formatNumber(bg.price) + ' ЭН'}</div></div>`;
+    card.innerHTML = `${badges}<img src="${bg.url}" class="skin-image" loading="lazy" style="object-fit:cover; width:100%; height:100px; border-radius:12px 12px 0 0;" onerror="this.src='https://images.wallpaperscraft.ru/image/single/kosmos_zvezdy_tumannost_157030_3840x2400.jpg'"><div class="skin-info"><div class="skin-name">${bg.name}</div><div class="skin-price">${owned ? (equipped ? 'АКТИВЕН' : 'В КОЛЛЕКЦИИ') : formatNumber(bg.price) + ' ЭН'}</div></div>`;
     
     if (!owned) {
       if (stellarEnergy >= bg.price) card.classList.add('available');
@@ -3083,6 +3061,12 @@ style.textContent = `
     line-height: 1.2;
     padding: 10px 12px;
     min-width: 70px;
+  }
+  .skin-image {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100px !important;
+    border-radius: 12px 12px 0 0 !important;
   }
 `;
 document.head.appendChild(style);
