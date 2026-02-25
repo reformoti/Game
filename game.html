@@ -1550,7 +1550,6 @@ body::before {
     <div class="music-panel">
       <div class="music-title">🎵 КОСМИЧЕСКАЯ МУЗЫКА</div>
       
-      <!-- Крутилка громкости -->
       <div class="volume-container">
         <div class="volume-ring" onclick="rotateVolume(event)">
           <div class="volume-ring-bg"></div>
@@ -1562,7 +1561,6 @@ body::before {
         <div class="volume-value" id="volumeDisplay">70%</div>
       </div>
       
-      <!-- КНОПКИ УПРАВЛЕНИЯ МУЗЫКОЙ -->
       <div class="music-controls">
         <button class="music-control-btn" onclick="prevTrack()" title="Предыдущий трек">⏮️</button>
         <button class="music-control-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()">▶️</button>
@@ -1570,7 +1568,6 @@ body::before {
         <button class="music-control-btn" onclick="stopMusic()" title="Стоп">⏹️</button>
       </div>
       
-      <!-- ВЫБОР ТРЕКОВ -->
       <div class="music-track-selector" id="musicTrackSelector">
         <button class="music-track-btn locked" id="trackBtn1" onclick="selectTrack(0)">#1</button>
         <button class="music-track-btn locked" id="trackBtn2" onclick="selectTrack(1)">#2</button>
@@ -1579,7 +1576,6 @@ body::before {
         <button class="music-track-btn locked" id="trackBtn5" onclick="selectTrack(4)">#5</button>
       </div>
       
-      <!-- ТЕКУЩИЙ ТРЕК -->
       <div class="current-track-display" id="currentTrackDisplay">
         ⏸️ Текущий трек: <span id="currentTrackName">Не выбран</span>
         <span class="track-number-badge" id="trackNumberBadge">0/5</span>
@@ -1683,19 +1679,16 @@ body::before {
   <div class="achievements-grid" id="achievementsGrid"></div>
 </div>
 
-<!-- ПАНЕЛЬ АНЕКДОТОВ - ТОЛЬКО ПОСЛЕ 20 REBIRTH -->
 <div class="panel" id="jokesPanel">
   <button class="close-panel" onclick="toggleJokesPanel()">×</button>
   
   <div class="secret-panel">
-    <div class="secret-title">😂 СЕКРЕТНЫЕ АНЕКДОТЫ</div>
+    <div class="secret-title">😂 100 КОСМИЧЕСКИХ АНЕКДОТОВ</div>
     <div style="color:#ffd700; text-align:center; margin-bottom:20px;">
       ✦ Вы достигли 20 сингулярностей! ✦
     </div>
     
-    <div class="joke-container" id="jokesGrid">
-      <!-- Анекдоты будут добавлены JavaScript -->
-    </div>
+    <div class="joke-container" id="jokesGrid"></div>
   </div>
 </div>
 
@@ -1739,21 +1732,19 @@ let secretCodes = {
   'VOID': { used: false },
   'COSMIC': { used: false },
   'NEBULA': { used: false },
-  'QUASAR': { used: false }
+  'QUASAR': { used: false },
+  'REFORMOTI': { used: false }
 };
 
 // ========== МУЗЫКАЛЬНАЯ СИСТЕМА ==========
-let audioContext = null;
 let audioEnabled = false;
 let currentTrack = 0;
-let audioGainNode = null;
 let musicUnlocked = false;
 let musicPrice = 50000;
 let tracksUnlocked = 0;
 let currentVolume = 70;
 let isDraggingVolume = false;
 
-// Массив с названиями треков
 const trackNames = [
   'Космическая симфония',
   'Галактический вальс',
@@ -1764,19 +1755,13 @@ const trackNames = [
 
 let audioElements = [];
 
-// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ МУЗЫКИ ==========
 function initMusicTracks() {
   for (let i = 0; i < 5; i++) {
     let audio = new Audio();
     audio.loop = true;
     audio.volume = currentVolume / 100;
     
-    // Здесь ваши локальные файлы
-    if (i === 0) audio.src = 'track1.mp3';
-    else if (i === 1) audio.src = 'track2.mp3';
-    else if (i === 2) audio.src = 'track3.mp3';
-    else if (i === 3) audio.src = 'track4.mp3';
-    else if (i === 4) audio.src = 'track5.mp3';
+    audio.src = `music/track${i+1}.mp3`;
     
     audioElements.push(audio);
     
@@ -1824,10 +1809,8 @@ function updateMusicTrackButtons() {
   }
   
   const playPauseBtn = document.getElementById('playPauseBtn');
-  if (audioEnabled) {
-    playPauseBtn.innerHTML = '⏸️';
-  } else {
-    playPauseBtn.innerHTML = '▶️';
+  if (playPauseBtn) {
+    playPauseBtn.innerHTML = audioEnabled ? '⏸️' : '▶️';
   }
 }
 
@@ -1907,14 +1890,12 @@ function selectTrack(index) {
 
 function nextTrack() {
   if (!musicUnlocked || tracksUnlocked === 0) return;
-  
   let nextIndex = (currentTrack + 1) % tracksUnlocked;
   playTrack(nextIndex);
 }
 
 function prevTrack() {
   if (!musicUnlocked || tracksUnlocked === 0) return;
-  
   let prevIndex = (currentTrack - 1 + tracksUnlocked) % tracksUnlocked;
   playTrack(prevIndex);
 }
@@ -2063,59 +2044,82 @@ function renderMusicPurchaseButton() {
   }
 }
 
-// ========== 30 АНЕКДОТОВ ==========
-const jokes = [
-  { text: "Летит байт по проводу, а навстречу ему гигабайт. Байт спрашивает: 'Ты кто?'. Гигабайт отвечает: 'Я - 1024 тебя!'", laugh: "🤣😂🤣" },
-  { text: "Программист просыпается и говорит жене: 'Дорогая, я тебя люблю!'. Жена: 'Ты что, баги ловил всю ночь?'", laugh: "😆😆😆" },
-  { text: "Встречаются два хакера. Один говорит: 'Я взломал Пентагон!'. Второй: 'А я взломал холодильник - теперь колбаса сама выходит!'", laugh: "🤪🤪🤪" },
-  { text: "Приходит байт в бар и заказывает 8 бит пива.", laugh: "😁😁😁" },
-  { text: "Стоят два процессора на конвейере. Один другому: 'Ты чего такой грустный?'. Второй: 'Да понимаешь, меня сегодня уже третий раз перезагружают...'", laugh: "🤣🤣🤣" },
-  { text: "Космонавт прилетает на Марс, а там табличка: 'Добро пожаловать! Если ты с Земли - у нас тут тоже есть интернет, только ping 40 минут'", laugh: "😆😆😆" },
-  { text: "Илон Маск купил Twitter, а теперь хочет купить телеграм, чтобы сделать из него космический корабль", laugh: "🚀🚀🚀" },
-  { text: "Сингулярность - это когда твой компьютер думает быстрее, чем ты успеваешь кликать", laugh: "😵😵😵" },
-  { text: "Почему программисты не любят космос? Там слишком много багов!", laugh: "🐛🐛🐛" },
-  { text: "Встречаются 0 и 1. 0 говорит: 'Ты такой единичный!'. 1 отвечает: 'А ты такой нулевой...'", laugh: "😄😄😄" },
-  { text: "Что говорит программист, когда у него день рождения? 'Happy birthday to me! Синтаксическая ошибка!'", laugh: "🎂🎂🎂" },
-  { text: "Почему программисты путают Хэллоуин и Рождество? Потому что Oct 31 == Dec 25", laugh: "🎃🎄🎃" },
-  { text: "Сколько программистов нужно, чтобы вкрутить лампочку? Ни одного, это hardware проблема.", laugh: "💡💡💡" },
-  { text: "Айтишник приходит к врачу. Врач: 'На что жалуетесь?'. Айтишник: 'Болит вот здесь, здесь и здесь'. Врач: 'Попробуйте перезагрузиться'", laugh: "🔄🔄🔄" },
-  { text: "Жена программиста: 'Дорогой, сходи в магазин, купи хлеб, если будут яйца - купи десяток'. Программист принес 10 буханок хлеба и сказал: 'Яйца были'", laugh: "🥚🥚🥚" },
-  { text: "Администратор спрашивает у программиста: 'Ты почему вчера не пришел на работу?'. Программист: 'Я компилировал программу'", laugh: "💻💻💻" },
-  { text: "Что такое 'I C Q' в переводе с английского? 'Я ищу тебя'", laugh: "🔍🔍🔍" },
-  { text: "Стоит Windows на коленях перед Линуксом и плачет. Линукс: 'Ты чего?'. Windows: 'Я тебя не поддерживаю'", laugh: "😭😭😭" },
-  { text: "Приходит баг к разработчику и говорит: 'Ты меня вчера пофиксил?'. Разработчик: 'Да'. Баг: 'А я сегодня опять вылез!'", laugh: "🐞🐞🐞" },
-  { text: "Как программисты поздравляют друг друга с днем рождения? 'Желаю тебе бесконечного цикла удачи и никаких багов в жизни!'", laugh: "🎉🎉🎉" },
-  { text: "В чем разница между программистом и Богом? Бог знает всё, программист знает, где искать", laugh: "👨‍💻👨‍💻👨‍💻" },
-  { text: "Оптимист учит английский, пессимист - китайский, а программист - язык ассемблера", laugh: "🔤🔤🔤" },
-  { text: "Почему программисты любят темноту? Потому что свет привлекает багов", laugh: "🌚🌚🌚" },
-  { text: "Если у тебя есть яблоко и у меня есть яблоко, и мы обменяемся, у каждого будет по яблоку. Если у тебя есть идея и у меня есть идея, и мы обменяемся, у каждого будет по две идеи", laugh: "🍎💡🍎" },
-  { text: "Программист заходит в бар и заказывает 1, 0, 1, 0, 1, 0, 1, 0...", laugh: "🥃🥃🥃" },
-  { text: "Сколько нужно программистов, чтобы поменять лампочку? 10. Один меняет, остальные 9 говорят: 'Я бы сделал лучше'", laugh: "💡💡💡" },
-  { text: "Что говорит программист, когда у него всё работает? 'Оно компилируется! ОНО КОМПИЛИРУЕТСЯ!!!'", laugh: "🎊🎊🎊" },
-  { text: "Как называется маленький программист? Микро-софт", laugh: "👶👶👶" },
-  { text: "Программист звоит в службу поддержки: 'У меня не работает интернет'. Оператор: 'Перезагрузите роутер'. Программист: 'А где кнопка перезагрузки?'", laugh: "📞📞📞" },
-  { text: "Хакеры не ломают системы - они просто просят пароль вежливо", laugh: "😇😇😇" }
+// ========== НОВЫЕ ФОНЫ ==========
+const backgrounds = [
+  {name:'Глубокий Космос', price:800*20, url:'https://wallpapercave.com/wp/wp9267865.jpg'},
+  {name:'Красная Туманность', price:40000*20, url:'https://images4.alphacoders.com/102/1029255.jpg'},
+  {name:'Синяя Галактика', price:50000*20, url:'https://wallpapercave.com/wp/wp15705495.jpg'},
+  {name:'Фиолетовый Космос', price:60000*20, url:'https://images8.alphacoders.com/135/thumb-1920-1354199.jpeg'},
+  {name:'Золотая Туманность', price:80000*20, url:'https://wallpaper.forfun.com/fetch/00/008ff52a2516af485380ffd409e6c834.jpeg'},
+  {name:'Розовая Галактика', price:100000*20, url:'https://applescoop.org/image/wallpapers/mac/night-mode-anime-style-cottage-on-a-hill-at-dark-night-best-most-popular-free-download-wallpapers-for-macbook-pro-and-macbook-air-and-microsoft-windows-desktop-pcs-4k-07-12-2024-1733638190-hd-wallpaper.webp'},
+  {name:'Изумрудный Космос', price:150000*20, url:'https://images8.alphacoders.com/131/1315742.jpg'},
+  {name:'Сапфировая Туманность', price:200000*20, url:'https://images3.alphacoders.com/137/1377082.png'}
 ];
 
-function createPurchaseParticles() {
-  for (let i = 0; i < 20; i++) {
-    setTimeout(() => {
-      const particle = document.createElement('div');
-      particle.className = 'purchase-particle';
-      particle.style.left = Math.random() * window.innerWidth + 'px';
-      particle.style.top = Math.random() * window.innerHeight + 'px';
-      particle.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
-      particle.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
-      document.body.appendChild(particle);
-      setTimeout(() => particle.remove(), 1000);
-    }, i * 50);
-  }
-}
+// ========== НОВЫЕ СКИНЫ ==========
+const originalSkins = [
+  {name:'Туманность Андромеды', price:500*20, url:'https://wallpaper.forfun.com/fetch/8d/8dbdaf8bd40e873ddb331cad3c246db3.jpeg'},
+  {name:'Ретро Череп', price:1200*20, url:'https://e1.pxfuel.com/desktop-wallpaper/962/415/desktop-wallpaper-pink-skull-by-daemonika-2800x2100-for-your-mobile-tablet-retro-skull.jpg'},
+  {name:'Пицца', price:2500*20, url:'https://c4.wallpaperflare.com/wallpaper/741/599/723/pizza-food-vegetables-fruit-wallpaper-preview.jpg'},
+  {name:'Киберпанк', price:4000*20, url:'https://i.pinimg.com/736x/20/4d/58/204d5811926c27cb8925d5cc0a9342aa.jpg'},
+  {name:'Космический Пульсар', price:8000*20, url:'https://pbs.twimg.com/media/GVeSbUeWUAA2PSc.jpg'},
+  {name:'Магнетар', price:12000*20, url:'https://universemagazine.com/wp-content/uploads/2023/12/javier-miranda-kbu5apay4t0-unsplash.jpg'},
+  {name:'Квазар', price:20000*20, url:'https://www6.slac.stanford.edu/sites/default/files/images/0803019_21.jpg'},
+  {name:'Абстракция', price:35000*20, url:'https://i.pinimg.com/736x/96/b8/7e/96b87ed46354a6bcedaef2799b6553c3.jpg'},
+  {name:'Галактика', price:80000*20, url:'https://i.pinimg.com/600x315/c9/ff/7d/c9ff7da321a1896eedae3b262dbe3d8b.jpg'},
+  {name:'Неон', price:100000*20, url:'https://scontent-waw2-1.xx.fbcdn.net/v/t1.6435-9/60960653_2254372368146460_449542527381405696_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=fm6huFCQQy4Q7kNvwHl7RTQ&_nc_oc=Admp1V6s_jGaslIHHvOIEQ3V2zjTEnEKwtSAaInTALc5E0TjQvDua369GWuI1J9Wblc&_nc_zt=23&_nc_ht=scontent-waw2-1.xx&_nc_gid=yUQGFDDZ8d1MHXUq7PRxLw&oh=00_AfvOxDFSawHZKZjb9Wd1ahNQS9Tpe2QQytxXiVM5pI7IdA&oe=69C677A3'}
+];
 
-function getRebirthCost() {
-  return 10000000 * Math.pow(2, quantumGeneration);
-}
+// ========== ЭКСКЛЮЗИВНЫЕ СКИНЫ (ГРАДИЕНТЫ) ==========
+const specialSkins = [
+  {name:'Пламя Феникса', price:250000*20, gradient:'linear-gradient(135deg, #ff6b6b, #ff8e53, #ffd700)'},
+  {name:'Ледяной Кристалл', price:500000*20, gradient:'linear-gradient(135deg, #a8e6cf, #d4edfa, #89cff0)'},
+  {name:'Золотая Галактика', price:1000000*20, gradient:'linear-gradient(135deg, #ffd700, #ffa500, #ff8c00)'},
+  {name:'Кровавая Луна', price:2500000*20, gradient:'linear-gradient(135deg, #8b0000, #ff0000, #ff4444)'},
+  {name:'Божественный Щит', price:10000000*20, gradient:'linear-gradient(135deg, #fff, #f0f0f0, #e0e0e0)'},
+  {name:'Сверхновая', price:25000000*20, gradient:'linear-gradient(135deg, #9400d3, #4b0082, #0000ff)'},
+  {name:'Космический Феникс', price:50000000*20, gradient:'linear-gradient(135deg, #ff1493, #ff69b4, #ffb6c1)'},
+  {name:'Реформати Легенда', price:100000000*20, gradient:'linear-gradient(135deg, #00b4ff, #9d4edd, #ff6b6b)'}
+];
 
+// ========== НОВЫЕ ПРОКАЧКИ ==========
+const newClickUpgrades = [
+  {power:2, price:40, name:"Квантовый импульс"},
+  {power:8, price:200, name:"Протонный удар"},
+  {power:15, price:400, name:"Нейтронный взрыв"},
+  {power:35, price:1000, name:"Плазменный шторм"},
+  {power:75, price:2000, name:"Гравитационный коллапс"},
+  {power:150, price:4000, name:"Сингулярность"},
+  {power:300, price:8000, name:"Черная дыра"},
+  {power:600, price:16000, name:"Квазар"},
+  {power:1200, price:32000, name:"Галактика"},
+  {power:2400, price:64000, name:"Мультивселенная"},
+  {power:5000, price:128000, name:"Абсолют"},
+  {power:10000, price:256000, name:"Бесконечность"},
+  {power:20000, price:512000, name:"Вечность"},
+  {power:40000, price:1024000, name:"Божественность"},
+  {power:80000, price:2048000, name:"Создатель"}
+];
+
+const newAutoUpgrades = [
+  {power:2, price:60, name:"Солнечный ветер"},
+  {power:6, price:300, name:"Ионный поток"},
+  {power:12, price:600, name:"Варп-поле"},
+  {power:25, price:1200, name:"Квантовая турбина"},
+  {power:40, price:2400, name:"Гравитационный привод"},
+  {power:60, price:4800, name:"Термоядро"},
+  {power:90, price:9600, name:"Звездный коллектор"},
+  {power:140, price:19200, name:"Червоточина"},
+  {power:250, price:38400, name:"Гиперпространство"},
+  {power:400, price:76800, name:"Временной разлом"},
+  {power:650, price:153600, name:"Портал"},
+  {power:1000, price:307200, name:"Измерение"},
+  {power:1600, price:614400, name:"Реальность"},
+  {power:2500, price:1228800, name:"Сознание"},
+  {power:4000, price:2457600, name:"Истина"}
+];
+
+// ========== СТАРЫЕ ПРОКАЧКИ ==========
 const clickUpgrades = [
   {power:1, price:20, name:"Базовый импульс"},
   {power:5, price:100, name:"Протонный всплеск"},
@@ -2167,6 +2171,10 @@ const autoUpgrades = [
   {power:500000000000, price:15000000000000, name:"Абсолютный сбор"}
 ];
 
+// Объединяем старые и новые прокачки
+const allClickUpgrades = [...clickUpgrades, ...newClickUpgrades];
+const allAutoUpgrades = [...autoUpgrades, ...newAutoUpgrades];
+
 const multiplierUpgrades = [
   {value:1.2, basePrice:1000, name:"×1.2"},
   {value:2, basePrice:5000, name:"×2"},
@@ -2180,10 +2188,6 @@ const multiplierUpgrades = [
   {value:1000000, basePrice:1562500000, name:"×1000000"}
 ];
 let multiplierPurchases = [0,0,0,0,0,0,0,0,0,0];
-
-function getMultiplierPrice(index) {
-  return multiplierUpgrades[index].basePrice * Math.pow(2, multiplierPurchases[index]);
-}
 
 const criticalUpgrades = [
   {chance:1, multiplier:2, price:5000, name:"Базовый крит"},
@@ -2224,62 +2228,116 @@ const bonusUpgrades = [
   {type:'luck', value:0.5, price:15625000000, name:"Удача III"}
 ];
 
-const originalSkins = [
-  {name:'Туманность Андромеды',price:500,url:'https://wallpaper.forfun.com/fetch/8d/8dbdaf8bd40e873ddb331cad3c246db3.jpeg'},
-  {name:'Облако Сингулярности',price:1200,url:'https://media.istockphoto.com/id/1498666644/ru/%D1%84%D0%BE%D1%82%D0%BE/%D0%BE%D0%B1%D0%BB%D0%B0%D0%BA%D0%B0-%D1%87%D0%B5%D1%80%D0%BD%D0%BE%D0%B9-%D0%B4%D1%8B%D1%80%D1%8B-%D0%B2%D1%8B%D1%81%D0%BE%D0%BA%D0%BE%D0%BA%D0%B0%D1%87%D0%B5%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%BD%D0%B4%D0%B5%D1%80%D0%B8%D0%BD%D0%B3.jpg'},
-  {name:'Квантовый Разлом',price:2500,url:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0TgYQy6Kacnqz2eG4Kzpb5s3Ih73QeAYi8Q&s'},
-  {name:'Эхо Вселенной',price:4000,url:'https://images.steamusercontent.com/ugc/1675869057985981771/EC21624F70B718E5406F4748BD3DFC1EE4309CB7/'},
-  {name:'Череп Пустоты',price:8000,url:'https://img.freepik.com/premium-vector/illustration-white-skull-black-background-skull-tattoos-illustration-scarf_15870-787.jpg'},
-  {name:'Крик Бездны',price:12000,url:'https://img.freepik.com/premium-vector/screaming-skull-vector-black-background_248052-86.jpg'},
-  {name:'Тетрадь Смерти',price:20000,url:'https://img.goodfon.ru/wallpaper/big/c/e3/death-note-tetrad-smerti-2436.webp'},
-  {name:'Астральный Символ',price:35000,url:'https://i.pinimg.com/736x/b9/30/ba/b930ba00009244ce23891e5c42e699e9.jpg'},
-  {name:'Галактический Разряд',price:80000,url:'https://klike.net/uploads/posts/2022-07/1657778940_37.jpg'},
-  {name:'Молниеносный Импульс',price:100000,url:'https://zefirka.club/uploads/posts/2023-01/thumbs/1673691446_24-zefirka-club-p-molniya-makvin-na-avu-35.jpg'},
-  {name:'Красный Гигант',price:150000,url:'https://cdn.pixabay.com/photo/2017/01/18/16/46/hollywood-1990326_1280.jpg'},
-  {name:'Голубой Сверхгигант',price:300000,url:'https://cdn.pixabay.com/photo/2011/12/14/12/21/orion-nebula-11107_1280.jpg'},
-  {name:'Пульсар',price:500000,url:'https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'},
-  {name:'Магнетар',price:750000,url:'https://cdn.pixabay.com/photo/2016/11/29/05/45/astronomy-1867616_1280.jpg'},
-  {name:'Квазар',price:1000000,url:'https://cdn.pixabay.com/photo/2017/09/12/11/56/universe-2742113_1280.jpg'}
+// ========== 100 АНЕКДОТОВ ==========
+const jokes = [
+  { text: "Летит байт по проводу, а навстречу ему гигабайт. Байт спрашивает: 'Ты кто?'. Гигабайт отвечает: 'Я - 1024 тебя!'", laugh: "🤣😂🤣" },
+  { text: "Программист просыпается и говорит жене: 'Дорогая, я тебя люблю!'. Жена: 'Ты что, баги ловил всю ночь?'", laugh: "😆😆😆" },
+  { text: "Встречаются два хакера. Один говорит: 'Я взломал Пентагон!'. Второй: 'А я взломал холодильник - теперь колбаса сама выходит!'", laugh: "🤪🤪🤪" },
+  { text: "Приходит байт в бар и заказывает 8 бит пива.", laugh: "😁😁😁" },
+  { text: "Стоят два процессора на конвейере. Один другому: 'Ты чего такой грустный?'. Второй: 'Да понимаешь, меня сегодня уже третий раз перезагружают...'", laugh: "🤣🤣🤣" },
+  { text: "Космонавт прилетает на Марс, а там табличка: 'Добро пожаловать! Если ты с Земли - у нас тут тоже есть интернет, только ping 40 минут'", laugh: "😆😆😆" },
+  { text: "Илон Маск купил Twitter, а теперь хочет купить телеграм, чтобы сделать из него космический корабль", laugh: "🚀🚀🚀" },
+  { text: "Сингулярность - это когда твой компьютер думает быстрее, чем ты успеваешь кликать", laugh: "😵😵😵" },
+  { text: "Почему программисты не любят космос? Там слишком много багов!", laugh: "🐛🐛🐛" },
+  { text: "Встречаются 0 и 1. 0 говорит: 'Ты такой единичный!'. 1 отвечает: 'А ты такой нулевой...'", laugh: "😄😄😄" },
+  { text: "Что говорит программист, когда у него день рождения? 'Happy birthday to me! Синтаксическая ошибка!'", laugh: "🎂🎂🎂" },
+  { text: "Почему программисты путают Хэллоуин и Рождество? Потому что Oct 31 == Dec 25", laugh: "🎃🎄🎃" },
+  { text: "Сколько программистов нужно, чтобы вкрутить лампочку? Ни одного, это hardware проблема.", laugh: "💡💡💡" },
+  { text: "Айтишник приходит к врачу. Врач: 'На что жалуетесь?'. Айтишник: 'Болит вот здесь, здесь и здесь'. Врач: 'Попробуйте перезагрузиться'", laugh: "🔄🔄🔄" },
+  { text: "Жена программиста: 'Дорогой, сходи в магазин, купи хлеб, если будут яйца - купи десяток'. Программист принес 10 буханок хлеба и сказал: 'Яйца были'", laugh: "🥚🥚🥚" },
+  { text: "Администратор спрашивает у программиста: 'Ты почему вчера не пришел на работу?'. Программист: 'Я компилировал программу'", laugh: "💻💻💻" },
+  { text: "Что такое 'I C Q' в переводе с английского? 'Я ищу тебя'", laugh: "🔍🔍🔍" },
+  { text: "Стоит Windows на коленях перед Линуксом и плачет. Линукс: 'Ты чего?'. Windows: 'Я тебя не поддерживаю'", laugh: "😭😭😭" },
+  { text: "Приходит баг к разработчику и говорит: 'Ты меня вчера пофиксил?'. Разработчик: 'Да'. Баг: 'А я сегодня опять вылез!'", laugh: "🐞🐞🐞" },
+  { text: "Как программисты поздравляют друг друга с днем рождения? 'Желаю тебе бесконечного цикла удачи и никаких багов в жизни!'", laugh: "🎉🎉🎉" },
+  { text: "В чем разница между программистом и Богом? Бог знает всё, программист знает, где искать", laugh: "👨‍💻👨‍💻👨‍💻" },
+  { text: "Оптимист учит английский, пессимист - китайский, а программист - язык ассемблера", laugh: "🔤🔤🔤" },
+  { text: "Почему программисты любят темноту? Потому что свет привлекает багов", laugh: "🌚🌚🌚" },
+  { text: "Если у тебя есть яблоко и у меня есть яблоко, и мы обменяемся, у каждого будет по яблоку. Если у тебя есть идея и у меня есть идея, и мы обменяемся, у каждого будет по две идеи", laugh: "🍎💡🍎" },
+  { text: "Программист заходит в бар и заказывает 1, 0, 1, 0, 1, 0, 1, 0...", laugh: "🥃🥃🥃" },
+  { text: "Сколько нужно программистов, чтобы поменять лампочку? 10. Один меняет, остальные 9 говорят: 'Я бы сделал лучше'", laugh: "💡💡💡" },
+  { text: "Что говорит программист, когда у него всё работает? 'Оно компилируется! ОНО КОМПИЛИРУЕТСЯ!!!'", laugh: "🎊🎊🎊" },
+  { text: "Как называется маленький программист? Микро-софт", laugh: "👶👶👶" },
+  { text: "Программист звонит в службу поддержки: 'У меня не работает интернет'. Оператор: 'Перезагрузите роутер'. Программист: 'А где кнопка перезагрузки?'", laugh: "📞📞📞" },
+  { text: "Хакеры не ломают системы - они просто просят пароль вежливо", laugh: "😇😇😇" },
+  { text: "Приходит программист к психиатру. Психиатр: 'Что вас беспокоит?'. Программист: 'Мне кажется, что я - собака'. Психиатр: 'И давно?'. Программист: 'С тех пор как меня переименовали в puplik'", laugh: "🐕🐕🐕" },
+  { text: "Почему программисты не ходят на свидания? Потому что они боятся commit'ов", laugh: "💔💔💔" },
+  { text: "Что такое 'Hello World' для программиста? Это первый шаг к безумию", laugh: "👋🌍👋" },
+  { text: "Программист приходит в бар и говорит: 'Мне пиво и чтобы без багов'. Бармен: 'У нас только лагер'", laugh: "🍺🍺🍺" },
+  { text: "Как программисты называют своих детей? 'Наследники класса'", laugh: "👶👶👶" },
+  { text: "Почему программисты не играют в футбол? Потому что там слишком много header'ов", laugh: "⚽⚽⚽" },
+  { text: "Что общего между программистом и Шерлоком Холмсом? Оба ищут баги", laugh: "🔍🔍🔍" },
+  { text: "Программист приходит к врачу. Врач: 'У вас аритмия'. Программист: 'Это потому что я не синхронизировал потоки?'", laugh: "💓💓💓" },
+  { text: "Почему программисты не любят природу? Там слишком много багов и нет интернета", laugh: "🌲🌲🌲" },
+  { text: "Что такое 'NaN'? Это когда твоя зарплата после налогов", laugh: "💰💰💰" },
+  { text: "Программист спрашивает у коллеги: 'Ты вчера видел мой код?'. Коллега: 'Нет, я не мазохист'", laugh: "😱😱😱" },
+  { text: "Почему программисты не ходят в церковь? Потому что там говорят 'аминь', а не 'commit'", laugh: "⛪⛪⛪" },
+  { text: "Как программисты называют плохую погоду? 'Баг в системе природы'", laugh: "🌧️🌧️🌧️" },
+  { text: "Программист жалуется: 'У меня вчера была ошибка 404'. Друг: 'Что не нашел?'. Программист: 'Свою девушку'", laugh: "😢😢😢" },
+  { text: "Почему программисты не женятся? Потому что боятся бесконечного цикла", laugh: "💍💍💍" },
+  { text: "Что говорит программист, когда видит красивую девушку? 'Ого, какие настройки!'", laugh: "👀👀👀" },
+  { text: "Как программисты называют свою память? 'RAM' - потому что всё забывают при выключении", laugh: "🧠🧠🧠" },
+  { text: "Программист приходит в ресторан. Официант: 'Что будете заказывать?'. Программист: 'Меню'. Официант: 'Вот'. Программист: 'А где документация?'", laugh: "📋📋📋" },
+  { text: "Почему программисты не водят машину? Потому что боятся ошибок в драйверах", laugh: "🚗🚗🚗" },
+  { text: "Что такое 'Ctrl+Z' для программиста? Кнопка спасения жизни", laugh: "🔄🔄🔄" },
+  { text: "Программист спрашивает у Бога: 'Боже, когда будет идеальный код?'. Бог: 'Жди, я компилирую Вселенную'", laugh: "🌌🌌🌌" },
+  { text: "Почему программисты не пьют кофе? Потому что он горький, как их жизнь", laugh: "☕☕☕" },
+  { text: "Как программисты называют свою жену? 'Основной поток'", laugh: "👩👩👩" },
+  { text: "Программист приходит к психологу. Психолог: 'Расскажите о своих проблемах'. Программист: 'У меня есть проблема между креслом и клавиатурой'", laugh: "🪑🪑🪑" },
+  { text: "Почему программисты не ходят в кино? Потому что там слишком много сюжетных багов", laugh: "🎬🎬🎬" },
+  { text: "Что такое '999' для программиста? Это когда у тебя 999 проблем, и все связаны с кодом", laugh: "9️⃣9️⃣9️⃣" },
+  { text: "Программист спрашивает: 'Почему ты не отвечаешь на мои сообщения?'. Друг: 'Я в офлайне'. Программист: 'А перезагрузиться не пробовал?'", laugh: "📱📱📱" },
+  { text: "Почему программисты не спят? Потому что ночью меньше пользователей и можно спокойно дебажить", laugh: "😴😴😴" },
+  { text: "Как программисты называют плохое настроение? 'Критическая ошибка в системе'", laugh: "😠😠😠" },
+  { text: "Программист говорит другу: 'Я сегодня поймал 10 багов'. Друг: 'Молодец! А где?'. Программист: 'В зоопарке'", laugh: "🐜🐜🐜" },
+  { text: "Почему программисты не любят осень? Потому что листья падают, как их код после код-ревью", laugh: "🍂🍂🍂" },
+  { text: "Что такое 'API' для программиста? Это когда он просит у Бога документацию", laugh: "📖📖📖" },
+  { text: "Программист заходит в лифт и говорит: 'Поехали на 5 этаж'. Лифт: '404 Not Found'", laugh: "🛗🛗🛗" },
+  { text: "Почему программисты не ходят на пляж? Потому что там слишком много 'песочниц'", laugh: "🏖️🏖️🏖️" },
+  { text: "Как программисты называют отпуск? 'Долгий период без деплоя'", laugh: "✈️✈️✈️" },
+  { text: "Программист приходит в магазин и спрашивает: 'У вас есть хлеб?'. Продавец: 'Да'. Программист: 'А документация к нему есть?'", laugh: "🍞🍞🍞" },
+  { text: "Почему программисты не любят понедельник? Потому что это 'System.ArrayIndexOutOfBoundsException' дня недели", laugh: "📅📅📅" },
+  { text: "Что такое 'while(true)' для программиста? Это его жизнь", laugh: "🔄🔄🔄" },
+  { text: "Программист спрашивает у коллеги: 'Как пройти в библиотеку?'. Коллега: 'Используй Google Maps API'", laugh: "🗺️🗺️🗺️" },
+  { text: "Почему программисты не готовят еду? Потому что боятся переполнения стека", laugh: "🍳🍳🍳" },
+  { text: "Как программисты называют свою кошку? 'Домашний сервер'", laugh: "🐱🐱🐱" },
+  { text: "Программист жалуется: 'У меня сегодня был тяжелый день'. Друг: 'Что случилось?'. Программист: 'Я забыл поставить точку с запятой'", laugh: "😫😫😫" },
+  { text: "Почему программисты не ходят на концерты? Потому что там слишком много 'live' багов", laugh: "🎸🎸🎸" },
+  { text: "Что такое 'git commit' для программиста? Это когда он пытается сохранить свою совесть", laugh: "💾💾💾" },
+  { text: "Программист говорит: 'Я знаю 1000 языков программирования'. Друг: 'А на каком думаешь?'. Программист: 'На русском'", laugh: "🇷🇺🇷🇺🇷🇺" },
+  { text: "Почему программисты не ходят в спортзал? Потому что там слишком много 'весов' и 'циклов'", laugh: "🏋️🏋️🏋️" },
+  { text: "Как программисты называют свою зарплату? 'Фиксированный баг'", laugh: "💵💵💵" },
+  { text: "Программист приходит к врачу. Врач: 'У вас простуда'. Программист: 'Это вирус или баг?'", laugh: "🤧🤧🤧" },
+  { text: "Почему программисты не ходят в театр? Потому что там слишком много 'драм' в коде", laugh: "🎭🎭🎭" },
+  { text: "Что такое 'null' для программиста? Это его социальная жизнь", laugh: "0️⃣0️⃣0️⃣" },
+  { text: "Программист спрашивает: 'Ты любишь джаву?'. Девушка: 'Да, это вкусно'. Программист уходит плакать", laugh: "☕☕☕" },
+  { text: "Почему программисты не ходят в горы? Потому что там слишком много 'пиков'", laugh: "⛰️⛰️⛰️" },
+  { text: "Как программисты называют свою машину? 'Железо с багами'", laugh: "🚗🚗🚗" },
+  { text: "Программист говорит: 'Я написал идеальный код'. Друг: 'Покажи'. Программист: 'Он не компилируется'", laugh: "😅😅😅" },
+  { text: "Почему программисты не любят математику? Потому что там слишком много 'исключений'", laugh: "🧮🧮🧮" },
+  { text: "Что такое 'Ctrl+C' для программиста? Это копирование чужих ошибок", laugh: "📋📋📋" },
+  { text: "Программист спрашивает у Бога: 'Боже, почему в мире столько багов?'. Бог: 'Это фичи, сынок'", laugh: "😇😇😇" },
+  { text: "Почему программисты не ходят в бассейн? Потому что там слишком много 'потоков'", laugh: "🏊🏊🏊" },
+  { text: "Как программисты называют свою собаку? 'Домашний firewall'", laugh: "🐕🐕🐕" },
+  { text: "Программист говорит: 'Я вчера нашел баг в матрице'. Друг: 'И что?'. Программист: 'Ничего, он оказался фичей'", laugh: "🤔🤔🤔" },
+  { text: "Почему программисты не ходят на свидания вслепую? Потому что боятся 'null pointer'", laugh: "👁️👁️👁️" },
+  { text: "Что такое 'sudo' для программиста? Это когда он просит у компа вежливо", laugh: "👑👑👑" },
+  { text: "Программист приходит в кафе. Официант: 'Что будете?'. Программист: 'Кофе, но без кофеина'. Официант: 'А смысл?'. Программист: 'Как в джаваскрипте - работает, но непонятно зачем'", laugh: "☕☕☕" },
+  { text: "Почему программисты не ходят на рыбалку? Потому что там слишком много 'багов' в воде", laugh: "🎣🎣🎣" },
+  { text: "Как программисты называют свою голову? 'Процессор с ошибками в коде'", laugh: "🧠🧠🧠" },
+  { text: "Программист спрашивает: 'Почему ты не отвечаешь?'. Друг: 'Я в офлайне'. Программист: 'А пинг проверить слабо?'", laugh: "📶📶📶" },
+  { text: "Почему программисты не любят зиму? Потому что слишком много 'снежинок' в коде", laugh: "❄️❄️❄️" },
+  { text: "Что такое 'break' для программиста? Это когда он выходит из бесконечного цикла жизни", laugh: "🚪🚪🚪" },
+  { text: "Программист говорит: 'Я знаю C++, Java, Python'. Друг: 'А людей?'. Программист: 'Это сложный API'", laugh: "👥👥👥" },
+  { text: "Почему программисты не ходят на выставки? Потому что там слишком много 'арта', а не кода", laugh: "🎨🎨🎨" },
+  { text: "Как программисты называют свою память? 'Кэш' - потому что быстро забывают", laugh: "💾💾💾" },
+  { text: "Программист приходит к гадалке. Гадалка: 'Вижу в твоем будущем много багов'. Программист: 'Это баг или фича?'", laugh: "🔮🔮🔮" },
+  { text: "Почему программисты не ходят в цирк? Потому что там слишком много 'клоунов', которые пишут код", laugh: "🤡🤡🤡" },
+  { text: "Программист спрашивает у коллеги: 'Ты веришь в Бога?'. Коллега: 'Да, это единственный разработчик, у которого нет багов'", laugh: "🙏🙏🙏" },
+  { text: "Почему программисты не ходят на пляж? Потому что там слишком много 'песочниц'", laugh: "🏖️🏖️🏖️" }
 ];
 
-const specialSkins = [
-  {name:'Пламя Феникса',price:250000,url:'https://cdn.pixabay.com/photo/2016/11/29/05/45/astronomy-1867616_1280.jpg'},
-  {name:'Ледяной Кристалл',price:500000,url:'https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'},
-  {name:'Золотая Галактика',price:1000000,url:'https://cdn.pixabay.com/photo/2016/10/20/18/35/earth-1756274_1280.jpg'},
-  {name:'Кровавая Луна',price:2500000,url:'https://cdn.pixabay.com/photo/2011/12/14/12/21/orion-nebula-11107_1280.jpg'},
-  {name:'Божественный Щит',price:10000000,url:'https://cdn.pixabay.com/photo/2017/09/12/11/56/universe-2742113_1280.jpg'},
-  {name:'Сверхновая',price:25000000,url:'https://cdn.pixabay.com/photo/2016/11/22/23/44/buildings-1851246_1280.jpg'},
-  {name:'Космический Феникс',price:50000000,url:'https://cdn.pixabay.com/photo/2017/02/09/17/15/abstract-2049565_1280.jpg'},
-  {name:'Реформати Легенда',price:100000000,url:'https://cdn.pixabay.com/photo/2018/04/25/09/26/eclipse-3348889_1280.jpg'},
-  {name:'Туманность Ориона',price:150000000,url:'https://cdn.pixabay.com/photo/2017/01/18/16/46/hollywood-1990326_1280.jpg'},
-  {name:'Андромеда',price:200000000,url:'https://cdn.pixabay.com/photo/2016/10/20/18/35/earth-1756274_1280.jpg'},
-  {name:'Млечный Путь',price:250000000,url:'https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'},
-  {name:'Черная Дыра',price:500000000,url:'https://cdn.pixabay.com/photo/2017/09/12/11/56/universe-2742113_1280.jpg'}
-];
-
-const backgrounds = [
-  {name:'Глубокий Космос',price:800,url:'https://images.wallpaperscraft.ru/image/single/kosmos_zvezdy_tumannost_157030_3840x2400.jpg'},
-  {name:'Сингулярность',price:2000,url:'https://server.wallpaperalchemy.com/storage/wallpapers/91/4k-black-hole-minimalistic-wallpaper.png'},
-  {name:'Планета Земля',price:3500,url:'https://img3.akspic.ru/crops/1/9/9/5/25991/25991-zemlya-atmosfera-kosmos-prostranstvo-vselennaya-3840x2160.jpg'},
-  {name:'Галактический Вихрь',price:5000,url:'https://wallpaper.forfun.com/fetch/60/604f6358cd0a4b83989516f724ed8bea.jpeg'},
-  {name:'Туманность Ориона',price:7500,url:'https://images.alphacoders.com/135/1354208.jpeg'},
-  {name:'Ледяная Планета',price:10000,url:'https://abrakadabra.fun/uploads/posts/2021-12/1640668539_5-abrakadabra-fun-p-oboi-na-rabochii-stol-planeta-6.png'},
-  {name:'Космический Океан',price:15000,url:'https://images.wallpapershq.com/wallpapers/1284/wallpaper_1284_3840x2160.jpg'},
-  {name:'Аниме Пейзаж',price:20000,url:'https://sotni.ru/wp-content/uploads/2023/08/anime-peizazh-375.webp'},
-  {name:'Аниме Закат',price:25000,url:'https://abrakadabra.fun/uploads/posts/2022-02/1643978194_2-abrakadabra-fun-p-fon-dlya-prevyu-anime-2.jpg'},
-  {name:'Тёмный Лес',price:30000,url:'https://img2.akspic.ru/crops/1/1/7/7/97711/97711-les-chernyj_les-priroda-derevo-solnechnyj_svet-3840x2160.jpg'},
-  {name:'Красная Туманность',price:40000,url:'https://cdn.pixabay.com/photo/2016/11/29/05/45/astronomy-1867616_1280.jpg'},
-  {name:'Синяя Галактика',price:50000,url:'https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'},
-  {name:'Фиолетовый Космос',price:60000,url:'https://cdn.pixabay.com/photo/2016/10/20/18/35/earth-1756274_1280.jpg'},
-  {name:'Золотая Туманность',price:80000,url:'https://cdn.pixabay.com/photo/2011/12/14/12/21/orion-nebula-11107_1280.jpg'},
-  {name:'Розовая Галактика',price:100000,url:'https://cdn.pixabay.com/photo/2017/09/12/11/56/universe-2742113_1280.jpg'},
-  {name:'Изумрудный Космос',price:150000,url:'https://cdn.pixabay.com/photo/2017/01/18/16/46/hollywood-1990326_1280.jpg'},
-  {name:'Сапфировая Туманность',price:200000,url:'https://cdn.pixabay.com/photo/2016/11/22/23/44/buildings-1851246_1280.jpg'},
-  {name:'Алмазная Галактика',price:300000,url:'https://cdn.pixabay.com/photo/2017/02/09/17/15/abstract-2049565_1280.jpg'},
-  {name:'Космический Взрыв',price:500000,url:'https://cdn.pixabay.com/photo/2018/04/25/09/26/eclipse-3348889_1280.jpg'},
-  {name:'Рождение Звезды',price:1000000,url:'https://cdn.pixabay.com/photo/2016/11/29/05/45/astronomy-1867616_1280.jpg'}
-];
-
+// Достижения
 const achievements = [
   {id:'first_click', name:'Первый шаг', desc:'Совершите первый клик', icon:'👣', condition:()=>totalClicks>=1, reward:{energy:100}, progress:()=>Math.min(totalClicks,1)},
   {id:'click_master', name:'Мастер клика', desc:'100 кликов', icon:'⚡', condition:()=>totalClicks>=100, reward:{multiplier:1.1}, progress:()=>Math.min(totalClicks/100,1)},
@@ -2293,10 +2351,10 @@ const achievements = [
   {id:'energy_billion', name:'Миллиардер', desc:'1,000,000,000 энергии', icon:'💰', condition:()=>highestEnergy>=1000000000, reward:{multiplier:1.5, energy:100000000}, progress:()=>Math.min(highestEnergy/1000000000,1)},
   {id:'skin_collector', name:'Коллекционер', desc:'5 скинов', icon:'🎨', condition:()=>skinsPurchased>=5, reward:{multiplier:1.1}, progress:()=>Math.min(skinsPurchased/5,1)},
   {id:'skin_master', name:'Мастер скинов', desc:'Все обычные скины', icon:'🖼️', condition:()=>skinsPurchased>=15, reward:{multiplier:1.3}, progress:()=>Math.min(skinsPurchased/15,1)},
-  {id:'skin_legend', name:'Легендарный коллекционер', desc:'Все эксклюзивные скины', icon:'👑', condition:()=>specialSkinsPurchased>=12, reward:{multiplier:1.5}, progress:()=>Math.min(specialSkinsPurchased/12,1)},
+  {id:'skin_legend', name:'Легендарный коллекционер', desc:'Все эксклюзивные скины', icon:'👑', condition:()=>specialSkinsPurchased>=8, reward:{multiplier:1.5}, progress:()=>Math.min(specialSkinsPurchased/8,1)},
   {id:'background_collector', name:'Художник фонов', desc:'5 фонов', icon:'🎭', condition:()=>backgroundsPurchased>=5, reward:{multiplier:1.1}, progress:()=>Math.min(backgroundsPurchased/5,1)},
-  {id:'background_master', name:'Мастер фонов', desc:'Все фоны', icon:'✨', condition:()=>backgroundsPurchased>=20, reward:{multiplier:1.2}, progress:()=>Math.min(backgroundsPurchased/20,1)},
-  {id:'core_master', name:'Мастер ядра', desc:'Купите 10 улучшений ядра', icon:'⚡', condition:()=>corePower>=10000, reward:{multiplier:1.2}, progress:()=>Math.min(corePower/10000,1)},
+  {id:'background_master', name:'Мастер фонов', desc:'Все фоны', icon:'✨', condition:()=>backgroundsPurchased>=8, reward:{multiplier:1.2}, progress:()=>Math.min(backgroundsPurchased/8,1)},
+  {id:'core_master', name:'Мастер ядра', desc:'Купите 30 улучшений ядра', icon:'⚡', condition:()=>corePower>=1000000, reward:{multiplier:1.2}, progress:()=>Math.min(corePower/1000000,1)},
   {id:'auto_master', name:'Автоматизатор', desc:'1000 авто/сек', icon:'🤖', condition:()=>autoHarvest>=1000, reward:{multiplier:1.3}, progress:()=>Math.min(autoHarvest/1000,1)},
   {id:'auto_god', name:'Бог автоматизации', desc:'1,000,000 авто/сек', icon:'⚙️', condition:()=>autoHarvest>=1000000, reward:{multiplier:1.5}, progress:()=>Math.min(autoHarvest/1000000,1)},
   {id:'multiplier_master', name:'Мастер множителей', desc:'×100 множитель', icon:'♾️', condition:()=>quantumMulti>=100, reward:{multiplier:1.3}, progress:()=>Math.min(quantumMulti/100,1)},
@@ -2309,11 +2367,12 @@ const achievements = [
   {id:'rebirth_beginner', name:'Начинающий путешественник', desc:'1 сингулярность', icon:'🌀', condition:()=>quantumGeneration>=1, reward:{energy:100000}, progress:()=>Math.min(quantumGeneration,1)},
   {id:'rebirth_king', name:'Король перерождений', desc:'10 сингулярностей', icon:'👑', condition:()=>quantumGeneration>=10, reward:{multiplier:2.0}, progress:()=>Math.min(quantumGeneration/10,1)},
   {id:'rebirth_legend', name:'Легенда перерождений', desc:'100 сингулярностей', icon:'♾️', condition:()=>quantumGeneration>=100, reward:{multiplier:3.0}, progress:()=>Math.min(quantumGeneration/100,1)},
-  {id:'code_master', name:'Взломщик кодов', desc:'Активируйте секретные коды', icon:'🔓', condition:()=>Object.values(secretCodes).filter(c=>c.used).length>=5, reward:{multiplier:2.0}, progress:()=>Object.values(secretCodes).filter(c=>c.used).length/5},
+  {id:'code_master', name:'Взломщик кодов', desc:'Активируйте 5 секретных кодов', icon:'🔓', condition:()=>Object.values(secretCodes).filter(c=>c.used).length>=5, reward:{multiplier:2.0}, progress:()=>Object.values(secretCodes).filter(c=>c.used).length/5},
   {id:'music_lover', name:'Меломан', desc:'Купите музыку', icon:'🎵', condition:()=>musicUnlocked, reward:{multiplier:1.2}, progress:()=>musicUnlocked?1:0},
   {id:'millionaire', name:'Миллионер', desc:'1,000,000 энергии', icon:'💰', condition:()=>stellarEnergy>=1000000, reward:{multiplier:1.25}, progress:()=>Math.min(stellarEnergy/1000000,1)},
   {id:'billionaire', name:'Миллиардер', desc:'1,000,000,000 энергии', icon:'💎', condition:()=>stellarEnergy>=1000000000, reward:{multiplier:1.5}, progress:()=>Math.min(stellarEnergy/1000000000,1)},
-  {id:'trillionaire', name:'Триллионер', desc:'1,000,000,000,000 энергии', icon:'💵', condition:()=>stellarEnergy>=1000000000000, reward:{multiplier:2.0}, progress:()=>Math.min(stellarEnergy/1000000000000,1)}
+  {id:'trillionaire', name:'Триллионер', desc:'1,000,000,000,000 энергии', icon:'💵', condition:()=>stellarEnergy>=1000000000000, reward:{multiplier:2.0}, progress:()=>Math.min(stellarEnergy/1000000000000,1)},
+  {id:'joke_master', name:'Король анекдотов', desc:'Откройте 50 анекдотов', icon:'😂', condition:()=>quantumGeneration>=20, reward:{multiplier:1.5}, progress:()=>quantumGeneration>=20?1:0}
 ];
 
 let unlockedAchievements = new Set();
@@ -2343,6 +2402,30 @@ function createQuantumFlare(x, y, val, color = null) {
   flare.textContent = '⚡+' + displayVal;
   document.querySelector('.nova-core-area').appendChild(flare);
   setTimeout(() => flare.remove(), 1000);
+}
+
+function createPurchaseParticles() {
+  for (let i = 0; i < 20; i++) {
+    setTimeout(() => {
+      const particle = document.createElement('div');
+      particle.className = 'purchase-particle';
+      particle.style.left = Math.random() * window.innerWidth + 'px';
+      particle.style.top = Math.random() * window.innerHeight + 'px';
+      particle.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+      particle.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
+      document.body.appendChild(particle);
+      setTimeout(() => particle.remove(), 1000);
+    }, i * 50);
+  }
+}
+
+function showStellarMessage(text, color) {
+  const msg = document.getElementById('stellarMessage');
+  if (!msg) return;
+  msg.textContent = text;
+  msg.style.color = color;
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 3000);
 }
 
 function handleClick(x, y) {
@@ -2385,14 +2468,15 @@ novaCore.onclick = (e) => {
   handleClick(e.clientX - rect.left, e.clientY - rect.top);
 };
 
+// Усложнение: энергия накапливается раз в 5 секунд с множителем 1.3
 setInterval(() => {
-  let earned = autoHarvest * quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier;
-  earned += energyRegen * (1 + passiveIncome);
+  let earned = autoHarvest * quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier * 1.3;
+  earned += energyRegen * (1 + passiveIncome) * 1.3;
   stellarEnergy += earned;
   totalAutoEarned += earned;
   if (stellarEnergy > highestEnergy) highestEnergy = stellarEnergy;
   updateCosmicInterface();
-}, 1000);
+}, 5000);
 
 setInterval(() => {
   totalTimePlayed++;
@@ -2559,9 +2643,11 @@ function activateStellarCode() {
     updateCosmicInterface(); checkAchievements();
   }
   else if (code === 'REFORMOTI') {
+    if (secretCodes['REFORMOTI'].used) { showStellarMessage('❌ Код уже активирован!', '#ff9800'); return; }
     stellarEnergy += 1000000000;
     quantumMulti *= 10;
     criticalChance += 25;
+    secretCodes['REFORMOTI'].used = true;
     showStellarMessage('✨ СЕКРЕТНЫЙ КОД РАЗРАБОТЧИКА!', '#ffd700');
     codeInput.value = '';
     createPurchaseParticles();
@@ -2570,14 +2656,6 @@ function activateStellarCode() {
   else {
     showStellarMessage('❌ НЕВЕРНЫЙ КОД!', '#ff6b6b');
   }
-}
-
-function showStellarMessage(text, color) {
-  const msg = document.getElementById('stellarMessage');
-  msg.textContent = text;
-  msg.style.color = color;
-  msg.style.display = 'block';
-  setTimeout(() => msg.style.display = 'none', 3000);
 }
 
 function openTab(id, btn) {
@@ -2631,8 +2709,7 @@ function toggleJokesPanel() {
 function calculateSkinBonus() {
   const totalSkins = ownedSkins.size + ownedSpecialSkins.size;
   if (totalSkins === 0) return 1;
-  if (totalSkins === 1) return 2;
-  let bonus = Math.pow(1.5, totalSkins - 1);
+  let bonus = 1 + (totalSkins * 0.1);
   bonus *= luckMultiplier;
   return bonus;
 }
@@ -2640,7 +2717,7 @@ function calculateSkinBonus() {
 function renderClickUpgrades() {
   const container = document.getElementById('clickUpgradesGrid');
   container.innerHTML = '';
-  clickUpgrades.forEach((upg, i) => {
+  allClickUpgrades.forEach((upg, i) => {
     const btn = document.createElement('button');
     btn.className = 'upgrade-btn';
     btn.innerHTML = `<div class="upgrade-value">+${formatNumber(upg.power)}</div><div class="upgrade-price">${formatNumber(upg.price)} ЭН</div><div class="upgrade-name">${upg.name}</div>`;
@@ -2659,7 +2736,7 @@ function renderClickUpgrades() {
 function renderAutoUpgrades() {
   const container = document.getElementById('autoUpgradesGrid');
   container.innerHTML = '';
-  autoUpgrades.forEach((upg, i) => {
+  allAutoUpgrades.forEach((upg, i) => {
     const btn = document.createElement('button');
     btn.className = 'upgrade-btn';
     btn.innerHTML = `<div class="upgrade-value">+${formatNumber(upg.power)}/сек</div><div class="upgrade-price">${formatNumber(upg.price)} ЭН</div><div class="upgrade-name">${upg.name}</div>`;
@@ -2695,6 +2772,10 @@ function renderMultipliers() {
     };
     container.appendChild(btn);
   });
+}
+
+function getMultiplierPrice(index) {
+  return multiplierUpgrades[index].basePrice * Math.pow(2, multiplierPurchases[index]);
 }
 
 function renderCriticalUpgrades() {
@@ -2820,7 +2901,7 @@ function renderSpecialSkins() {
     if (owned) badges += '<div class="skin-owned-badge">✓</div>';
     if (equipped) badges += '<div class="skin-equip-badge">👑</div>';
     
-    card.innerHTML = `${badges}<img src="${skin.url}" class="skin-image" loading="lazy" onerror="this.src='https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_1280.jpg'"><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? (equipped ? 'НАДЕТО' : 'В ГАРДЕРОБЕ') : formatNumber(skin.price) + ' ЭН'}</div></div>`;
+    card.innerHTML = `${badges}<div class="skin-image" style="background:${skin.gradient}; width:100%; height:100px;"></div><div class="skin-info"><div class="skin-name">${skin.name}</div><div class="skin-price">${owned ? (equipped ? 'НАДЕТО' : 'В ГАРДЕРОБЕ') : formatNumber(skin.price) + ' ЭН'}</div></div>`;
     
     if (!owned) {
       if (stellarEnergy >= skin.price) card.classList.add('available');
@@ -2840,7 +2921,7 @@ function renderSpecialSkins() {
       card.onclick = () => {
         equippedSpecialSkin = skin.name;
         equippedSkin = null;
-        novaCore.style.backgroundImage = `url('${skin.url}')`;
+        novaCore.style.background = skin.gradient;
         createPurchaseParticles();
         showStellarMessage(`✅ Надет эксклюзив: ${skin.name}`, '#ffd700');
         renderSkins();
@@ -2921,6 +3002,10 @@ function quantumSingularity() {
   }
 }
 
+function getRebirthCost() {
+  return 10000000 * Math.pow(2, quantumGeneration);
+}
+
 function updateCosmicInterface() {
   skinBonusMulti = calculateSkinBonus();
   const totalMulti = quantumMulti * singularityMulti * skinBonusMulti * achievementMultiplier * clickCombo;
@@ -2960,7 +3045,13 @@ updateVolume(70);
 updateCosmicInterface();
 updateAchievementsDisplay();
 
-// Добавляем стиль для уведомлений
+// Разблокировка аудио при клике
+document.addEventListener('click', function unlockAudio() {
+  const silentAudio = new Audio();
+  silentAudio.volume = 0.01;
+  document.removeEventListener('click', unlockAudio);
+}, { once: true });
+
 const style = document.createElement('style');
 style.textContent = `
   .stellar-message { color: #00e0ff; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; text-shadow: 0 0 15px rgba(0,224,255,0.5); }
