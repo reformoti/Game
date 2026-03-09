@@ -66,6 +66,149 @@
             width: 100%;
         }
         
+        /* СЕКЦИЯ ВЫБОРА ИГР */
+        .game-selector-section {
+            margin: 60px 0;
+            text-align: center;
+        }
+        
+        .selector-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #00b4ff, #9d4edd, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .game-cards {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .game-card {
+            background: rgba(15,20,40,0.7);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(88,179,255,0.3);
+            border-radius: 30px;
+            padding: 30px;
+            width: 350px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: #00b4ff;
+            box-shadow: 0 30px 50px rgba(0,180,255,0.3);
+        }
+        
+        .game-card:hover::before {
+            left: 100%;
+        }
+        
+        .game-card.cosmic {
+            border-color: #00b4ff;
+        }
+        
+        .game-card.plast {
+            border-color: #9d4edd;
+        }
+        
+        .game-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .game-name {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+        
+        .game-name.cosmic {
+            background: linear-gradient(135deg, #00b4ff, #4a00e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .game-name.plast {
+            background: linear-gradient(135deg, #9d4edd, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .game-desc {
+            color: #a0c8ff;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .game-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        
+        .game-feature {
+            background: rgba(0,180,255,0.1);
+            border: 1px solid rgba(0,180,255,0.3);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 12px;
+            color: #8bb9ff;
+        }
+        
+        .game-btn {
+            display: inline-block;
+            padding: 12px 40px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 18px;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .game-btn.cosmic {
+            background: linear-gradient(145deg, #00b4ff, #4a00e0);
+            color: white;
+            box-shadow: 0 10px 20px rgba(0,180,255,0.3);
+        }
+        
+        .game-btn.plast {
+            background: linear-gradient(145deg, #9d4edd, #ff6b6b);
+            color: white;
+            box-shadow: 0 10px 20px rgba(157,78,221,0.3);
+        }
+        
+        .game-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 30px rgba(0,180,255,0.5);
+        }
+        
         .hero {
             display: flex;
             align-items: center;
@@ -119,30 +262,6 @@
             color: #8bb9ff;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-        
-        .play-btn {
-            background: linear-gradient(145deg, #00b4ff, #4a00e0);
-            border: none;
-            color: white;
-            padding: 18px 50px;
-            border-radius: 50px;
-            font-size: 20px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid rgba(255,255,255,0.2);
-            text-decoration: none;
-            display: inline-block;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            box-shadow: 0 10px 30px rgba(0,180,255,0.3);
-            animation: pulse 2s infinite;
-        }
-        
-        .play-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px rgba(0,180,255,0.5);
         }
         
         .hero-image {
@@ -372,6 +491,11 @@
                 width: 300px;
                 height: 300px;
             }
+            
+            .game-card {
+                width: 100%;
+                max-width: 350px;
+            }
         }
     </style>
 </head>
@@ -383,86 +507,120 @@
         <nav class="fade-in">
             <div class="logo">REFORMOTI</div>
             <div class="nav-links">
-                <a href="#about">О игре</a>
+                <a href="#about">О нас</a>
+                <a href="#games">Игры</a>
                 <a href="#features">Особенности</a>
-                <a href="#codes">Коды</a>
                 <a href="#community">Сообщество</a>
             </div>
-            <a href="game.html" class="btn btn-discord">
-                <span>🎮</span> ИГРАТЬ СЕЙЧАС
-            </a>
         </nav>
         
-        <section class="hero">
-            <div class="hero-content fade-in">
+        <!-- НОВАЯ СЕКЦИЯ ВЫБОРА ИГР -->
+        <section id="games" class="game-selector-section fade-in">
+            <h2 class="selector-title">🚀 ВЫБЕРИ СВОЮ ВСЕЛЕННУЮ</h2>
+            <div class="game-cards">
+                <!-- Карточка Космического Кликера -->
+                <div class="game-card cosmic">
+                    <div class="game-icon">⚡</div>
+                    <h3 class="game-name cosmic">КОСМИЧЕСКИЙ КЛИКЕР</h3>
+                    <p class="game-desc">
+                        Классический кликер в космической тематике. 
+                        Прокачивай ядро, собирай энергию, открывай скины и достижения.
+                    </p>
+                    <div class="game-features">
+                        <span class="game-feature">30 уровней ядра</span>
+                        <span class="game-feature">25 скинов</span>
+                        <span class="game-feature">25 ачивок</span>
+                        <span class="game-feature">секретные коды</span>
+                    </div>
+                    <a href="game.html" class="game-btn cosmic">🎮 ИГРАТЬ</a>
+                </div>
+                
+                <!-- Карточка Plast - НОВАЯ ИГРА -->
+                <div class="game-card plast">
+                    <div class="game-icon">🪐</div>
+                    <h3 class="game-name plast">PLAST</h3>
+                    <p class="game-desc">
+                        Космический паркур с платформами. 
+                        Собирай монеты, покупай улучшения и исследуй галактику!
+                    </p>
+                    <div class="game-features">
+                        <span class="game-feature">платформы-батуты</span>
+                        <span class="game-feature">ускорители</span>
+                        <span class="game-feature">магазин прокачки</span>
+                        <span class="game-feature">секретные бонусы</span>
+                    </div>
+                    <a href="plast.html" class="game-btn plast">🪐 ИГРАТЬ</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="hero fade-in">
+            <div class="hero-content">
                 <h1 class="hero-title">
-                    КОСМИЧЕСКИЙ<br>
-                    <span class="gradient-text">КЛИКЕР</span>
+                    ДОБРО ПОЖАЛОВАТЬ<br>
+                    <span class="gradient-text">В REFORMOTI</span>
                 </h1>
                 <p class="hero-subtitle">
-                    Погрузитесь в бескрайние просторы вселенной. Создавайте сингулярности, 
-                    открывайте уникальные скины и станьте повелителем галактики!
+                    Мы создаем космические игры с уникальной атмосферой, 
+                    продуманной механикой и бесконечными возможностями.
                 </p>
                 <div class="hero-stats">
                     <div class="stat-item">
-                        <div class="stat-number">30+</div>
-                        <div class="stat-label">УРОВНЕЙ ЯДРА</div>
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">ИГРЫ</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">25</div>
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">УЛУЧШЕНИЙ</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">40+</div>
                         <div class="stat-label">СКИНОВ</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number">25</div>
-                        <div class="stat-label">АЧИВОК</div>
-                    </div>
                 </div>
-                <a href="game.html" class="play-btn">
-                    🚀 ИГРАТЬ
-                </a>
             </div>
-            <div class="hero-image fade-in">
+            <div class="hero-image">
                 <div class="core-preview"></div>
             </div>
         </section>
         
         <section id="features">
-            <h2 class="section-title fade-in">ОСОБЕННОСТИ ИГРЫ</h2>
+            <h2 class="section-title fade-in">ОСОБЕННОСТИ НАШИХ ИГР</h2>
             <div class="features-grid">
                 <div class="feature-card fade-in">
                     <div class="feature-icon">⚡</div>
-                    <div class="feature-title">30 УРОВНЕЙ ЯДРА</div>
-                    <div class="feature-desc">От базового импульса до божественной мощи. Каждый уровень увеличивает силу клика.</div>
+                    <div class="feature-title">КЛИКЕР С ПРОКАЧКОЙ</div>
+                    <div class="feature-desc">30 уровней ядра, авто-сборщики, криты и множители. Стань богом кликов!</div>
                 </div>
                 
                 <div class="feature-card fade-in">
-                    <div class="feature-icon">🌀</div>
-                    <div class="feature-title">30 АВТО-УЛУЧШЕНИЙ</div>
-                    <div class="feature-desc">Автоматический сбор энергии с помощью космических двигателей.</div>
+                    <div class="feature-icon">🪐</div>
+                    <div class="feature-title">ПАРКУР С ФИЗИКОЙ</div>
+                    <div class="feature-desc">Платформы-батуты, ускорители, монеты и магазин прокачки в игре Plast.</div>
                 </div>
                 
                 <div class="feature-card fade-in">
                     <div class="feature-icon">🎨</div>
-                    <div class="feature-title">25 СКИНОВ</div>
-                    <div class="feature-desc">Уникальные скины ядра: от туманностей до легендарных артефактов.</div>
+                    <div class="feature-title">40+ СКИНОВ</div>
+                    <div class="feature-desc">Уникальные скины для ядра в кликере и персонажа в паркуре. Собирай их все!</div>
                 </div>
                 
                 <div class="feature-card fade-in">
                     <div class="feature-icon">🏆</div>
-                    <div class="feature-title">25 АЧИВОК</div>
-                    <div class="feature-desc">Достижения с наградами и анимациями. Станьте легендой!</div>
+                    <div class="feature-title">СИСТЕМА АЧИВОК</div>
+                    <div class="feature-desc">Десятки достижений с наградами. Хвастайся своими успехами!</div>
                 </div>
                 
                 <div class="feature-card fade-in">
                     <div class="feature-icon">🔐</div>
                     <div class="feature-title">СЕКРЕТНЫЕ КОДЫ</div>
-                    <div class="feature-desc">XaR03, free2026, 1324 - активируйте и получите мощные бонусы!</div>
+                    <div class="feature-desc">XaR03, free2026, 1324 и другие - активируй и получай мощные бонусы!</div>
                 </div>
                 
                 <div class="feature-card fade-in">
                     <div class="feature-icon">🎵</div>
                     <div class="feature-title">КОСМИЧЕСКАЯ МУЗЫКА</div>
-                    <div class="feature-desc">Атмосферный саундтрек и звуковые эффекты для полного погружения.</div>
+                    <div class="feature-desc">Атмосферный саундтрек в обеих играх. Регулируй громкость и выбирай треки.</div>
                 </div>
             </div>
         </section>
@@ -472,19 +630,23 @@
             <div class="codes-grid">
                 <div class="code-item">
                     <div class="code-value">XaR03</div>
-                    <div class="code-desc">+290M к клику, ×940 множитель</div>
+                    <div class="code-desc">Для Космического Кликера</div>
                 </div>
                 <div class="code-item">
                     <div class="code-value">free2026</div>
-                    <div class="code-desc">+15M энергии, ×2 множитель</div>
+                    <div class="code-desc">Для Космического Кликера</div>
                 </div>
                 <div class="code-item">
                     <div class="code-value">1324</div>
-                    <div class="code-desc">+98.4M к клику</div>
+                    <div class="code-desc">Для Космического Кликера</div>
+                </div>
+                <div class="code-item">
+                    <div class="code-value">PLAST</div>
+                    <div class="code-desc">Секретный код для Plast</div>
                 </div>
             </div>
             <div class="code-hint mt-4">
-                💡 Введи коды в меню "СТАНЦИЯ" в игре
+                💡 Введи коды в меню "СТАНЦИЯ" в каждой игре
             </div>
         </section>
         
@@ -493,21 +655,21 @@
             <div class="testimonials-grid">
                 <div class="testimonial-card fade-in">
                     <div class="testimonial-text">
-                        "Лучший кликер, в который я играл! 30 уровней ядра - это нечто. Уже 5 сингулярностей!"
+                        "Космический Кликер - лучший кликер! 30 уровней ядра, скины, ачивки. Уже 10 сингулярностей!"
                     </div>
                     <div class="testimonial-author">— CosmicMaster</div>
                 </div>
                 
                 <div class="testimonial-card fade-in">
                     <div class="testimonial-text">
-                        "Скины просто космос! Особенно Легенда Реформати. А ачивки с анимациями - огонь!"
+                        "Plast - неожиданно крутой паркур! Платформы-батуты, ускорители, магазин. Залипательно!"
                     </div>
                     <div class="testimonial-author">— StarCollector</div>
                 </div>
                 
                 <div class="testimonial-card fade-in">
                     <div class="testimonial-text">
-                        "Нашел код XaR03 - теперь мой клик дает 290M! Игра стал еще интереснее."
+                        "Нашел код XaR03 в кликере и секретный PLAST в паркуре. Разработчики красавчики!"
                     </div>
                     <div class="testimonial-author">— CodeHunter</div>
                 </div>
@@ -516,13 +678,13 @@
         
         <footer>
             <div class="footer-links">
-                <a href="game.html">Играть</a>
+                <a href="game.html">Космический Кликер</a>
+                <a href="plast.html">Plast</a>
                 <a href="https://discord.gg/8d2RQHvGhH" target="_blank">Discord</a>
                 <a href="#about">О проекте</a>
-                <a href="#features">Обновления</a>
             </div>
             <div class="copyright">
-                © 2024 REFORMOTI СИСТЕМЫ. Космический Кликер v2.0
+                © 2024 REFORMOTI СИСТЕМЫ. Все игры v2.0
             </div>
         </footer>
     </div>

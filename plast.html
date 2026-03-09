@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plast - Космический паркур</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: #000;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            transition: background-image 0.5s ease;
+        }
+
+        /* Космический фон как в кликере */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(88,179,255,0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: nebula-drift 20s infinite alternate;
+        }
+
+        @keyframes nebula-drift {
+            0% { transform: translate(0,0) scale(1); opacity: 0.5; }
+            100% { transform: translate(-2%,-2%) scale(1.1); opacity: 0.8; }
+        }
+
+        /* Фоновые звезды */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Парящие частицы */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(100, 200, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            from { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            to { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Платформы */
+        .platform {
+            position: absolute;
+            height: 20px;
+            border-radius: 10px;
+            background: linear-gradient(145deg, rgba(40,50,100,0.9), rgba(30,40,90,0.9));
+            border: 2px solid rgba(88,179,255,0.4);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(88,179,255,0.2);
+            z-index: 10;
+            backdrop-filter: blur(2px);
+        }
+
+        .platform-speed {
+            background: linear-gradient(145deg, #ffaa00, #ff8800);
+            border-color: #ffd966;
+            box-shadow: 0 0 20px #ffaa00;
+            animation: pulseSpeed 2s infinite;
+        }
+
+        .platform-bounce {
+            background: linear-gradient(145deg, #ff6b6b, #ff4444);
+            border-color: #ff9999;
+            box-shadow: 0 0 20px #ff6b6b;
+            animation: pulseBounce 1s infinite;
+        }
+
+        .platform-coin {
+            background: linear-gradient(145deg, #ffd966, #ffaa00);
+            border-color: #ffe484;
+            box-shadow: 0 0 20px #ffd966;
+        }
+
+        @keyframes pulseSpeed {
+            0%, 100% { box-shadow: 0 0 20px #ffaa00; }
+            50% { box-shadow: 0 0 40px #ffaa00; }
+        }
+
+        @keyframes pulseBounce {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.9); }
+        }
+
+        /* Позиции платформ */
+        .platform1 { left: 8%; width: 160px; bottom: 220px; }
+        .platform2 { left: 22%; width: 140px; bottom: 320px; }
+        .platform3 { left: 36%; width: 150px; bottom: 420px; }
+        .platform4 { left: 50%; width: 130px; bottom: 520px; }
+        .platform5 { left: 64%; width: 170px; bottom: 620px; }
+        .platform6 { left: 78%; width: 140px; bottom: 520px; }
+        .platform7 { left: 65%; width: 110px; bottom: 370px; }
+        .platform8 { left: 51%; width: 120px; bottom: 270px; }
+        .platform9 { left: 37%; width: 130px; bottom: 170px; }
+        .platform10 { left: 23%; width: 110px; bottom: 120px; }
+
+        /* Монеты - космические кристаллы */
+        .coin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #ffa500);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ffd700;
+            animation: coinFloat 1s ease-in-out infinite;
+            z-index: 20;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .coin::after {
+            content: '$';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        .coin-special {
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #ff1493);
+            box-shadow: 0 0 30px #ff1493;
+        }
+
+        .coin-special::after {
+            content: '💎';
+            font-size: 14px;
+        }
+
+        @keyframes coinFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Позиции монет */
+        .coin1 { left: 10%; bottom: 250px; }
+        .coin2 { left: 16%; bottom: 250px; }
+        .coin3 { left: 24%; bottom: 350px; }
+        .coin4 { left: 30%; bottom: 350px; }
+        .coin5 { left: 38%; bottom: 450px; }
+        .coin6 { left: 44%; bottom: 450px; }
+        .coin7 { left: 52%; bottom: 550px; }
+        .coin8 { left: 58%; bottom: 550px; }
+        .coin9 { left: 66%; bottom: 650px; }
+        .coin10 { left: 72%; bottom: 650px; }
+        .coin11 { left: 80%; bottom: 550px; }
+        .coin12 { left: 67%; bottom: 400px; }
+        .coin13 { left: 53%; bottom: 300px; }
+        .coin14 { left: 39%; bottom: 200px; }
+        .coin15 { left: 25%; bottom: 150px; }
+
+        /* Игрок */
+        .player {
+            position: absolute;
+            bottom: 150px;
+            left: 10%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            z-index: 100;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/1727/1727571.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0 0 10px rgba(0, 180, 255, 0.5));
+            transition: left 0.05s ease;
+        }
+
+        .player.hidden { display: none; }
+        .player.walking { animation: walkCycle 0.2s infinite alternate; }
+
+        @keyframes walkCycle {
+            0% { transform: translateX(-50%) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-2px); }
+        }
+
+        /* ========== МЕНЮ КАК В КЛИКЕРЕ ========== */
+        .panel {
+            position: fixed;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            background: rgba(5, 10, 25, 0.98);
+            backdrop-filter: blur(20px);
+            transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 60px 15px 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            border-top: 3px solid rgba(88, 179, 255, 0.3);
+        }
+
+        .panel.active {
+            top: 0;
+        }
+
+        .close-panel {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 107, 107, 0.2);
+            border: none;
+            color: #ff6b6b;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(255, 107, 107, 0.3);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .close-panel:hover {
+            transform: rotate(90deg) scale(1.1);
+            background: rgba(255, 107, 107, 0.4);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Верхняя панель как в кликере */
+        .top-bar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 5;
+        }
+
+        .astro-btn {
+            background: linear-gradient(145deg, rgba(30,40,80,0.9), rgba(20,30,70,0.9));
+            border: none;
+            color: #b3d4ff;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+            border: 1px solid rgba(88,179,255,0.4);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4), inset 0 0 10px rgba(88,179,255,0.2);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            min-height: 40px;
+            flex: 1;
+            margin: 0 3px;
+        }
+
+        .astro-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(145deg, rgba(40,60,120,0.9), rgba(30,50,100,0.9));
+            box-shadow: 0 8px 20px rgba(88,179,255,0.4);
+            border-color: rgba(88,179,255,0.8);
+        }
+
+        /* Главное меню */
+        .menu-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 20;
+            background: rgba(15,20,40,0.8);
+            backdrop-filter: blur(15px);
+            padding: 40px 60px;
+            border-radius: 30px;
+            border: 2px solid rgba(88,179,255,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 0 30px rgba(88,179,255,0.1);
+            animation: menuFloat 3s ease-in-out infinite;
+        }
+
+        .menu-container.hidden {
+            display: none;
+        }
+
+        @keyframes menuFloat {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-5px); }
+        }
+
+        .menu-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00b4ff, #9d4edd, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(0,180,255,0.5);
+            letter-spacing: 2px;
+        }
+
+        .menu-button {
+            display: block;
+            width: 280px;
+            padding: 16px 40px;
+            margin: 15px auto;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(145deg, rgba(30,40,80,0.9), rgba(20,30,70,0.9));
+            border: 2px solid rgba(88,179,255,0.4);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(88,179,255,0.2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-button:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(145deg, rgba(40,60,120,0.9), rgba(30,50,100,0.9));
+            box-shadow: 0 10px 25px rgba(88,179,255,0.5);
+            border-color: rgba(88,179,255,0.8);
+        }
+
+        .menu-button:hover::before {
+            left: 100%;
+        }
+
+        .menu-button.shop {
+            background: linear-gradient(145deg, #9d4edd, #8e2de2);
+            border-color: rgba(157,78,221,0.7);
+        }
+
+        /* Статистика как в кликере */
+        .stats-container {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 200;
+        }
+
+        .stat-card {
+            background: rgba(15,20,40,0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(88,179,255,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #a0c8ff;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #00e0ff;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 8px rgba(0,224,255,0.3);
+        }
+
+        .stat-card.hidden {
+            display: none;
+        }
+
+        /* Комбо счетчик */
+        .combo-counter {
+            position: absolute;
+            top: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,107,107,0.8);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.2rem;
+            border: 2px solid #ff6b6b;
+            z-index: 200;
+            display: none;
+        }
+        .combo-counter.active { display: block; animation: comboPulse 1s infinite; }
+
+        @keyframes comboPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* Крестик выхода */
+        .exit-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,107,107,0.2);
+            border: 2px solid rgba(255,107,107,0.3);
+            color: #ff6b6b;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 200;
+            backdrop-filter: blur(5px);
+        }
+
+        .exit-button:hover {
+            transform: rotate(90deg) scale(1.1);
+            background: rgba(255,107,107,0.4);
+            box-shadow: 0 0 20px rgba(255,107,107,0.5);
+        }
+
+        .exit-button.hidden {
+            display: none;
+        }
+
+        /* Сообщение о монете */
+        .coin-message {
+            position: absolute;
+            color: #00e0ff;
+            font-size: 18px;
+            font-weight: bold;
+            animation: coinMessage 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 1000;
+            text-shadow: 0 0 10px #00e0ff;
+        }
+        @keyframes coinMessage {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
+        }
+
+        /* ========== МУЗЫКАЛЬНАЯ ПАНЕЛЬ КАК В КЛИКЕРЕ ========== */
+        .music-panel {
+            background: linear-gradient(145deg, rgba(30,20,60,0.95), rgba(20,15,40,0.95));
+            border-radius: 25px;
+            padding: 25px;
+            margin: 20px auto;
+            max-width: 550px;
+            border: 2px solid rgba(88,179,255,0.5);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8), inset 0 0 30px rgba(88,179,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .music-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(88,179,255,0.1), transparent);
+            animation: spin-slow 15s linear infinite;
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .music-title {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8bb9ff, #9d4edd, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            letter-spacing: 1.5px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .volume-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .volume-ring {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .volume-ring-bg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            border: 10px solid rgba(88,179,255,0.2);
+            box-shadow: 0 0 30px rgba(0,180,255,0.3);
+            transition: 0.3s;
+        }
+
+        .volume-ring-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 10px solid transparent;
+            border-top-color: #00b4ff;
+            border-right-color: #9d4edd;
+            border-bottom-color: #ff6b6b;
+            border-left-color: #f9c74f;
+            transform: rotate(0deg);
+            transition: transform 0.1s;
+            pointer-events: none;
+        }
+
+        .volume-knob {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #fff, #ccc);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+            border: 3px solid #00b4ff;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #00b4ff;
+            font-size: 18px;
+        }
+
+        .volume-knob:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 40px #00e0ff;
+        }
+
+        .volume-knob:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        .volume-value {
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00b4ff, #9d4edd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 10px;
+        }
+
+        .music-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .music-btn {
+            background: linear-gradient(145deg, rgba(40,50,90,0.9), rgba(30,40,80,0.9));
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid rgba(88,179,255,0.4);
+            transition: all 0.3s;
+            min-width: 110px;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .music-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .music-btn:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(145deg, rgba(60,70,120,0.9), rgba(50,60,110,0.9));
+            box-shadow: 0 8px 20px rgba(88,179,255,0.4);
+        }
+
+        .music-btn:hover::before {
+            left: 100%;
+        }
+
+        .music-btn:active {
+            transform: scale(0.95);
+        }
+
+        .music-btn.active {
+            background: linear-gradient(145deg, #4caf50, #45a049);
+            border-color: #81c784;
+            box-shadow: 0 0 25px rgba(76,175,80,0.6);
+        }
+
+        .music-track-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .music-track-btn {
+            background: linear-gradient(145deg, rgba(30,20,60,0.8), rgba(20,15,40,0.8));
+            border: 2px solid rgba(88,179,255,0.3);
+            border-radius: 12px;
+            padding: 10px 15px;
+            color: #a0c8ff;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .music-track-btn:hover {
+            transform: translateY(-3px);
+            border-color: #00b4ff;
+            color: #fff;
+            box-shadow: 0 10px 20px rgba(0,180,255,0.3);
+        }
+
+        .music-track-btn.active {
+            background: linear-gradient(145deg, #00b4ff, #4a00e0);
+            color: #fff;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .music-track-btn.locked {
+            opacity: 0.5;
+            filter: blur(1px);
+            pointer-events: none;
+            background: rgba(50,50,70,0.5);
+        }
+
+        .discord-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(145deg, #5865F2, #4752c4);
+            color: white;
+            padding: 16px 30px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 16px;
+            margin-top: 25px;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 350px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .discord-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .discord-link:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(88,101,242,0.6);
+        }
+
+        .discord-link:hover::before {
+            left: 100%;
+        }
+
+        /* ========== МАГАЗИН С ФОНАМИ ========== */
+        .shop-panel {
+            position: fixed;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(5,10,25,0.98);
+            backdrop-filter: blur(20px);
+            transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 70px 15px 20px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .shop-panel.active {
+            top: 0;
+        }
+
+        .shop-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .shop-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00b4ff, #9d4edd, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .shop-categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .shop-category {
+            background: rgba(30,40,70,0.9);
+            border: 2px solid rgba(88,179,255,0.3);
+            color: #a0c8ff;
+            padding: 10px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .shop-category:hover {
+            transform: translateY(-2px);
+            background: rgba(50,70,120,0.9);
+            border-color: rgba(88,179,255,0.6);
+        }
+
+        .shop-category.active {
+            background: linear-gradient(145deg, #4a00e0, #8e2de2);
+            color: white;
+            border-color: rgba(142,45,226,0.8);
+        }
+
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .shop-item {
+            background: linear-gradient(145deg, rgba(30,40,70,0.9), rgba(20,30,60,0.9));
+            border: 2px solid rgba(88,179,255,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-5px);
+            border-color: #00b4ff;
+            box-shadow: 0 10px 25px rgba(0,180,255,0.3);
+        }
+
+        .shop-item-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .shop-item-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e0c3ff;
+            margin-bottom: 5px;
+        }
+
+        .shop-item-desc {
+            font-size: 0.8rem;
+            color: #a0c8ff;
+            margin-bottom: 10px;
+        }
+
+        .shop-item-price {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(0,180,255,0.2);
+            border-radius: 15px;
+            color: #ffd166;
+            font-weight: bold;
+        }
+
+        .shop-item-owned {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #4caf50;
+            border-radius: 15px;
+            color: white;
+        }
+
+        /* Превью фона */
+        .bg-preview {
+            width: 100%;
+            height: 100px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        /* Космическая бездна */
+        .void {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            z-index: 5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Фоновые звезды -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Платформы -->
+    <div class="platform platform1" id="platform1"></div>
+    <div class="platform platform-speed platform2" id="platform2"></div>
+    <div class="platform platform3" id="platform3"></div>
+    <div class="platform platform-bounce platform4" id="platform4"></div>
+    <div class="platform platform5" id="platform5"></div>
+    <div class="platform platform-coin platform6" id="platform6"></div>
+    <div class="platform platform7" id="platform7"></div>
+    <div class="platform platform-speed platform8" id="platform8"></div>
+    <div class="platform platform9" id="platform9"></div>
+    <div class="platform platform10" id="platform10"></div>
+
+    <!-- Монеты -->
+    <div class="coin coin1" id="coin1"></div>
+    <div class="coin coin2" id="coin2"></div>
+    <div class="coin coin3" id="coin3"></div>
+    <div class="coin coin4" id="coin4"></div>
+    <div class="coin coin5" id="coin5"></div>
+    <div class="coin coin6" id="coin6"></div>
+    <div class="coin coin-special coin7" id="coin7"></div>
+    <div class="coin coin8" id="coin8"></div>
+    <div class="coin coin9" id="coin9"></div>
+    <div class="coin coin-special coin10" id="coin10"></div>
+    <div class="coin coin11" id="coin11"></div>
+    <div class="coin coin12" id="coin12"></div>
+    <div class="coin coin13" id="coin13"></div>
+    <div class="coin coin14" id="coin14"></div>
+    <div class="coin coin15" id="coin15"></div>
+
+    <!-- Космическая бездна -->
+    <div class="void"></div>
+
+    <!-- Статистика как в кликере -->
+    <div class="stats-container">
+        <div class="stat-card hidden" id="balance">
+            <div class="stat-label">КРИСТАЛЛЫ</div>
+            <div class="stat-value" id="balanceAmount">0</div>
+        </div>
+        <div class="stat-card hidden" id="multiplier">
+            <div class="stat-label">МНОЖИТЕЛЬ</div>
+            <div class="stat-value" id="multiplierAmount">1x</div>
+        </div>
+    </div>
+
+    <!-- Комбо счетчик -->
+    <div class="combo-counter" id="comboCounter">
+        <span>КОМБО: <span id="comboAmount">0</span>x</span>
+    </div>
+
+    <!-- Крестик выхода -->
+    <div class="exit-button hidden" id="exitButton" onclick="exitToMenu()">✕</div>
+
+    <!-- Главное меню -->
+    <div class="menu-container" id="menuContainer">
+        <div class="menu-title">PLAST</div>
+        <button class="menu-button" onclick="startGame()">НАЧАТЬ</button>
+        <button class="menu-button" onclick="openStationMenu()">СТАНЦИЯ</button>
+        <button class="menu-button shop" onclick="openShop()">МАГАЗИН</button>
+    </div>
+
+    <!-- Панель станции (музыка + дискорд) -->
+    <div class="panel" id="stationPanel">
+        <button class="close-panel" onclick="closeStationMenu()">×</button>
+        <div style="max-width:600px; margin:0 auto; padding:20px; text-align:center;">
+            <div style="font-size:2.5rem; font-weight:900; background:linear-gradient(135deg, #00b4ff, #9d4edd, #ff6b6b, #f9c74f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:30px;">
+                КОСМИЧЕСКАЯ СТАНЦИЯ
+            </div>
+            
+            <div class="music-panel">
+                <div class="music-title">🎵 КОСМИЧЕСКАЯ МУЗЫКА</div>
+                
+                <div class="volume-container">
+                    <div class="volume-ring" onclick="rotateVolume(event)">
+                        <div class="volume-ring-bg"></div>
+                        <div class="volume-ring-fill" id="volumeRingFill" style="transform:rotate(0deg)"></div>
+                        <div class="volume-knob" id="volumeKnob" onmousedown="startDragVolume(event)" ontouchstart="startDragVolume(event)">
+                            <span id="volumeKnobValue">70</span>
+                        </div>
+                    </div>
+                    <div class="volume-value" id="volumeDisplay">70%</div>
+                </div>
+                
+                <div class="music-track-selector" id="musicTrackSelector">
+                    <button class="music-track-btn locked" id="trackBtn1" onclick="selectTrack(0)">#1</button>
+                    <button class="music-track-btn locked" id="trackBtn2" onclick="selectTrack(1)">#2</button>
+                    <button class="music-track-btn locked" id="trackBtn3" onclick="selectTrack(2)">#3</button>
+                    <button class="music-track-btn locked" id="trackBtn4" onclick="selectTrack(3)">#4</button>
+                    <button class="music-track-btn locked" id="trackBtn5" onclick="selectTrack(4)">#5</button>
+                </div>
+                
+                <div class="music-controls">
+                    <button class="music-btn" onclick="toggleMusic()">⏯️ СТАРТ/ПАУЗА</button>
+                    <button class="music-btn" onclick="stopMusic()">⏹️ СТОП</button>
+                </div>
+                
+                <div class="current-track-display" style="color:#a0c8ff; margin:15px 0; padding:10px; background:rgba(0,0,0,0.3); border-radius:10px;">
+                    🎧 ТЕКУЩИЙ ТРЕК: <span id="currentTrackName">НЕ ВЫБРАН</span>
+                </div>
+                
+                <div style="margin-top:20px; color:#a0c8ff;">
+                    🎧 СТАТУС: <span id="musicOwnedStatus">❌ НЕТ ДОСТУПА</span>
+                </div>
+                <div id="musicPurchaseBtnContainer" style="margin-top:15px;"></div>
+            </div>
+            
+            <a href="https://discord.gg/8d2RQHvGhH" target="_blank" class="discord-link">
+                <span style="font-size:24px;">🛸</span> DISCORD
+            </a>
+        </div>
+    </div>
+
+    <!-- Магазин с фонами -->
+    <div class="shop-panel" id="shopPanel">
+        <button class="close-panel" onclick="closeShop()">×</button>
+        <div class="shop-content">
+            <h2 class="shop-title">ГАЛАКТИЧЕСКИЙ МАРКЕТ</h2>
+            
+            <div class="shop-categories">
+                <div class="shop-category active" onclick="switchShopCategory('stats')">ХАРАКТЕРИСТИКИ</div>
+                <div class="shop-category" onclick="switchShopCategory('abilities')">СПОСОБНОСТИ</div>
+                <div class="shop-category" onclick="switchShopCategory('skins')">СКИНЫ</div>
+                <div class="shop-category" onclick="switchShopCategory('backgrounds')">ФОНЫ</div>
+            </div>
+
+            <div id="shopStats" class="shop-items"></div>
+            <div id="shopAbilities" class="shop-items" style="display: none;"></div>
+            <div id="shopSkins" class="shop-items" style="display: none;"></div>
+            <div id="shopBackgrounds" class="shop-items" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Игрок -->
+    <div class="player hidden" id="player"></div>
+
+    <script>
+        const player = document.getElementById('player');
+        const menuContainer = document.getElementById('menuContainer');
+        const exitButton = document.getElementById('exitButton');
+        const stationPanel = document.getElementById('stationPanel');
+        const shopPanel = document.getElementById('shopPanel');
+        const balanceElement = document.getElementById('balance');
+        const balanceAmount = document.getElementById('balanceAmount');
+        const multiplierElement = document.getElementById('multiplier');
+        const multiplierAmount = document.getElementById('multiplierAmount');
+        const comboCounter = document.getElementById('comboCounter');
+        const comboAmount = document.getElementById('comboAmount');
+
+        // Параметры игрока
+        let playerX = window.innerWidth * 0.1;
+        let playerSpeed = 6;
+        let jumpStrength = 18;
+        let isOnGround = true;
+        let velocityY = 0;
+        let playerBottom = 220;
+        let balance = 100;
+        let collectedCoins = 0;
+
+        // Множители и бонусы
+        let coinMultiplier = 1;
+        let combo = 0;
+        let lastCoinTime = 0;
+
+        // Управление
+        let leftPressed = false;
+        let rightPressed = false;
+        let spacePressed = false;
+        let gameStarted = false;
+
+        // Физика
+        const gravity = 0.7;
+        const voidLevel = 50;
+
+        // Купленные улучшения
+        const ownedItems = new Set();
+
+        // Музыка
+        let audioEnabled = false;
+        let currentTrack = 0;
+        let musicUnlocked = false;
+        let tracksUnlocked = 0;
+        let currentVolume = 70;
+        let isDraggingVolume = false;
+        const audioElements = [];
+        const trackNames = ['Космическая симфония', 'Галактический вальс', 'Туманность Ориона', 'Пульсар', 'Черная дыра'];
+
+        // Фоны из кликера
+        const backgrounds = [
+            { name: 'Глубокий Космос', price: 800, url: 'https://images.wallpaperscraft.ru/image/single/kosmos_zvezdy_tumannost_157030_3840x2400.jpg' },
+            { name: 'Сингулярность', price: 2000, url: 'https://server.wallpaperalchemy.com/storage/wallpapers/91/4k-black-hole-minimalistic-wallpaper.png' },
+            { name: 'Планета Земля', price: 3500, url: 'https://img3.akspic.ru/crops/1/9/9/5/25991/25991-zemlya-atmosfera-kosmos-prostranstvo-vselennaya-3840x2160.jpg' },
+            { name: 'Галактический Вихрь', price: 5000, url: 'https://wallpaper.forfun.com/fetch/60/604f6358cd0a4b83989516f724ed8bea.jpeg' },
+            { name: 'Туманность Ориона', price: 7500, url: 'https://images.alphacoders.com/135/1354208.jpeg' },
+            { name: 'Ледяная Планета', price: 10000, url: 'https://abrakadabra.fun/uploads/posts/2021-12/1640668539_5-abrakadabra-fun-p-oboi-na-rabochii-stol-planeta-6.png' },
+            { name: 'Космический Океан', price: 15000, url: 'https://images.wallpapershq.com/wallpapers/1284/wallpaper_1284_3840x2160.jpg' },
+            { name: 'Аниме Пейзаж', price: 20000, url: 'https://sotni.ru/wp-content/uploads/2023/08/anime-peizazh-375.webp' },
+            { name: 'Аниме Закат', price: 25000, url: 'https://abrakadabra.fun/uploads/posts/2022-02/1643978194_2-abrakadabra-fun-p-fon-dlya-prevyu-anime-2.jpg' },
+            { name: 'Тёмный Лес', price: 30000, url: 'https://img2.akspic.ru/crops/1/1/7/7/97711/97711-les-chernyj_les-priroda-derevo-solnechnyj_svet-3840x2160.jpg' }
+        ];
+
+        // Звезды
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            document.getElementById('stars').appendChild(star);
+        }
+
+        // Частицы
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 10 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            document.body.appendChild(particle);
+        }
+
+        // Инициализация музыки
+        function initMusicTracks() {
+            for (let i = 0; i < 5; i++) {
+                const audio = new Audio();
+                audio.loop = true;
+                audio.volume = currentVolume / 100;
+                audio.src = `music/track${i+1}.mp3`;
+                audioElements.push(audio);
+            }
+            updateMusicTrackButtons();
+        }
+
+        function updateMusicTrackButtons() {
+            for (let i = 0; i < 5; i++) {
+                const btn = document.getElementById(`trackBtn${i+1}`);
+                if (i < tracksUnlocked) {
+                    btn.classList.remove('locked');
+                    btn.innerHTML = `#${i+1}<br><small>${trackNames[i].substring(0, 8)}</small>`;
+                    if (i === currentTrack && audioEnabled) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                } else {
+                    btn.classList.add('locked');
+                    btn.innerHTML = `#${i+1}<br><small>🔒</small>`;
+                }
+            }
+            document.getElementById('currentTrackName').textContent = 
+                tracksUnlocked > 0 && currentTrack < tracksUnlocked ? trackNames[currentTrack] : 'НЕ ВЫБРАН';
+        }
+
+        function toggleMusic() {
+            if (!musicUnlocked) { 
+                alert('❌ Сначала купите доступ к музыке!'); 
+                return; 
+            }
+            if (tracksUnlocked === 0) {
+                alert('❌ Нет доступных треков!');
+                return;
+            }
+            if (audioEnabled) {
+                audioElements.forEach(a => a.pause());
+                audioEnabled = false;
+            } else {
+                audioElements[currentTrack].play();
+                audioEnabled = true;
+            }
+            updateMusicTrackButtons();
+        }
+
+        function stopMusic() {
+            audioElements.forEach(a => { a.pause(); a.currentTime = 0; });
+            audioEnabled = false;
+            updateMusicTrackButtons();
+        }
+
+        function selectTrack(index) {
+            if (!musicUnlocked || index >= tracksUnlocked) return;
+            if (audioEnabled) audioElements.forEach(a => a.pause());
+            currentTrack = index;
+            if (audioEnabled) audioElements[currentTrack].play();
+            updateMusicTrackButtons();
+        }
+
+        function updateVolume(value) {
+            currentVolume = Math.min(100, Math.max(0, value));
+            audioElements.forEach(a => a.volume = currentVolume / 100);
+            document.getElementById('volumeDisplay').textContent = currentVolume + '%';
+            document.getElementById('volumeKnobValue').textContent = currentVolume;
+            document.getElementById('volumeRingFill').style.transform = `rotate(${currentVolume * 3.6}deg)`;
+        }
+
+        function startDragVolume(e) {
+            e.preventDefault();
+            isDraggingVolume = true;
+            const onMove = (moveEvent) => {
+                if (!isDraggingVolume) return;
+                moveEvent.preventDefault();
+                const ring = document.querySelector('.volume-ring');
+                const rect = ring.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                let clientX, clientY;
+                if (moveEvent.touches) {
+                    clientX = moveEvent.touches[0].clientX;
+                    clientY = moveEvent.touches[0].clientY;
+                } else {
+                    clientX = moveEvent.clientX;
+                    clientY = moveEvent.clientY;
+                }
+                const angle = Math.atan2(clientY - centerY, clientX - centerX) * (180 / Math.PI) + 180;
+                const volume = Math.round((angle / 360) * 100);
+                updateVolume(volume);
+            };
+            const onEnd = () => {
+                isDraggingVolume = false;
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onEnd);
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('touchend', onEnd);
+        }
+
+        function rotateVolume(e) {
+            const ring = document.querySelector('.volume-ring');
+            const rect = ring.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            let clientX, clientY;
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            const angle = Math.atan2(clientY - centerY, clientX - centerX) * (180 / Math.PI) + 180;
+            updateVolume(Math.round((angle / 360) * 100));
+        }
+
+        function purchaseMusicAccess() {
+            if (balance < 500) { alert('❌ Недостаточно кристаллов!'); return; }
+            balance -= 500;
+            musicUnlocked = true;
+            if (tracksUnlocked < 5) tracksUnlocked++;
+            updateBalance();
+            updateMusicTrackButtons();
+            document.getElementById('musicOwnedStatus').innerHTML = '✅ ДОСТУП ПОЛУЧЕН';
+            renderMusicPurchaseButton();
+        }
+
+        function renderMusicPurchaseButton() {
+            const container = document.getElementById('musicPurchaseBtnContainer');
+            container.innerHTML = '';
+            if (tracksUnlocked < 5) {
+                const btn = document.createElement('button');
+                btn.className = 'music-btn';
+                btn.style.width = '100%';
+                btn.innerHTML = `🎵 КУПИТЬ ТРЕК ${tracksUnlocked + 1} (500 💎)`;
+                btn.onclick = purchaseMusicAccess;
+                container.appendChild(btn);
+            }
+        }
+
+        // Платформы
+        const platforms = [
+            { id: 1, left: 0.08 * window.innerWidth, bottom: 220, width: 160, type: 'normal' },
+            { id: 2, left: 0.22 * window.innerWidth, bottom: 320, width: 140, type: 'speed' },
+            { id: 3, left: 0.36 * window.innerWidth, bottom: 420, width: 150, type: 'normal' },
+            { id: 4, left: 0.50 * window.innerWidth, bottom: 520, width: 130, type: 'bounce' },
+            { id: 5, left: 0.64 * window.innerWidth, bottom: 620, width: 170, type: 'normal' },
+            { id: 6, left: 0.78 * window.innerWidth, bottom: 520, width: 140, type: 'coin' },
+            { id: 7, left: 0.65 * window.innerWidth, bottom: 370, width: 110, type: 'normal' },
+            { id: 8, left: 0.51 * window.innerWidth, bottom: 270, width: 120, type: 'speed' },
+            { id: 9, left: 0.37 * window.innerWidth, bottom: 170, width: 130, type: 'normal' },
+            { id: 10, left: 0.23 * window.innerWidth, bottom: 120, width: 110, type: 'normal' }
+        ];
+
+        // Монеты
+        const coins = [
+            { id: 'coin1', x: 0.10 * window.innerWidth, y: 250, active: true, timer: null, value: 10, special: false },
+            { id: 'coin2', x: 0.16 * window.innerWidth, y: 250, active: true, timer: null, value: 10, special: false },
+            { id: 'coin3', x: 0.24 * window.innerWidth, y: 350, active: true, timer: null, value: 10, special: false },
+            { id: 'coin4', x: 0.30 * window.innerWidth, y: 350, active: true, timer: null, value: 10, special: false },
+            { id: 'coin5', x: 0.38 * window.innerWidth, y: 450, active: true, timer: null, value: 10, special: false },
+            { id: 'coin6', x: 0.44 * window.innerWidth, y: 450, active: true, timer: null, value: 10, special: false },
+            { id: 'coin7', x: 0.52 * window.innerWidth, y: 550, active: true, timer: null, value: 20, special: true },
+            { id: 'coin8', x: 0.58 * window.innerWidth, y: 550, active: true, timer: null, value: 10, special: false },
+            { id: 'coin9', x: 0.66 * window.innerWidth, y: 650, active: true, timer: null, value: 10, special: false },
+            { id: 'coin10', x: 0.72 * window.innerWidth, y: 650, active: true, timer: null, value: 20, special: true },
+            { id: 'coin11', x: 0.80 * window.innerWidth, y: 550, active: true, timer: null, value: 10, special: false },
+            { id: 'coin12', x: 0.67 * window.innerWidth, y: 400, active: true, timer: null, value: 10, special: false },
+            { id: 'coin13', x: 0.53 * window.innerWidth, y: 300, active: true, timer: null, value: 10, special: false },
+            { id: 'coin14', x: 0.39 * window.innerWidth, y: 200, active: true, timer: null, value: 10, special: false },
+            { id: 'coin15', x: 0.25 * window.innerWidth, y: 150, active: true, timer: null, value: 10, special: false }
+        ];
+
+        // Товары в магазине
+        const shopItems = {
+            stats: [
+                { id: 'speed1', name: 'Скорость +2', desc: 'Увеличивает скорость', price: 100, icon: '⚡', effect: () => { playerSpeed += 2; } },
+                { id: 'speed2', name: 'Скорость +5', desc: 'Сильное ускорение', price: 250, icon: '⚡⚡', effect: () => { playerSpeed += 5; } },
+                { id: 'jump1', name: 'Прыжок +5', desc: 'Выше прыжок', price: 150, icon: '🦘', effect: () => { jumpStrength += 5; } },
+                { id: 'jump2', name: 'Прыжок +10', desc: 'Супер прыжок', price: 300, icon: '🦘🦘', effect: () => { jumpStrength += 10; } },
+                { id: 'multiplier1', name: 'Множитель x2', desc: 'Удваивает монеты', price: 500, icon: '2️⃣', effect: () => { coinMultiplier = 2; } }
+            ],
+            abilities: [
+                { id: 'doublejump', name: 'Двойной прыжок', desc: 'Прыжок в воздухе', price: 400, icon: '🦘🦘' },
+                { id: 'dash', name: 'Рывок', desc: 'Shift для рывка', price: 350, icon: '💨' },
+                { id: 'magnet', name: 'Магнит', desc: 'Притягивает монеты', price: 450, icon: '🧲' },
+                { id: 'shield', name: 'Щит', desc: 'Защита от падений', price: 300, icon: '🛡️' }
+            ],
+            skins: [
+                { id: 'skinblue', name: 'Синий', desc: 'Голубое свечение', price: 200, icon: '🔵', effect: () => { player.style.filter = 'hue-rotate(200deg) drop-shadow(0 0 10px #00b4ff)'; } },
+                { id: 'skinred', name: 'Красный', desc: 'Красное свечение', price: 200, icon: '🔴', effect: () => { player.style.filter = 'hue-rotate(300deg) drop-shadow(0 0 10px #ff6b6b)'; } },
+                { id: 'skingold', name: 'Золотой', desc: 'Золотое свечение', price: 500, icon: '🌟', effect: () => { player.style.filter = 'brightness(1.2) hue-rotate(50deg) drop-shadow(0 0 15px gold)'; } },
+                { id: 'skinrainbow', name: 'Радужный', desc: 'Меняет цвета', price: 1000, icon: '🌈', effect: () => { 
+                    let hue = 0;
+                    setInterval(() => {
+                        hue = (hue + 5) % 360;
+                        player.style.filter = `hue-rotate(${hue}deg) drop-shadow(0 0 10px white)`;
+                    }, 100);
+                } }
+            ],
+            backgrounds: backgrounds.map((bg, index) => ({
+                id: `bg${index}`,
+                name: bg.name,
+                desc: 'Космический фон',
+                price: bg.price,
+                icon: '🖼️',
+                url: bg.url,
+                effect: () => { document.body.style.backgroundImage = `url('${bg.url}')`; }
+            }))
+        };
+
+        function startGame() {
+            gameStarted = true;
+            menuContainer.classList.add('hidden');
+            exitButton.classList.remove('hidden');
+            balanceElement.classList.remove('hidden');
+            multiplierElement.classList.remove('hidden');
+            player.classList.remove('hidden');
+
+            playerX = window.innerWidth * 0.1;
+            playerBottom = 220;
+            velocityY = 0;
+            isOnGround = true;
+            combo = 0;
+            updateMultiplier();
+
+            resetCoins();
+
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
+            requestAnimationFrame(gameLoop);
+        }
+
+        function exitToMenu() {
+            gameStarted = false;
+            menuContainer.classList.remove('hidden');
+            exitButton.classList.add('hidden');
+            balanceElement.classList.add('hidden');
+            multiplierElement.classList.add('hidden');
+            comboCounter.classList.remove('active');
+            player.classList.add('hidden');
+
+            document.removeEventListener('keydown', handleKeyDown);
+            document.removeEventListener('keyup', handleKeyUp);
+
+            coins.forEach(coin => {
+                if (coin.timer) {
+                    clearTimeout(coin.timer);
+                    coin.timer = null;
+                }
+            });
+        }
+
+        function openStationMenu() { 
+            stationPanel.classList.add('active');
+            renderMusicPurchaseButton();
+        }
+        
+        function closeStationMenu() { stationPanel.classList.remove('active'); }
+        
+        function openShop() { 
+            shopPanel.classList.add('active');
+            renderShop();
+        }
+        
+        function closeShop() { shopPanel.classList.remove('active'); }
+
+        let currentCategory = 'stats';
+        function switchShopCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.shop-category').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('shopStats').style.display = category === 'stats' ? 'grid' : 'none';
+            document.getElementById('shopAbilities').style.display = category === 'abilities' ? 'grid' : 'none';
+            document.getElementById('shopSkins').style.display = category === 'skins' ? 'grid' : 'none';
+            document.getElementById('shopBackgrounds').style.display = category === 'backgrounds' ? 'grid' : 'none';
+            
+            renderShop();
+        }
+
+        function renderShop() {
+            const container = document.getElementById(`shop${currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)}`);
+            container.innerHTML = '';
+            
+            shopItems[currentCategory].forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'shop-item';
+                const owned = ownedItems.has(item.id);
+                
+                let previewHtml = '';
+                if (item.url) {
+                    previewHtml = `<div class="bg-preview" style="background-image: url('${item.url}');"></div>`;
+                }
+                
+                div.innerHTML = `
+                    ${previewHtml}
+                    <div class="shop-item-icon">${item.icon}</div>
+                    <div class="shop-item-name">${item.name}</div>
+                    <div class="shop-item-desc">${item.desc}</div>
+                    ${owned ? 
+                        '<div class="shop-item-owned">КУПЛЕНО</div>' : 
+                        `<div class="shop-item-price">${item.price} 💎</div>`
+                    }
+                `;
+                
+                if (!owned) {
+                    div.onclick = () => buyItem(item);
+                }
+                
+                container.appendChild(div);
+            });
+        }
+
+        function buyItem(item) {
+            if (balance >= item.price) {
+                balance -= item.price;
+                ownedItems.add(item.id);
+                if (item.effect) item.effect();
+                updateBalance();
+                renderShop();
+            } else {
+                alert('❌ Недостаточно кристаллов!');
+            }
+        }
+
+        function collectCoin(coinId) {
+            const coin = coins.find(c => c.id === coinId);
+            if (!coin || !coin.active) return;
+
+            coin.active = false;
+            document.getElementById(coinId).style.display = 'none';
+
+            const now = Date.now();
+            if (now - lastCoinTime < 2000) {
+                combo++;
+                if (combo > 1) {
+                    comboCounter.classList.add('active');
+                    comboAmount.textContent = combo;
+                }
+            } else {
+                combo = 1;
+            }
+            lastCoinTime = now;
+
+            const value = coin.value * coinMultiplier * (1 + combo * 0.1);
+            balance += Math.floor(value);
+            
+            updateBalance();
+
+            const msg = document.createElement('div');
+            msg.className = 'coin-message';
+            msg.textContent = '+' + Math.floor(value);
+            msg.style.left = coin.x + 'px';
+            msg.style.top = coin.y + 'px';
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 1000);
+
+            if (coin.timer) clearTimeout(coin.timer);
+            coin.timer = setTimeout(() => {
+                coin.active = true;
+                document.getElementById(coinId).style.display = 'block';
+                coin.timer = null;
+            }, 10000);
+        }
+
+        function checkCoinCollisions() {
+            const playerHitbox = { left: playerX - 15, right: playerX + 15, bottom: playerBottom, top: playerBottom + 35 };
+            coins.forEach(coin => {
+                if (coin.active) {
+                    const el = document.getElementById(coin.id);
+                    if (el) {
+                        el.style.left = coin.x + 'px';
+                        el.style.bottom = coin.y + 'px';
+                        
+                        const coinHitbox = { left: coin.x - 15, right: coin.x + 15, bottom: coin.y, top: coin.y + 30 };
+                        if (playerHitbox.left < coinHitbox.right && playerHitbox.right > coinHitbox.left &&
+                            playerHitbox.bottom < coinHitbox.top && playerHitbox.top > coinHitbox.bottom) {
+                            collectCoin(coin.id);
+                        }
+                    }
+                }
+            });
+        }
+
+        function checkPlatformCollisions() {
+            const playerFeet = { left: playerX - 12, right: playerX + 12, bottom: playerBottom };
+            for (let p of platforms) {
+                if (playerFeet.right > p.left && playerFeet.left < p.left + p.width &&
+                    playerFeet.bottom <= p.bottom + 20 && playerFeet.bottom >= p.bottom - 5 &&
+                    velocityY >= 0) {
+                    
+                    playerBottom = p.bottom + 20;
+                    velocityY = 0;
+                    
+                    if (p.type === 'speed') {
+                        playerSpeed = 10;
+                        setTimeout(() => playerSpeed = 6, 2000);
+                    } else if (p.type === 'bounce') {
+                        velocityY = -jumpStrength * 1.5;
+                        isOnGround = false;
+                    } else if (p.type === 'coin') {
+                        balance += 5;
+                        updateBalance();
+                    }
+                    
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function resetCoins() {
+            coins.forEach(coin => {
+                coin.active = true;
+                const el = document.getElementById(coin.id);
+                if (el) el.style.display = 'block';
+                if (coin.timer) { clearTimeout(coin.timer); coin.timer = null; }
+            });
+        }
+
+        function updateBalance() { balanceAmount.textContent = Math.floor(balance); }
+        function updateMultiplier() { multiplierAmount.textContent = coinMultiplier + 'x'; }
+
+        function handleKeyDown(e) {
+            if (!gameStarted) return;
+            const key = e.key.toLowerCase();
+            if (['a', 'ф', 'arrowleft', 'd', 'в', 'arrowright', ' ', 'arrowup'].includes(key)) e.preventDefault();
+
+            if (key === 'a' || key === 'ф' || key === 'arrowleft') {
+                leftPressed = true; player.classList.add('walking');
+            }
+            if (key === 'd' || key === 'в' || key === 'arrowright') {
+                rightPressed = true; player.classList.add('walking');
+            }
+            if (key === ' ' || key === 'arrowup') {
+                spacePressed = true;
+                if (isOnGround || (ownedItems.has('doublejump') && !isOnGround)) {
+                    velocityY = -jumpStrength;
+                    isOnGround = false;
+                }
+            }
+        }
+
+        function handleKeyUp(e) {
+            if (!gameStarted) return;
+            const key = e.key.toLowerCase();
+            if (key === 'a' || key === 'ф' || key === 'arrowleft') leftPressed = false;
+            if (key === 'd' || key === 'в' || key === 'arrowright') rightPressed = false;
+            if (key === ' ' || key === 'arrowup') spacePressed = false;
+            if (!leftPressed && !rightPressed) player.classList.remove('walking');
+        }
+
+        function gameLoop() {
+            if (!gameStarted) return;
+
+            if (leftPressed) playerX -= playerSpeed;
+            if (rightPressed) playerX += playerSpeed;
+            playerX = Math.max(20, Math.min(window.innerWidth - 20, playerX));
+
+            if (!isOnGround) {
+                velocityY += gravity;
+                playerBottom += velocityY;
+            }
+
+            const onPlatform = checkPlatformCollisions();
+
+            if (!onPlatform && playerBottom < voidLevel) {
+                if (!ownedItems.has('shield')) {
+                    combo = 0;
+                    comboCounter.classList.remove('active');
+                }
+                playerBottom = 220;
+                playerX = window.innerWidth * 0.1;
+                velocityY = 0;
+            }
+
+            if (!onPlatform) {
+                if (playerBottom <= voidLevel) {
+                    playerBottom = voidLevel;
+                    velocityY = 0;
+                    isOnGround = true;
+                } else isOnGround = false;
+            } else isOnGround = true;
+
+            if (ownedItems.has('magnet')) {
+                coins.forEach(coin => {
+                    if (coin.active) {
+                        const dx = coin.x - playerX;
+                        const dy = coin.y - playerBottom;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < 80) {
+                            coin.x += (dx > 0 ? 1 : -1) * 2;
+                            coin.y += (dy > 0 ? 1 : -1) * 2;
+                        }
+                    }
+                });
+            }
+
+            checkCoinCollisions();
+
+            player.style.left = playerX + 'px';
+            player.style.bottom = playerBottom + 'px';
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener('resize', () => {
+            if (gameStarted) playerX = Math.min(playerX, window.innerWidth - 20);
+            platforms.forEach((p, i) => {
+                const lefts = [0.08, 0.22, 0.36, 0.50, 0.64, 0.78, 0.65, 0.51, 0.37, 0.23];
+                p.left = lefts[i] * window.innerWidth;
+            });
+            coins.forEach((c, i) => {
+                const xs = [0.10, 0.16, 0.24, 0.30, 0.38, 0.44, 0.52, 0.58, 0.66, 0.72, 0.80, 0.67, 0.53, 0.39, 0.25];
+                c.x = xs[i] * window.innerWidth;
+                if (c.active) document.getElementById(c.id).style.left = c.x + 'px';
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            player.classList.add('hidden');
+            initMusicTracks();
+            updateVolume(70);
+        });
+    </script>
+</body>
+</html>
